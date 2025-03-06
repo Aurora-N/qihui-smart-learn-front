@@ -1,0 +1,217 @@
+<script setup>
+import { useForumApi } from '~/api/forum';
+
+const router = useRouter()
+const route = useRoute()
+
+// 高亮导航索引
+const selectedNav = computed(() => {
+  const nav = route.path.split("/").pop();
+  return nav !== 'forum' ? nav : 'all'
+});
+
+const switchToNav = (item) => {
+  console.log(item)
+  selectedNav.value = item
+  if (item !== 'all')
+    router.push(`/forum/${item}`)
+  else
+    router.push(`/forum`)
+}
+
+const bannerConfig = ref({
+  title: '欢迎来到本论坛',
+  subTitle: '知识图谱成就世界',
+  hueColor: '260'
+})
+
+const tags = ref([])
+
+const getAllTags = async () => {
+  const res = await useForumApi().getAllTags()
+  tags.value = res.data
+}
+
+onMounted(() => getAllTags())
+
+provide("bannerConfig", bannerConfig)
+</script>
+
+<template>
+  <Navbar />
+  <div class="container">
+    <!-- Welcome Banner -->
+    <ForumBanner :title="bannerConfig.title" :sub-title="bannerConfig.subTitle" :hue="bannerConfig.hueColor">
+    </ForumBanner>
+
+    <!-- 内容区域 -->
+    <div class="forum-content">
+      <div class="main-forum-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <button class="publish-button" @click="$router.push('/newpost')"
+            :style="{ '--hue': bannerConfig?.hueColor }">发布主题</button>
+          <Sidebar class="sidebar" height="auto">
+            <div class="nav-item" :class="{ active: selectedNav === 'all' }" @click="switchToNav('all')">
+              <el-icon>
+                <ChatDotRound />
+              </el-icon>
+              <span>全部主题</span>
+            </div>
+            <div class="nav-item" :class="{ active: selectedNav === 'favorite' }" @click="switchToNav('favorite')">
+              <el-icon>
+                <Star />
+              </el-icon>
+              <span>我的关注</span>
+            </div>
+            <div class="nav-item" :class="{ active: selectedNav === 'tags' }" @click="switchToNav('tags')">
+              <el-icon>
+                <Menu />
+              </el-icon>
+              <span>标签</span>
+            </div>
+            <hr>
+            <!-- 标签（如前端/后端/C++等） -->
+            <div class="nav-item-tag" v-for="tag of tags" :key="tag.tagId"
+              :class="{ 'active-tag': selectedNav === tag.tagId }" :style="{ '--hue': tag.hueColor }"
+              @click="switchToNav(`tags/${tag.tagId}`)">
+              <el-icon>
+                <CollectionTag />
+              </el-icon>
+              <span>{{ tag.title }}</span>
+            </div>
+          </Sidebar>
+        </div>
+
+        <!-- Content Section -->
+        <NuxtPage id="content" />
+      </div>
+    </div>
+  </div>
+  <Footer />
+</template>
+
+<style scoped>
+.container {
+  min-height: 100vh;
+  background-color: while;
+  margin-top: 55px;
+}
+
+.banner-links {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.banner-links a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.forum-content {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.main-forum-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* 侧边栏样式 */
+.sidebar {
+  width: 15rem;
+  flex-shrink: 0;
+  margin-right: 2rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  color: #606266;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+  padding-right: 1px;
+}
+
+.nav-item:hover {
+  color: #2563eb;
+  background-color: rgb(248, 250, 252);
+  border-radius: 6px;
+  padding-left: 10px;
+}
+
+.nav-item-tag {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  color: #606266;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+  padding-right: 1px;
+}
+
+.nav-item-tag:hover {
+  color: oklch(.55 .12 var(--hue));
+  background-color: oklch(.95 .025 var(--hue));
+  border-radius: 6px;
+  padding-left: 10px;
+}
+
+.active {
+  color: #2563eb;
+}
+
+.active-tag {
+  color: oklch(.55 .12 var(--hue));
+}
+
+.nav-item .el-icon,
+.nav-item-tag .el-icon {
+  margin-right: 10px;
+}
+
+.nav-item .count,
+.nav-item-tag .count {
+  margin-left: auto;
+  color: #909399;
+}
+
+.publish-button {
+  padding: 0.5rem 1rem;
+  background-color: oklch(0.55 0.22 var(--hue));
+  /* #2563eb */
+  width: 100%;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  margin-bottom: 2rem;
+}
+
+.publish-button:hover {
+  background-color: oklch(0.6 0.22 var(--hue));
+  /* #1576ff */
+  box-shadow: 0 0 5px oklch(0.52 0.21 var(--hue) / 0.5);
+  /* rgba(0, 96, 223, 0.5) */
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+  .forum-content {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
+</style>
