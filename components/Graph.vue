@@ -1,350 +1,574 @@
 <template>
-  <div class="knowledge-graph">
-    <div class="controls">
-      <input v-model="searchTerm" placeholder="Search nodes..." @input="filterNodes" />
-      <button @click="toggleUploadModal">Upload Data</button>
-    </div>
-    <div v-if="error" class="error">{{ error }}</div>
-    <svg v-else ref="svg" :width="width" :height="height"></svg>
-    <div v-if="selectedNode" class="node-details">
-      <h3>{{ selectedNode.id }}</h3>
-      <p>Group: {{ selectedNode.group }}</p>
-      <p>Connections: {{ selectedNode.connections }}</p>
-      <p>Relationship: {{ selectedNode.relationship }}</p>
-      <p>简介: {{ selectedNode.简介 }}</p>
-    </div>
-    <button @click="toggleLegend" class="legend-toggle">
-      {{ showLegend ? 'Hide' : 'Show' }} Legend
-    </button>
-    <div v-if="showLegend" class="legend">
-      <h3>Legend</h3>
-      <div v-for="(group, index) in uniqueGroups" :key="index" class="legend-item">
-        <span class="legend-color" :style="{ backgroundColor: color(group) }"></span>
-        <span>{{ group }}</span>
+  <div class="knowledge-graph-container">
+    <!-- 小窗口模式 -->
+    <div class="knowledge-graph-card" @click="toggleFullscreen" v-if="!isFullscreen && !isEmbedded">
+      <div class="card-content">
+        <h3>{{ props.title }}</h3>
+        <div class="mini-graph" ref="miniGraphContainer"></div>
+        <div class="expand-hint">
+          <span>点击展开</span>
+        </div>
       </div>
     </div>
-    <modal v-if="showUploadModal" @close="toggleUploadModal">
-      <template #header>
-        <h3>Upload Data</h3>
-      </template>
-      <template #body>
-        <textarea v-model="jsonInput" placeholder="Paste your JSON data here..."></textarea>
-        <button @click="loadData">Load Data</button>
-      </template>
-    </modal>
-    <div v-if="error" class="error-message">
-      {{ error }}
+
+    <!-- 内嵌小窗口模式 -->
+    <div class="knowledge-graph-card-embeded" @click="toggleFullscreen" v-else-if="!isFullscreen && isEmbedded">
+      <div class="mini-graph" ref="miniGraphContainer"></div>
     </div>
-    <div v-if="missingNodesWarning" class="missing-nodes-warning">
-      {{ missingNodesWarning }}
+
+    <!-- 全屏模式 -->
+    <div v-else class="fullscreen-viewer">
+      <div class="fullscreen-header">
+        <h2>{{ props.title }}知识图谱</h2>
+        <button class="close-btn" @click="toggleFullscreen">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="fullscreen-content">
+        <div class="controls">
+          <button @click="resetZoom" class="control-btn">重置视图</button>
+          <div class="checkbox-control">
+            <input type="checkbox" id="showLabels" v-model="showLinkLabels">
+            <label for="showLabels">显示关系标签</label>
+          </div>
+          <div class="search-control">
+            <input type="text" v-model="searchTerm" @input="handleSearchInput" placeholder="搜索节点" class="search-input">
+          </div>
+
+          <div class="legend-container">
+            <div class="legend-header" @click="toggleLegend">
+              <span>图例</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                :class="{ 'rotate-icon': !showLegend }">
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+            </div>
+            <div class="legend" v-show="showLegend">
+              <div class="legend-item">
+                <span class="legend-color" style="background-color: #ff7675;"></span>
+                <span>根节点</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color" style="background-color: #74b9ff;"></span>
+                <span>分类</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color" style="background-color: #55efc4;"></span>
+                <span>入门难度</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color" style="background-color: #ffeaa7;"></span>
+                <span>基础难度</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color" style="background-color: #fd79a8;"></span>
+                <span>进阶难度</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color" style="background-color: #a29bfe;"></span>
+                <span>深入难度</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color" style="background-color: #e17055;"></span>
+                <span>高级难度</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div ref="graphContainer" class="graph-container"></div>
+
+        <!-- 右侧滑入侧边栏 -->
+        <transition name="slide">
+          <div v-if="selectedNode" class="sidebar-details">
+            <div class="sidebar-header">
+              <h3>{{ selectedNode.id }}</h3>
+              <button @click="selectedNode = null" class="close-sidebar-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div class="sidebar-content">
+              <!-- 基本信息 -->
+              <div class="sidebar-section">
+                <div class="sidebar-section-header">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  <h4>基本信息</h4>
+                </div>
+                <div class="sidebar-section-content">
+                  <div v-if="selectedNode.level" class="info-item">
+                    <span class="info-label">难度:</span>
+                    <span class="info-badge" :class="'level-' + getLevelClass(selectedNode.level)">
+                      {{ selectedNode.level }}
+                    </span>
+                  </div>
+                  <div v-if="selectedNode.content" class="info-item">
+                    <p>{{ selectedNode.content }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 相关资源 -->
+              <div class="sidebar-section">
+                <div class="sidebar-section-header">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                  </svg>
+                  <h4>相关资源</h4>
+                </div>
+                <div class="sidebar-section-content">
+                  <!-- 这里可以根据节点数据动态生成资源链接 -->
+                  <div class="resource-links">
+                    <a v-if="getNodeResources(selectedNode).articles.length > 0"
+                      v-for="article in getNodeResources(selectedNode).articles" :key="article.title"
+                      :href="article.url" target="_blank" class="resource-link">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                      </svg>
+                      <span>{{ article.title }}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 视频教程 -->
+              <div class="sidebar-section" v-if="getNodeResources(selectedNode).videos.length > 0">
+                <div class="sidebar-section-header">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                  </svg>
+                  <h4>视频教程</h4>
+                </div>
+                <div class="sidebar-section-content">
+                  <div class="video-container" v-for="video in getNodeResources(selectedNode).videos"
+                    :key="video.title">
+                    <h5>{{ video.title }}</h5>
+                    <div class="video-embed">
+                      <iframe :src="video.embedUrl" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 相关节点 -->
+              <div class="sidebar-section">
+                <div class="sidebar-section-header">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  <h4>相关节点</h4>
+                </div>
+                <div class="sidebar-section-content">
+                  <div class="related-nodes">
+                    <div v-for="node in getRelatedNodes(selectedNode)" :key="node.id" class="related-node"
+                      @click="selectNode(node)">
+                      <div class="node-indicator" :style="{ backgroundColor: getNodeColor(node) }"></div>
+                      <span>{{ node.id }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 相关知识图谱 -->
+              <div class="sidebar-section">
+                <div class="sidebar-section-header">
+                  <IconsGraph style="width:20px; height: 20px;" />
+                  <h4>相关知识图谱</h4>
+                </div>
+                <div class="sidebar-section-content">
+                  <Graph isEmbedded="true" :id="selectedNode.id" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
+import { ref, onMounted, watch, nextTick } from 'vue';
 import * as d3 from 'd3';
-import initialData from '~/assets/knowledge_graph_data.json';
+import { transformData } from '~/utils/transformData'
+import { useWindowSize } from '@vueuse/core';
 
-// SVG 元素引用
-const svg = ref(null);
-// 搜索词
+// Props
+const props = defineProps({
+  title: {
+    type: String,
+    default: 'Knowledge Graph'
+  },
+  isEmbedded: {
+    type: Boolean,
+    default: false,
+  },
+  graphId: {
+    type: String,
+    default: ''
+  },
+  maxDepth: {
+    type: Number,
+    default: 5,
+  }
+})
+
+// 引入数据
+import graphData from '~/assets/data.json';
+import { IconsGraph } from '#components';
+
+// 状态变量
+const isFullscreen = ref(false);
+const showLegend = ref(true);
+const showLinkLabels = ref(false);
 const searchTerm = ref('');
-// 选中的节点
 const selectedNode = ref(null);
-// 是否显示上传模态框
-const showUploadModal = ref(false);
-// JSON 输入
-const jsonInput = ref('');
-// 是否显示图例
-const showLegend = ref(false);
-// 错误信息
-const error = ref(null);
-// 缺失节点警告
-const missingNodesWarning = ref('');
+const matchedNodes = ref([]);
+const searchTimeout = ref(null);
+const isSearching = ref(false);
 
-// 力导向图模拟
-let simulation;
-// 节点数组
+// 监听窗口大小
+const { width: windowWidth, height: windowHeight } = useWindowSize();
+
+// 根据窗口变化重设svg大小
+watch([windowWidth, windowHeight], ([windowWidth, windowHeight]) => {
+  d3.select("svg").attr("width", windowWidth).attr("height", windowHeight + 100);
+})
+
+// DOM引用
+const miniGraphContainer = ref(null);
+const graphContainer = ref(null);
+
+// D3相关变量
+let simulation = null;
+let svg = null;
+let g = null;
+let zoom = null;
+let linkLabels = null;
 let nodes = [];
-// 连接数组
 let links = [];
 
-// 图形数据
-const data = ref(initialData);
+// 切换全屏/小窗口模式
+const toggleFullscreen = async () => {
+  isFullscreen.value = !isFullscreen.value;
 
-// 图形宽度
-const width = 800;
-// 图形高度
-const height = 600;
-// 节点半径
-const nodeRadius = 10;
-
-// 计算唯一的组
-const uniqueGroups = computed(() => {
-  return [...new Set(data.value.map(node => node.课程大纲))];
-});
-
-// 颜色比例尺
-const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-// 处理数据
-function processData(rawData) {
-  const nodes = [];
-  const links = [];
-  const nodeMap = new Map();
-  const missingNodes = new Set();
-
-  // First pass: create nodes
-  rawData.forEach((item, index) => {
-    const node = {
-      id: item.课程分类,
-      group: item.课程大纲,
-      简介: item.简介,
-      isMissing: false
-    };
-    nodes.push(node);
-    nodeMap.set(node.id, index);
-  });
-
-  // Second pass: create links and identify missing nodes
-  rawData.forEach((item) => {
-    for (let i = 1; i <= 9; i++) {
-      const relationKey = `关系${i}`;
-      const targetKey = `关系${i}后继`;
-      if (item[relationKey] && item[targetKey]) {
-        if (!nodeMap.has(item[targetKey])) {
-          missingNodes.add(item[targetKey]);
-        }
-        links.push({
-          source: item.课程分类,
-          target: item[targetKey],
-          relationship: item[relationKey]
-        });
-      }
-    }
-  });
-
-  // Add missing nodes as placeholders
-  missingNodes.forEach((missingNodeId) => {
-    const node = {
-      id: missingNodeId,
-      group: 'Missing',
-      简介: 'This node is referenced but not defined in the data',
-      isMissing: true
-    };
-    nodes.push(node);
-    nodeMap.set(missingNodeId, nodes.length - 1);
-  });
-
-  return { nodes, links, missingNodes: Array.from(missingNodes) };
-}
-
-// 组件挂载时初始化图形
-onMounted(() => {
-  console.log('Component mounted');
-  try {
+  // 等待DOM更新后初始化图表
+  await nextTick();
+  if (isFullscreen.value) {
     initGraph();
-  } catch (e) {
-    console.error('Error initializing graph:', e);
-    error.value = e.message;
+  } else {
+    initMiniGraph();
   }
-});
+};
 
-// 监听数据变化，重新初始化图形
-watch(data, () => {
-  initGraph();
-}, { deep: true });
+// 切换图例显示/隐藏
+const toggleLegend = () => {
+  showLegend.value = !showLegend.value;
+};
 
-// 初始化图形
-function initGraph() {
-  console.log('Initializing graph');
-  if (!svg.value) {
-    console.error('SVG element not found');
-    error.value = 'SVG element not found';
-    return;
-  }
+// 初始化小图, 大图的等比例缩小版本
+const initMiniGraph = () => {
+  if (!miniGraphContainer.value) return;
 
-  const { nodes: graphNodes, links: graphLinks, missingNodes } = processData(data.value);
+  const data = transformData(graphData, props.maxDepth);
+  nodes = data.nodes;
+  links = data.links;
 
-  d3.select(svg.value).selectAll("*").remove();
+  const width = miniGraphContainer.value.clientWidth;
+  const height = miniGraphContainer.value.clientHeight;
 
-  simulation = d3.forceSimulation(graphNodes)
-    .force("link", d3.forceLink(graphLinks).id(d => d.id).distance(150))
-    .force("charge", d3.forceManyBody().strength(-1000))
-    .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("x", d3.forceX(width / 2).strength(0.1))
-    .force("y", d3.forceY(height / 2).strength(0.1));
+  // 清除之前的图表
+  d3.select(miniGraphContainer.value).selectAll('*').remove();
 
-  const svgElement = d3.select(svg.value)
-    .attr("viewBox", [0, 0, width, height])
-    .call(d3.zoom().on("zoom", zoomed));
+  // 创建SVG
+  const miniSvg = d3.select(miniGraphContainer.value)
+    .append('svg')
+    .attr("width", width)
+    .attr("height", height)
+    .attr('viewBox', [0, 0, width, height])
+    .attr('style', 'max-width: 100%; height: auto;');
 
-  const g = svgElement.append("g");
+  const miniG = miniSvg.append('g');
 
-  // Define arrow markers for each group
-  const defs = svgElement.append("defs");
-  uniqueGroups.value.forEach(group => {
-    defs.append("marker")
-      .attr("id", `arrowhead-${group.replace(/\s+/g, '-')}`)
-      .attr("viewBox", "-0 -5 10 10")
-      .attr("refX", 8)
-      .attr("refY", 0)
-      .attr("orient", "auto")
-      .attr("markerWidth", 4)
-      .attr("markerHeight", 4)
-      .attr("xoverflow", "visible")
-      .append("svg:path")
-      .attr("d", "M 0,-5 L 10 ,0 L 0,5")
-      .attr("fill", color(group))
-      .style("stroke", "none");
+  // 创建链接
+  miniG.append('g')
+    .selectAll('line')
+    .data(links)
+    .enter().append('line')
+    .attr('stroke', '#999')
+    .attr('stroke-opacity', 0.6)
+    .attr('stroke-width', d => Math.sqrt(d.value) * 0.5); // 缩小线宽
+
+  // 创建节点
+  miniG.append('g')
+    .selectAll('circle')
+    .data(nodes)
+    .enter().append('circle')
+    .attr('r', d => getNodeRadius(d) * 0.5) // 缩小节点半径
+    .attr('fill', d => getNodeColor(d))
+    .attr('stroke', '#fff')
+    .attr('stroke-width', 1);
+
+  // 创建力导向模拟
+  const miniSimulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d => d.uniqueId).distance(50 / 8))
+    .force('charge', d3.forceManyBody().strength(-150 / 8))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(d => getNodeRadius(d) * 0.5 + 2));
+
+  // 更新函数
+  miniSimulation.on('tick', () => {
+    miniG.selectAll('line')
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y);
+
+    miniG.selectAll('circle')
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y);
   });
 
-  // Add a special marker for missing nodes
-  defs.append("marker")
-    .attr("id", "arrowhead-missing")
-    .attr("viewBox", "-0 -5 10 10")
-    .attr("refX", 8)
-    .attr("refY", 0)
-    .attr("orient", "auto")
-    .attr("markerWidth", 4)
-    .attr("markerHeight", 4)
-    .attr("xoverflow", "visible")
-    .append("svg:path")
-    .attr("d", "M 0,-5 L 10 ,0 L 0,5")
-    .attr("fill", "#ccc")
-    .style("stroke", "none");
+  // 运行模拟一段时间后停止
+  setTimeout(() => miniSimulation.stop(), 2000);
+};
 
-  const linkGroup = g.append("g")
-    .attr("class", "links")
-    .selectAll("g")
-    .data(graphLinks)
-    .join("g");
+// 初始化全屏图表
+const initGraph = () => {
+  if (!graphContainer.value) return;
 
-  linkGroup.append("line")
-    .attr("stroke", d => d.source.isMissing || d.target.isMissing ? "#ccc" : color(d.source.group))
-    .attr("stroke-opacity", 0.6)
-    .attr("stroke-width", 2)
-    .attr("marker-end", d => {
-      if (d.source.isMissing || d.target.isMissing) {
-        return "url(#arrowhead-missing)";
-      }
-      return `url(#arrowhead-${d.source.group.replace(/\s+/g, '-')})`;
+  const data = transformData(graphData, props.maxDepth);
+  nodes = data.nodes;
+  links = data.links;
+
+  const width = graphContainer.value.clientWidth;
+  const height = graphContainer.value.clientHeight;
+
+  // 清除之前的图表
+  d3.select(graphContainer.value).selectAll('*').remove();
+
+  // 创建SVG
+  svg = d3.select(graphContainer.value)
+    .append('svg')
+    .attr('width', '100%')
+    .attr('height', '100%')
+    .attr('viewBox', [0, 0, width, height])
+    .attr('style', 'max-width: 100%; height: auto;');
+
+  // 添加发光滤镜
+  const defs = svg.append('defs');
+
+  // 创建发光滤镜
+  const glowFilter = defs.append('filter')
+    .attr('id', 'glow')
+    .attr('x', '-50%')
+    .attr('y', '-50%')
+    .attr('width', '200%')
+    .attr('height', '200%');
+
+  glowFilter.append('feGaussianBlur')
+    .attr('stdDeviation', '5')
+    .attr('result', 'blur');
+
+  glowFilter.append('feComposite')
+    .attr('in', 'SourceGraphic')
+    .attr('in2', 'blur')
+    .attr('operator', 'over');
+
+  // 添加缩放功能
+  zoom = d3.zoom()
+    .scaleExtent([0.1, 4])
+    .on('zoom', (event) => {
+      g.attr('transform', event.transform);
     });
 
-  // 关系标签文本
-  linkGroup.append("text")
-    .attr("dy", 0)
-    .attr("text-anchor", "middle")
+  svg.call(zoom);
+
+  // 创建一个包含所有元素的组
+  g = svg.append('g');
+
+  // 添加箭头标记
+  svg.append('defs').selectAll('marker')
+    .data(['arrow'])
+    .enter().append('marker')
+    .attr('id', d => d)
+    .attr('viewBox', '0 -5 10 10')
+    .attr('refX', 25)
+    .attr('refY', 0)
+    .attr('markerWidth', 6)
+    .attr('markerHeight', 6)
+    .attr('orient', 'auto')
+    .append('path')
+    .attr('fill', '#999')
+    .attr('d', 'M0,-5L10,0L0,5');
+
+  // 创建链接
+  const link = g.append('g')
+    .selectAll('line')
+    .data(links)
+    .enter().append('line')
+    .attr('stroke', '#999')
+    .attr('stroke-opacity', 0.6)
+    .attr('stroke-width', d => Math.sqrt(d.value))
+    .attr('marker-end', 'url(#arrow)');
+
+  // 创建链接标签
+  linkLabels = g.append('g')
+    .selectAll('text')
+    .data(links)
+    .enter().append('text')
+    .attr('font-size', '8px')
+    .attr('text-anchor', 'middle')
     .text(d => d.relationship)
-    .attr("fill", "#666")
-    .attr("font-size", "10px")
-    .attr("pointer-events", "none");
+    .attr('fill', '#666')
+    .attr('dy', -5)
+    .attr('opacity', 0); // 标签一开始不展示
 
-  // 关系标签背后的矩形框
-  linkGroup.insert("rect", "text")
-    .attr("fill", "rgba(255, 255, 255, 0)")
-    .attr("width", function () {
-      return this.parentNode.querySelector('text').getBBox().width + 4;
-    })
-    .attr("height", function () {
-      return this.parentNode.querySelector('text').getBBox().height + 2;
-    })
-    .attr("x", function () {
-      return this.parentNode.querySelector('text').getBBox().x - 2;
-    })
-    .attr("y", function () {
-      return this.parentNode.querySelector('text').getBBox().y - 1;
-    });
+  // 计算图的中心点
+  const centerX = width / 2;
+  const centerY = height / 2;
 
-  // 结点
-  const node = g.append("g")
-    .attr("class", "nodes")
-    .selectAll("circle")
-    .data(graphNodes)
-    .join("circle")
-    .attr("r", d => d.isMissing ? nodeRadius * 0.8 : nodeRadius)
-    .attr("fill", d => d.isMissing ? "#ccc" : color(d.group))
-    .attr("stroke", d => d.isMissing ? "#999" : null)
-    .attr("stroke-width", d => d.isMissing ? 2 : 0)
-    .attr("stroke-dasharray", d => d.isMissing ? "3,3" : null)
-    .call(drag(simulation))
-    .on("click", (event, d) => {
-      selectedNode.value = { ...d, connections: getConnections(d) };
+  // 创建节点
+  const node = g.append('g')
+    .selectAll('circle')
+    .data(nodes)
+    .enter().append('circle')
+    .attr('r', d => getNodeRadius(d))
+    .attr('fill', d => getNodeColor(d))
+    .attr('stroke', '#fff')
+    .attr('stroke-width', 1.5)
+    .attr('class', 'node')
+    .on('click', (event, d) => {
+      selectedNode.value = d;
+      event.stopPropagation();
     })
-    .on("mouseover", handleMouseOver)
-    .on("mouseout", handleMouseOut);
+    .on('mouseover', (event, d) => {
+      // 鼠标悬停时突出显示节点及其标签
+      highlightNode(d);
+    })
+    .on('mouseout', () => {
+      // 鼠标移出时恢复正常显示
+      resetHighlight();
+    })
+    .call(d3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended));
 
-  // 结点标签
-  const label = g.append("g")
-    .attr("class", "labels")
-    .selectAll("text")
-    .data(graphNodes)
-    .join("text")
-    .attr("text-anchor", "middle")
-    .attr("dominant-baseline", "central")
+  // 添加节点标签，根据节点位置调整标签位置
+  const label = g.append('g')
+    .selectAll('text')
+    .data(nodes)
+    .enter().append('text')
+    .attr('font-size', '10px')
+    .attr('pointer-events', 'none')
     .text(d => d.id)
-    .attr('fill', '#333')
-    .style('font-size', '12px')
-    .style('pointer-events', 'none');
+    .attr('fill', useColorMode().value === 'light' ? '#333' : '#fff')
+    .attr('class', 'node-label');
 
-  simulation.on("tick", () => {
-    linkGroup.select("line")
-      .attr("x1", d => d.source.x)
-      .attr("y1", d => d.source.y)
-      .attr("x2", d => calculateEdgePoint(d.source, d.target, 'x'))
-      .attr("y2", d => calculateEdgePoint(d.source, d.target, 'y'));
+  // 创建力导向模拟
+  simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d => d.uniqueId).distance(100))
+    .force('charge', d3.forceManyBody().strength(-300))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(d => getNodeRadius(d) + 10));
 
-    linkGroup.select("text")
-      .attr("x", d => (d.source.x + d.target.x) / 2)
-      .attr("y", d => (d.source.y + d.target.y) / 2 - 10);
-
-    linkGroup.select("rect")
-      .attr("x", function () {
-        const textElement = this.parentNode.querySelector('text');
-        const bbox = textElement.getBBox();
-        return parseFloat(textElement.getAttribute('x')) - bbox.width / 2 - 2;
-      })
-      .attr("y", function () {
-        const textElement = this.parentNode.querySelector('text');
-        return parseFloat(textElement.getAttribute('y')) - 11;
-      });
+  // 更新函数
+  simulation.on('tick', () => {
+    link
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y);
 
     node
-      .attr("cx", d => d.x)
-      .attr("cy", d => d.y);
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y);
 
-    label
-      .attr("x", d => d.x)
-      .attr("y", d => d.y + 15);
+    // 更新标签位置，使用平滑过渡
+    label.each(function (d) {
+      const labelElement = d3.select(this);
+      const nodeRadius = getNodeRadius(d);
+
+      // 计算节点相对于中心的位置
+      const dx = d.x - centerX;
+      const dy = d.y - centerY;
+
+      // 使用平滑的角度计算，避免突变
+      const angle = Math.atan2(dy, dx);
+
+      // 根据角度确定标签位置
+      let textAnchor, xOffset, yOffset;
+
+      // 使用平滑的象限划分，避免边界处的突变
+      if (angle > -Math.PI / 4 && angle < Math.PI / 4) {
+        // 右侧
+        textAnchor = 'start';
+        xOffset = nodeRadius + 5;
+        yOffset = 4;
+      } else if (angle >= Math.PI / 4 && angle < 3 * Math.PI / 4) {
+        // 下侧
+        textAnchor = 'middle';
+        xOffset = 0;
+        yOffset = nodeRadius + 15;
+      } else if (angle >= -3 * Math.PI / 4 && angle <= -Math.PI / 4) {
+        // 上侧
+        textAnchor = 'middle';
+        xOffset = 0;
+        yOffset = -nodeRadius - 8;
+      } else {
+        // 左侧
+        textAnchor = 'end';
+        xOffset = -nodeRadius - 5;
+        yOffset = 4;
+      }
+
+      // 应用计算的位置，使用D3的过渡效果
+      labelElement
+        .transition()
+        .duration(50) // 短暂的过渡时间，避免延迟感
+        .attr('x', d.x + xOffset)
+        .attr('y', d.y + yOffset)
+        .attr('text-anchor', textAnchor);
+    });
+
+    linkLabels
+      .attr('x', d => (d.source.x + d.target.x) / 2)
+      .attr('y', d => (d.source.y + d.target.y) / 2);
   });
 
-  function zoomed(event) {
-    g.attr("transform", event.transform);
-  }
+  // 点击空白处关闭详情面板
+  svg.on('click', () => {
+    selectedNode.value = null;
+  });
 
-  nodes = node;
-  links = linkGroup;
-
-  // Add warning for missing nodes
-  if (missingNodes.length > 0) {
-    missingNodesWarning.value = `Warning: The following nodes are referenced but not defined: ${missingNodes.join(", ")}`;
-  } else {
-    missingNodesWarning.value = '';
-  }
-}
-
-// 计算边缘点
-function calculateEdgePoint(source, target, coord) {
-  const dx = target.x - source.x;
-  const dy = target.y - source.y;
-  const distance = Math.sqrt(dx * dx + dy * dy);
-  const ratio = (distance - nodeRadius - 5) / distance; // Subtract 5 to leave space for the arrowhead
-  return coord === 'x' ? source.x + dx * ratio : source.y + dy * ratio;
-}
-
-// 拖拽行为
-function drag(simulation) {
+  // 拖拽函数
   function dragstarted(event) {
     if (!event.active) simulation.alphaTarget(0.3).restart();
     event.subject.fx = event.subject.x;
@@ -361,218 +585,948 @@ function drag(simulation) {
     event.subject.fx = null;
     event.subject.fy = null;
   }
+};
 
-  return d3.drag()
-    .on("start", dragstarted)
-    .on("drag", dragged)
-    .on("end", dragended);
-}
+// 高亮单个节点及其标签
+const highlightNode = (node) => {
+  if (!svg) return;
 
-// 鼠标悬停处理
-function handleMouseOver(event, d) {
-  const node = d3.select(this);
-  if (!d.isMissing) {
-    node.attr("stroke", "#fff").attr("stroke-width", 2);
-  } else {
-    node.attr("stroke", "#666").attr("stroke-width", 3);
+  // 增加当前节点的边框宽度并添加发光效果
+  svg.selectAll('.node')
+    .filter(d => d.uniqueId === node.uniqueId)
+    .transition()
+    .duration(10)
+    .attr('stroke-width', 3)
+    .attr('filter', 'url(#glow)');
+
+  // 加粗当前节点的标签
+  svg.selectAll('.node-label')
+    .filter(d => d.uniqueId === node.uniqueId)
+    .transition()
+    .duration(10)
+    .attr('font-weight', '1000')
+    .attr('font-size', '12px');
+};
+
+// 重置高亮效果
+const resetHighlight = () => {
+  if (!svg) return;
+
+  // 如果正在搜索，不重置高亮
+  if (searchTerm.value) return;
+
+  // 恢复所有节点的边框宽度和移除滤镜
+  svg.selectAll('.node')
+    .transition()
+    .duration(200)
+    .attr('stroke-width', 1.5)
+    .attr('filter', null);
+
+  // 恢复所有标签的样式
+  svg.selectAll('.node-label')
+    .transition()
+    .duration(200)
+    .attr('font-weight', 'normal')
+    .attr('font-size', '10px');
+};
+
+// 处理搜索输入
+const handleSearchInput = () => {
+  // 标记正在搜索
+  isSearching.value = true;
+
+  // 清除之前的定时器
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value);
   }
 
-  links.filter(l => l.source.id === d.id || l.target.id === d.id)
-    .select("line")
-    .attr("stroke-width", 4);
+  // 执行搜索
+  handleSearch();
 
-  d3.selectAll("text")
-    .filter(t => t.id === d.id)
-    .style("font-weight", "bold");
-}
+  // 设置新的定时器，在用户停止输入500ms后执行定位
+  searchTimeout.value = setTimeout(() => {
+    isSearching.value = false;
+    if (matchedNodes.value.length > 0) {
+      focusOnSearchResults();
+    }
+  }, 500);
+};
 
-// 鼠标离开处理
-function handleMouseOut(event, d) {
-  const node = d3.select(this);
-  if (!d.isMissing) {
-    node.attr("stroke", null).attr("stroke-width", null);
-  } else {
-    node.attr("stroke", "#999").attr("stroke-width", 2);
-  }
+// 搜索和高亮函数
+const handleSearch = () => {
+  if (!svg) return;
 
-  links.select("line")
-    .attr("stroke-width", 2);
-
-  d3.selectAll("text")
-    .style("font-weight", null);
-}
-
-// 获取节点连接数
-function getConnections(node) {
-  return data.value.filter(item =>
-    item.课程分类 === node.id ||
-    Object.keys(item).some(key => key.startsWith('关系') && key.endsWith('后继') && item[key] === node.id)
-  ).length;
-}
-
-// 过滤节点
-function filterNodes() {
   const term = searchTerm.value.toLowerCase();
-  const { nodes: graphNodes, links: graphLinks } = processData(data.value);
 
-  nodes.attr("opacity", d => d.id.toLowerCase().includes(term) ? 1 : 0.1);
-  links.attr("opacity", d =>
-    d.source.id.toLowerCase().includes(term) ||
-      d.target.id.toLowerCase().includes(term) ? 1 : 0.1
-  );
-  d3.selectAll("text")
-    .attr("opacity", d => {
-      if (d.id) {
-        return d.id.toLowerCase().includes(term) ? 1 : 0.1;
-      }
-      return d.source.id.toLowerCase().includes(term) ||
-        d.target.id.toLowerCase().includes(term) ? 1 : 0.1;
-    });
-}
+  // 重置所有节点、链接和标签的透明度
+  svg.selectAll('circle, line, text')
+    .attr('opacity', 1);
 
-// 切换上传模态框显示状态
-function toggleUploadModal() {
-  showUploadModal.value = !showUploadModal.value;
-}
+  if (term) {
+    // 找到匹配的节点
+    matchedNodes.value = nodes.filter(node => node.id.toLowerCase().includes(term));
 
-// 切换图例显示状态
-function toggleLegend() {
-  showLegend.value = !showLegend.value;
-}
+    // 如果有匹配的节点，降低其他元素的透明度
+    if (matchedNodes.value.length > 0) {
+      // 降低所有元素的透明度
+      svg.selectAll('line, text')
+        .attr('opacity', 0);
+      svg.selectAll('circle').attr('opacity', 0.1);
 
-// 加载数据
-function loadData() {
-  try {
-    const newData = JSON.parse(jsonInput.value);
-    data.value = newData;
-    showUploadModal.value = false;
-    jsonInput.value = '';
-    initGraph();
-  } catch (error) {
-    console.error('Error parsing JSON:', error);
-    alert('Invalid JSON data. Please check your input.');
+      // 高亮匹配的节点及其相关节点
+      matchedNodes.value.forEach(node => {
+        highlightNodeAndRelated(node);
+      });
+    } else {
+      matchedNodes.value = [];
+    }
+  } else {
+    matchedNodes.value = [];
   }
-}
+};
 
-// 组件卸载时停止模拟
-onUnmounted(() => {
-  if (simulation) {
-    simulation.stop();
+// 缩放到搜索结果
+const focusOnSearchResults = () => {
+  if (!svg || !zoom || matchedNodes.value.length === 0) return;
+
+  // 计算匹配节点的边界框
+  const bounds = {
+    minX: Infinity,
+    minY: Infinity,
+    maxX: -Infinity,
+    maxY: -Infinity
+  };
+
+  matchedNodes.value.forEach(node => {
+    bounds.minX = Math.min(bounds.minX, node.x);
+    bounds.minY = Math.min(bounds.minY, node.y);
+    bounds.maxX = Math.max(bounds.maxX, node.x);
+    bounds.maxY = Math.max(bounds.maxY, node.y);
+  });
+
+  // 添加一些边距
+  const padding = 50;
+  bounds.minX -= padding;
+  bounds.minY -= padding;
+  bounds.maxX += padding;
+  bounds.maxY += padding;
+
+  // 计算边界框的中心和尺寸
+  const width = graphContainer.value.clientWidth;
+  const height = graphContainer.value.clientHeight;
+  const boundWidth = bounds.maxX - bounds.minX;
+  const boundHeight = bounds.maxY - bounds.minY;
+  const centerX = bounds.minX + boundWidth / 2;
+  const centerY = bounds.minY + boundHeight / 2;
+
+  // 计算适当的缩放比例
+  const scale = Math.min(
+    width / boundWidth,
+    height / boundHeight,
+    3 // 最大缩放限制
+  ) * 0.9; // 稍微缩小一点，留出边距
+
+  // 应用缩放和平移
+  svg.transition()
+    .duration(750)
+    .call(
+      zoom.transform,
+      d3.zoomIdentity
+        .translate(width / 2, height / 2)
+        .scale(scale)
+        .translate(-centerX, -centerY)
+    );
+};
+
+// 高亮节点及其相关节点
+const highlightNodeAndRelated = (node) => {
+  // 用于存储已处理的节点ID，避免重复处理
+  const processedNodes = new Set();
+
+  // 递归高亮节点及其子节点
+  const highlightRecursive = (currentNode, depth = 0, maxDepth = 3) => {
+    if (depth > maxDepth || processedNodes.has(currentNode.uniqueId)) return;
+    processedNodes.add(currentNode.uniqueId);
+
+    // 高亮当前节点
+    svg.selectAll('circle')
+      .filter(d => d.uniqueId === currentNode.uniqueId)
+      .attr('opacity', 1);
+
+    // 高亮节点标签
+    svg.selectAll('text.node-label')
+      .filter(d => d.uniqueId === currentNode.uniqueId)
+      .attr('opacity', 1);
+
+    // 高亮子节点和连接
+    links.forEach(link => {
+      if (link.source.uniqueId === currentNode.uniqueId) {
+        // 高亮连接
+        svg.selectAll('line')
+          .filter(d => d.source.uniqueId === currentNode.uniqueId && d.target.uniqueId === link.target.uniqueId)
+          .attr('opacity', 1);
+
+        // 高亮连接标签
+        svg.selectAll('text')
+          .filter(d => d === link)
+          .attr('opacity', 1);
+
+        // 递归处理子节点
+        const childNode = nodes.find(n => n.uniqueId === link.target.uniqueId);
+        if (childNode) {
+          highlightRecursive(childNode, depth + 1, maxDepth);
+        }
+      }
+    });
+  };
+
+  // 高亮当前节点
+  svg.selectAll('circle')
+    .filter(d => d.uniqueId === node.uniqueId)
+    .attr('opacity', 1);
+
+  // 高亮节点标签
+  svg.selectAll('text.node-label')
+    .filter(d => d.uniqueId === node.uniqueId)
+    .attr('opacity', 1);
+
+  // 高亮子节点和连接（递归）
+  highlightRecursive(node);
+
+  // 高亮直接指向当前节点的父节点和连接（非递归）
+  links.forEach(link => {
+    if (link.target.uniqueId === node.uniqueId) {
+      // 高亮连接
+      svg.selectAll('line')
+        .filter(d => d.target.uniqueId === node.uniqueId && d.source.uniqueId === link.source.uniqueId)
+        .attr('opacity', 1);
+
+      // 高亮连接标签
+      svg.selectAll('text')
+        .filter(d => d === link)
+        .attr('opacity', 1);
+
+      // 高亮父节点
+      svg.selectAll('circle')
+        .filter(d => d.uniqueId === link.source.uniqueId)
+        .attr('opacity', 1);
+
+      // 高亮父节点标签
+      svg.selectAll('text.node-label')
+        .filter(d => d.uniqueId === link.source.uniqueId)
+        .attr('opacity', 1);
+    }
+  });
+};
+
+// 根据节点类型获取半径
+const getNodeRadius = (node) => {
+  switch (node.type) {
+    case 'all': return 20;
+    case 'category': return 15;
+    case 'part': return 12;
+    case 'depart': return 10;
+    default: return 8; // course1 和 course2
+  }
+};
+
+// 根据难度级别获取颜色
+const getNodeColor = (node) => {
+  // 对于没有难度级别的节点（如根节点和分类节点），保持原有颜色
+  if (!node.level) {
+    switch (node.type) {
+      case 'all': return '#ff7675'; // 红色
+      case 'category': return '#74b9ff'; // 蓝色
+      default: return '#a8a8a8'; // 灰色（默认）
+    }
+  }
+
+  // 根据难度级别设置颜色
+  switch (node.level) {
+    case '入门': return '#55efc4'; // 绿色
+    case '基础': return '#ffeaa7'; // 黄色
+    case '进阶': return '#fd79a8'; // 粉色
+    case '深入': return '#a29bfe'; // 紫色
+    case '高级': return '#e17055'; // 橙色
+    default: return '#a8a8a8'; // 灰色（默认）
+  }
+};
+
+// 获取难度级别的CSS类名
+const getLevelClass = (level) => {
+  switch (level) {
+    case '入门': return 'beginner';
+    case '基础': return 'basic';
+    case '进阶': return 'intermediate';
+    case '深入': return 'advanced';
+    case '高级': return 'expert';
+    default: return 'default';
+  }
+};
+
+// 获取节点相关资源（模拟数据，实际应用中可以从API获取）
+const getNodeResources = (node) => {
+  // 这里可以根据节点ID或其他属性获取相关资源
+  // 这里使用模拟数据
+  const resources = {
+    articles: [],
+    videos: []
+  };
+
+  // 根据节点类型和难度添加不同的资源
+  if (node.type === 'all') {
+    resources.articles.push(
+      { title: '知识图谱概述', url: '#' },
+      { title: '学习路径指南', url: '#' }
+    );
+  } else if (node.level === '入门') {
+    resources.articles.push(
+      { title: '入门教程：' + node.id, url: '#' },
+      { title: '快速上手指南', url: '#' }
+    );
+    resources.videos.push(
+      { title: '入门视频教程', embedUrl: '' }
+    );
+  } else if (node.level === '基础') {
+    resources.articles.push(
+      { title: '基础知识：' + node.id, url: '#' },
+      { title: '实践案例分析', url: '#' }
+    );
+  } else if (node.level === '进阶') {
+    resources.articles.push(
+      { title: '进阶技巧：' + node.id, url: '#' },
+      { title: '深度解析文章', url: '#' }
+    );
+    resources.videos.push(
+      { title: '进阶视频教程', embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
+    );
+  } else if (node.level === '深入' || node.level === '高级') {
+    resources.articles.push(
+      { title: '高级指南：' + node.id, url: '#' },
+      { title: '专家经验分享', url: '#' },
+      { title: '前沿研究动态', url: '#' }
+    );
+    resources.videos.push(
+      { title: '专家讲解视频', embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
+    );
+  }
+
+  return resources;
+};
+
+// 获取相关节点
+const getRelatedNodes = (node) => {
+  const relatedNodes = [];
+
+  // 查找直接相连的节点
+  links.forEach(link => {
+    if (link.source.uniqueId === node.uniqueId) {
+      const targetNode = nodes.find(n => n.uniqueId === link.target.uniqueId);
+      if (targetNode && !relatedNodes.some(n => n.uniqueId === targetNode.uniqueId)) {
+        relatedNodes.push(targetNode);
+      }
+    } else if (link.target.uniqueId === node.uniqueId) {
+      const sourceNode = nodes.find(n => n.uniqueId === link.source.uniqueId);
+      if (sourceNode && !relatedNodes.some(n => n.uniqueId === sourceNode.uniqueId)) {
+        relatedNodes.push(sourceNode);
+      }
+    }
+  });
+
+  // 限制返回的相关节点数量
+  return relatedNodes.slice(0, 5);
+};
+
+// 选择节点
+const selectNode = (node) => {
+  selectedNode.value = node;
+};
+
+// 重置缩放
+const resetZoom = () => {
+  svg.transition().duration(750).call(
+    zoom.transform,
+    d3.zoomIdentity,
+    d3.zoomTransform(svg.node()).invert([
+      graphContainer.value.clientWidth / 2,
+      graphContainer.value.clientHeight / 2
+    ])
+  );
+};
+
+// 监听 showLinkLabels 的变化
+watch(showLinkLabels, (newValue) => {
+  if (linkLabels) {
+    linkLabels.attr('opacity', newValue ? 1 : 0);
+  }
+});
+
+// 监听搜索词变化
+watch(searchTerm, () => {
+  handleSearchInput();
+});
+
+// 组件挂载后初始化小窗口图表
+onMounted(() => {
+  initMiniGraph();
+});
+
+// 组件卸载前清除定时器
+onBeforeUnmount(() => {
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value);
   }
 });
 </script>
 
 <style scoped>
-.knowledge-graph {
-  width: 100%;
-  height: 100vh;
-  background-color: #f9f9f9;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  overflow: hidden;
-  position: relative;
+.knowledge-graph-viewer {
+  font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
 }
 
-svg {
+/* 小窗口样式 */
+.mini-viewer {
+  position: relative;
+  width: 300px;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mini-viewer:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.mini-graph-container {
   width: 100%;
-  height: 100vh;
-  border: 1px solid #ccc;
+  height: 100%;
+  background-color: var(--background-color);
+}
+
+.mini-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.mini-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.mini-description {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.mini-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 旧的样式 */
+.knowledge-graph-container {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.light-mode .knowledge-graph-container {
+  --primary-color: #2563eb;
+  --primary-color-hover: #1d4ed8;
+  --background-color: #f8f9fa;
+  --card-background: #ffffff;
+  --text-color: #1f2937;
+  --border-color: #e5e7eb;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --sidebar-header: #f9fafb;
+  --sidebar-header-title: #333;
+  --sidebar-hover: #edf2fd;
+  --close-btn-color: #666;
+}
+
+.dark-mode .knowledge-graph-container {
+  --primary-color: #2563eb;
+  --primary-color-hover: #1d4ed8;
+  --background-color: #1b2535;
+  --card-background: #1b1b1b;
+  --text-color: #ffffff;
+  --border-color: #2c3e50;
+  --shadow-color: rgba(0, 0, 0, 0.517);
+  --sidebar-header: rgb(44, 57, 77);
+  --sidebar-header-title: #fbfbfb;
+  --sidebar-hover: #314361;
+  --close-btn-color: #eee;
+}
+
+.knowledge-graph-card {
+  background-color: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px var(--shadow-color);
+  min-width: 320px;
+  height: 240px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.knowledge-graph-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.card-content {
+  padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.knowledge-graph-card-embeded {
+  height: 100%;
+  display: flex;
+  width: 100%;
+  height: 200px;
+}
+
+.card-content h3 {
+  margin: 0 0 12px 0;
+  color: var(--text-color);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.mini-graph {
+  flex: 1;
+  background-color: var(--background-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.expand-hint {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0 0 0;
+  font-size: 14px;
+  color: var(--primary-color);
+}
+
+
+
+/* 全屏模式样式 */
+.fullscreen-viewer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--background-color);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fullscreen-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: var(--card-background);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.fullscreen-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--sidebar-header-title);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--close-btn-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.fullscreen-content {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
 }
 
 .controls {
-  margin-top: 50px;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 20px;
+  left: 20px;
   z-index: 10;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 12px;
+  max-width: 250px;
+  backdrop-filter: blur(64px);
+  -webkit-backdrop-filter: blur(64px);
+  border: 1px solid var(--border-color);
 }
 
-.node-details {
-  margin-top: 50px;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: white;
+.control-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 15px;
+  width: 100%;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.control-btn:hover {
+  background-color: var(--primary-color-hover);
+}
+
+.checkbox-control {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.checkbox-control input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.search-control {
+  margin-bottom: 15px;
+  display: flex;
+  gap: 8px;
+}
+
+.search-input {
+  width: 100%;
   padding: 10px;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
-.legend-toggle {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  z-index: 10;
+.search-input:focus {
+  outline: none;
+  border-color: #4a6cf7;
+}
+
+.legend-container {
+  border-top: 1px solid var(--border-color);
+  padding-top: 10px;
+}
+
+.legend-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px 0;
+  font-weight: 500;
+}
+
+.rotate-icon {
+  transform: rotate(180deg);
 }
 
 .legend {
-  position: absolute;
-  bottom: 50px;
-  left: 10px;
-  background-color: white;
-  padding: 10px;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin-top: 10px;
+  transition: max-height 0.3s ease;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  margin-bottom: 5px;
+  gap: 8px;
+  font-size: 12px;
+  margin-bottom: 8px;
 }
 
 .legend-color {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
 }
 
-input,
-button {
-  margin: 5px;
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.graph-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-button {
-  background-color: #42b883;
-  color: white;
+/* 侧边栏动画 */
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+/* 新的侧边栏样式 */
+.sidebar-details {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100%;
+  background-color: var(--background-color);
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-left: 1px solid var(--border-color);
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--sidebar-header);
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--sidebar-header-title);
+}
+
+.close-sidebar-btn {
+  background: none;
+  border: none;
   cursor: pointer;
+  color: var(--close-btn-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
 }
 
-button:hover {
-  background-color: #3ca576;
+.close-sidebar-btn:hover {
+  background-color: #f0f0f0;
+  color: #333;
 }
 
-.error-message {
-  position: absolute;
-  bottom: 20px;
-  left: 10px;
-  color: red;
-  font-weight: bold;
-}
-
-.error {
-  color: red;
-  font-weight: bold;
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
   padding: 20px;
 }
 
-.missing-nodes-warning {
-  margin-top: 50px;
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #fff3cd;
-  color: #856404;
-  padding: 10px;
+.sidebar-section {
+  margin-bottom: 24px;
+  background-color: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background-color: var(--sidebar-header);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-section-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--sidebar-header-title);
+}
+
+.sidebar-section-content {
+  padding: 15px;
+}
+
+.info-item {
+  margin-bottom: 10px;
+}
+
+.info-label {
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.info-badge {
+  display: inline-block;
+  padding: 4px 8px;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  max-width: 80%;
-  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.level-beginner {
+  background-color: #55efc4;
+  color: #2d3436;
+}
+
+.level-basic {
+  background-color: #ffeaa7;
+  color: #2d3436;
+}
+
+.level-intermediate {
+  background-color: #fd79a8;
+  color: white;
+}
+
+.level-advanced {
+  background-color: #a29bfe;
+  color: white;
+}
+
+.level-expert {
+  background-color: #e17055;
+  color: white;
+}
+
+.resource-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.resource-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: var(--background-color);
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.resource-link:hover {
+  background-color: var(--sidebar-hover);
+}
+
+.video-container {
+  margin-bottom: 15px;
+}
+
+.video-container h5 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.video-embed {
+  position: relative;
+  padding-bottom: 56.25%;
+  /* 16:9 比例 */
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.video-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.related-nodes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.related-node {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: var(--background-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.related-node:hover {
+  background-color: var(--sidebar-hover);
+}
+
+.node-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* 节点标签样式 */
+.node-label {
+  font-size: 10px;
+  fill: var(--text-color);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, fill 0.3s ease, font-weight 0.3s ease, font-size 0.3s ease;
+}
+
+/* 节点样式 */
+.node {
+  transition: r 0.3s ease, opacity 0.3s ease, stroke-width 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
 }
 </style>

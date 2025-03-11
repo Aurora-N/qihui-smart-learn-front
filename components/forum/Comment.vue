@@ -46,7 +46,10 @@ md.use(
 
 // Use `md.renderAsync` instead of `md.render`
 const renderedContent = await md.renderAsync(props.content)
-const finalContent = renderedContent.replace(/#FAFAFA/g, '#F8FAFC'); // 替换代码区背景色
+
+const codeColor = computed(() => useColorMode().preference === 'light' ? '#F8FAFC' : '#1E293B')
+
+const finalContent = renderedContent.replace(/#FAFAFA/g, codeColor); // 替换代码区背景色
 </script>
 
 <template>

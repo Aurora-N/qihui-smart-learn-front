@@ -1,13 +1,22 @@
 <template>
   <div class="search-container">
-    <!-- Search trigger button -->
-    <button class="search-trigger" @click="openSearch">
+    <!-- Desktop search trigger button -->
+    <button class="search-trigger desktop-search" @click="openSearch">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
       <span>搜索</span>
+    </button>
+
+    <!-- Mobile search icon button -->
+    <button class="mobile-search-button" @click="openSearch">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
     </button>
 
     <!-- Teleport the modal to the body -->
@@ -99,23 +108,33 @@ const handleKeyDown = (e) => {
   position: relative;
 }
 
-/* Search trigger button */
+/* Desktop search trigger button */
 .search-trigger {
   display: flex;
   align-items: center;
   width: 16rem;
   gap: 8px;
   background: none;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 8px 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  color: #333;
+  color: var(--color-text);
 }
 
 .search-trigger:hover {
-  background-color: #f5f5f5;
+  background-color: var(--color-background-hover);
+}
+
+/* Mobile search button */
+.mobile-search-button {
+  display: none;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: var(--color-text);
 }
 
 .search-icon {
@@ -163,7 +182,7 @@ const handleKeyDown = (e) => {
   position: relative;
   width: 90%;
   max-width: 600px;
-  background-color: white;
+  background-color: var(--color-background);
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   margin-top: 80px;
@@ -184,14 +203,14 @@ const handleKeyDown = (e) => {
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .search-header h2 {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text);
 }
 
 .close-button {
@@ -208,7 +227,7 @@ const handleKeyDown = (e) => {
 }
 
 .close-button:hover {
-  background-color: #f5f5f5;
+  background-color: var(--color-background-hover);
 }
 
 /* Search input */
@@ -222,26 +241,38 @@ const handleKeyDown = (e) => {
   left: 30px;
   top: 50%;
   transform: translateY(-50%);
-  color: #666;
+  color: var(--color-text-2);
 }
 
 .search-input {
   width: 100%;
   padding: 16px 16px 16px 50px;
-  border: 1px solid #eee;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 16px;
   outline: none;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background: var(--color-background);
 }
 
 .search-input:focus {
   border-color: #4a90e2;
   box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  color: var(--color-text);
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .desktop-search {
+    display: none;
+  }
+
+  .mobile-search-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .search-content {
     width: 95%;
     margin-top: 60px;

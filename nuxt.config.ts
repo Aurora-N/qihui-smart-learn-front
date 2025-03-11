@@ -12,7 +12,9 @@ export default defineNuxtConfig({
     "@element-plus/nuxt",
     'nuxt-shiki',
     '@vueuse/nuxt',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
+    '@nuxtjs/color-mode'
   ],
   // shiki: {
   //   theme: 'material-theme-lighter',
@@ -39,5 +41,8 @@ export default defineNuxtConfig({
         }
       },
     },
+  },
+  build: {
+    transpile: ['jsencrypt'],
   }
 })

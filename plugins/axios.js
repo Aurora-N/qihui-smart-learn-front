@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useUserStore } from '~/stores/userStore'
 
 export default defineNuxtPlugin((nuxtApp) => {
     const apiClient = axios.create({
@@ -11,13 +12,13 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     // 请求拦截器：自动添加 Token
     apiClient.interceptors.request.use((config) => {
-        // // 从pinia获取token数据
-        // const userStore = useUserStore()
-        // // 拼接token数据
-        // const token = userStore.userInfo.token
-        const token = useCookie('token').value // 从 Cookie 获取 token
+        // 从pinia获取token数据
+        const userStore = useUserStore()
+        // 拼接token数据
+        const token = userStore.userInfo.token
         if (token) {
-            config.headers.Authorization = `Bearer ${token}`
+            console.log('token login')
+            config.headers.Authorization = `${token}`
         }
         return config
     }, (error) => {
@@ -28,10 +29,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     apiClient.interceptors.response.use((response) => {
         return response.data;
     }, (error) => {
-        // const userStore = useUserStore()
+        const userStore = useUserStore()
         if (error.response?.status === 401) {
-            console.warn('登录失败，请重新登陆');
-            useCookie('token').value = null // 清除 token
+            console.warn('登录失败，请重新登陆')
+            userStore.clearUserInfo()
             $router.push('/login')
         }
         return Promise.reject(error)

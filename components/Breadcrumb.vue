@@ -6,28 +6,30 @@ const props = defineProps({
     type: String,
     default: ''
   },
-  parent: {
-    type: Object,
-    default: () => ({
-      title: '',
-      link: ''
-    })
+  parents: { //除了根目录外的父级目录
+    type: Array,
+    default: () => []
   },
   root: {
     type: Object,
     default: () => ({
       title: '文章',
-      link: '/posts'
+      link: '/articles'
     })
   }
 })
+
+onMounted
+  (() => console.log(props.parents))
 </script>
 
 <template>
   <div class="breadcrumb">
     <el-breadcrumb :separator-icon="ArrowRight">
       <el-breadcrumb-item :to="{ path: props.root.link }">{{ props.root.title }}</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: props.parent.link }">{{ props.parent.title }}</el-breadcrumb-item>
+      <el-breadcrumb-item v-for="(parent, index) in props.parents"
+        :to="`/articles/${props.parents.slice(0, index + 1).join('/')}`">{{ parent
+        }}</el-breadcrumb-item>
       <el-breadcrumb-item>{{ props.currentTitle }}</el-breadcrumb-item>
     </el-breadcrumb>
   </div>

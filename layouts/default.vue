@@ -42,7 +42,7 @@ const footerColumns = [
 <template>
   <div>
     <Navbar />
-    <NuxtPage />
+    <slot />
     <Footer :columns="footerColumns" />
   </div>
 </template>

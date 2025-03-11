@@ -30,8 +30,13 @@ defineProps({
 </script>
 
 <style scoped>
-.footer {
+.light-mode .footer {
   background: #f9f9fb;
+  padding: 48px 24px;
+}
+
+.dark-mode .footer {
+  background: #313131;
   padding: 48px 24px;
 }
 
@@ -75,8 +80,14 @@ defineProps({
   margin-bottom: 8px;
 }
 
-.footer-column a {
+.light-mode .footer-column a {
   color: #404040;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.dark-mode .footer-column a {
+  color: #cdcdcd;
   text-decoration: none;
   font-size: 14px;
 }

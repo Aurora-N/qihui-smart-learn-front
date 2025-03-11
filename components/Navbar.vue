@@ -1,29 +1,24 @@
 <script setup>
-import { ChevronDown as ChevronDownIcon, Settings as SettingsIcon } from 'lucide-vue-next'
+import { ChevronDown as ChevronDownIcon, Settings as SettingsIcon, Menu as MenuIcon, X as XIcon, Sun as LightIcon, Moon as DarkIcon } from 'lucide-vue-next'
+import ThemeToggle from './ThemeToggle.vue'
 
-const isLogin = ref(true);
+const isMobileMenuOpen = ref(false)
+const userStore = useUserStore()
+const router = useRouter()
 
-const userInfo = ref({})
-
-const getUserProfile = async (userId) => {
-  const res = await {
-    data: {
-      userId: '114514',
-      username: '野兽先辈',
-      avatar: 'https://th.bing.com/th/id/R.302d3d33b7517b5ba691f0121f3cb70c?rik=DtmCYVM%2bGKcuCg&riu=http%3a%2f%2fe3f49eaa46b57.cdn.sohucs.com%2f2022%2f1%2f29%2f18%2f8%2fMTAwMTM1XzE2NDM0NTA5MzQ2ODc%3d.png&ehk=89geiY%2fK8bTH59efI2qV8vLTX5do6lx%2f4pkBusvICd8%3d&risl=&pid=ImgRaw&r=0',
-      selfDescription: '逸一时，误一世',
-      registerDate: '2019年8月10日',
-      counts: {
-        reply: 2151,
-        posts: 346,
-        likes: 5,
-        mentioned: 14
-      }
-    }
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+  if (isMobileMenuOpen.value) {
+    document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+  } else {
+    document.body.style.overflow = ''; // Restore scrolling
   }
-  userInfo.value = res.data
 }
-onMounted(() => getUserProfile())
+
+const logout = () => {
+  userStore.clearUserInfo()
+  router.replace({ path: '/' })
+}
 </script>
 
 <template>
@@ -32,17 +27,14 @@ onMounted(() => getUserProfile())
     <div class="nav-left">
       <a href="/" class="logo">LOGO</a>
       <div class="nav-links">
+        <NuxtLink to="/learn" class="nav-button">学习方向</NuxtLink>
         <Dropdown open-on="hover">
           <template #trigger>
-            <NuxtLink to="/learn" class="nav-button">学习方向</NuxtLink>
+            <NuxtLink to="/articles" class="nav-button">文章</NuxtLink>
           </template>
-          <a href="#">计算机基础</a>
-          <a href="#">数据结构与算法分析</a>
-          <a href="#">Web应用开发</a>
-          <a href="#">计算机网络</a>
-          <a href="#">操作系统</a>
+          <NuxtLink to="/articles/前端">前端</NuxtLink>
+          <NuxtLink to="/articles/后端">后端</NuxtLink>
         </Dropdown>
-        <NuxtLink to="/posts" class="nav-button">文章</NuxtLink>
         <NuxtLink to="/chat" class="nav-button">在线答疑</NuxtLink>
         <NuxtLink to="/forum" class="nav-button">论坛</NuxtLink>
         <Dropdown open-on="hover">
@@ -56,36 +48,126 @@ onMounted(() => getUserProfile())
     </div>
 
     <div class="nav-right">
-      <!-- <div class="search-container">
-          <input type="search" placeholder="搜索" class="search-input" @focus="openSearchModal">
-        </div> -->
       <SearchModal @search="handleSearch" />
-      <Dropdown open-on="click">
-        <template #trigger>
-          <button class="nav-button">
-            简体中文
-            <chevron-down-icon class="icon-small" />
-          </button>
-        </template>
-        <a href="#">English</a>
-        <a href="#">简体中文</a>
-      </Dropdown>
-      <button class="nav-button" @click="$router.push('/user/settings/profile')">
-        <settings-icon class="icon-small" />
+
+      <!-- Desktop language and user area -->
+      <div class="desktop-controls">
+        <!-- <Dropdown open-on="click">
+          <template #trigger>
+            <button class="nav-button">
+              简体中文
+              <chevron-down-icon class="icon-small" />
+            </button>
+          </template>
+          <a href="#">English</a>
+          <a href="#">简体中文</a>
+        </Dropdown> -->
+        <ThemeToggle class="nav-button" />
+        <div class="user" v-if="userStore.userInfo.data">
+          <el-dropdown class="dropdown">
+            <NuxtLink :to="`/user/${userStore.userInfo.data.userId}`" class="avatar-link">
+              <el-avatar :size="35" :src="userStore.userInfo.data.avatar" class="avatar"></el-avatar>
+            </NuxtLink>
+            <template #dropdown>
+              <el-dropdown-menu class="dropdown-menu">
+                <el-dropdown-item class="dropdown-item" @click="$router.push('/user/settings/profile')">
+                  <IconsSettings />账号配置
+                </el-dropdown-item>
+                <el-dropdown-item class="dropdown-item" @click="logout">
+                  <IconsLogout />退出登录
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
+        <div class="user" v-else>
+          <NuxtLink to="/signup" class="nav-button">注册</NuxtLink>
+          <NuxtLink to="/login" class="login-button">登录</NuxtLink>
+        </div>
+      </div>
+
+      <!-- Mobile menu button -->
+      <button class="mobile-menu-button" @click="toggleMobileMenu">
+        <menu-icon class="icon-small" />
       </button>
-      <div class="user" v-if="isLogin">
-        <NuxtLink :to="`/user/${userInfo.userId}`" class="avatar-link">
-          <el-avatar :size="35" :src="userInfo.avatar" class="avatar"></el-avatar>
-        </NuxtLink>
-      </div>
-      <div class="user" v-else>
-        <NuxtLink to="/signup" class="nav-button">注册</NuxtLink>
-        <NuxtLink to="/login" class="login-button">登录</NuxtLink>
-      </div>
     </div>
   </nav>
 
-  <!-- <search-modal :is-open="isSearchModalOpen" @close="closeSearchModal" /> -->
+  <!-- Mobile side menu -->
+  <div class="mobile-menu-overlay" :class="{ 'active': isMobileMenuOpen }" @click="toggleMobileMenu"></div>
+  <div class="mobile-menu" :class="{ 'active': isMobileMenuOpen }">
+    <div class="mobile-menu-header">
+      <a href="/" class="logo">LOGO</a>
+      <button class="close-menu-button" @click="toggleMobileMenu">
+        <x-icon class="icon-small" />
+      </button>
+    </div>
+
+    <div class="mobile-menu-content">
+      <div class="mobile-nav-links">
+        <NuxtLink to="/learn" class="mobile-nav-button">学习方向</NuxtLink>
+        <NuxtLink to="/articles" class="mobile-nav-button">文章</NuxtLink>
+        <div class="mobile-submenu">
+          <NuxtLink to="/articles/前端">前端</NuxtLink>
+          <NuxtLink to="/articles/后端">后端</NuxtLink>
+        </div>
+        <NuxtLink to="/chat" class="mobile-nav-button">在线答疑</NuxtLink>
+        <NuxtLink to="/forum" class="mobile-nav-button">论坛</NuxtLink>
+
+        <NuxtLink to="/about" class="mobile-nav-button">关于</NuxtLink>
+        <div class="mobile-submenu">
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+
+      <div class="mobile-menu-divider"></div>
+
+      <!-- Language selector in mobile menu -->
+      <!-- <div class="mobile-language">
+        <div class="mobile-section-title">语言</div>
+        <div class="mobile-language-options">
+          <a href="#" class="mobile-language-option active">简体中文</a>
+          <a href="#" class="mobile-language-option">English</a>
+        </div>
+      </div> -->
+
+      <!-- <div class="mobile-menu-divider"></div> -->
+
+      <!-- User area in mobile menu -->
+      <div class="mobile-user-area">
+        <div class="mobile-section-title">用户</div>
+        <template v-if="userStore.userInfo.data">
+          <div class="mobile-user-info">
+            <NuxtLink :to="`/user/${userStore.userInfo.data.userId}`" class="mobile-user-profile">
+              <el-avatar :size="50" :src="userStore.userInfo.data.avatar" class="mobile-avatar"></el-avatar>
+              <div class="mobile-user-details">
+                <div class="mobile-username">{{ userStore.userInfo.data.userName }}</div>
+                <div class="mobile-user-description">{{ userStore.userInfo.data.selfDescription }}</div>
+              </div>
+            </NuxtLink>
+            <div class="mobile-auth-buttons">
+              <button class="mobile-settings-button" @click="$router.push('/user/settings/profile')">
+                <IconsSettings />
+                <span>设置</span>
+              </button>
+              <button class="mobile-settings-button" @click="logout">
+                <IconsLogout />
+                <span>退出</span>
+              </button>
+            </div>
+
+          </div>
+        </template>
+        <template v-else>
+          <div class="mobile-auth-buttons">
+            <NuxtLink to="/login" class="mobile-login-button">登录</NuxtLink>
+            <NuxtLink to="/signup" class="mobile-signup-button">注册</NuxtLink>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -99,8 +181,8 @@ onMounted(() => getUserProfile())
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid #e5e7eb;
-  background: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-background-blur);
   backdrop-filter: blur(64px);
   -webkit-backdrop-filter: blur(64px);
 }
@@ -133,12 +215,13 @@ onMounted(() => getUserProfile())
   border: none;
   cursor: pointer;
   font-size: 0.875rem;
-  color: #2c3e50;
+  color: var(--color-text);
   text-decoration: none;
+  transition: all 0.3s ease-in-out;
 }
 
 .nav-button:hover {
-  background-color: #f3f4f6;
+  background-color: var(--color-background-hover);
   border-radius: 0.375rem;
 }
 
@@ -156,32 +239,257 @@ onMounted(() => getUserProfile())
 
 .user .avatar-link:hover {
   line-height: 0;
-  outline: 4px solid rgb(231, 236, 243);
+  outline: 4px solid var(--color-background-hover);
 }
 
-.search-container {
-  position: relative;
-  width: 16rem;
+:deep(.dropdown-item) {
+  border-radius: 6px;
+  gap: 0.5rem;
+  margin: 2px 4px;
 }
 
-.search-input {
-  width: 100%;
-  padding: 0.5rem 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
+:deep(.dropdown-item:hover) {
+  color: #2563eb;
+  background-color: var(--color-background);
 }
 
 .login-button {
   padding: 0.5rem 1rem;
-  background-color: #2563eb;
+  background-color: var(--main-color);
   color: white;
   border: none;
   border-radius: 0.375rem;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .login-button:hover {
-  background-color: #1d4ed8;
+  background-color: var(--main-color-hover-darker);
+}
+
+/* Mobile menu button */
+.mobile-menu-button {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+/* Mobile menu */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 60;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 300px;
+  height: 100%;
+  background-color: var(--color-background);
+  z-index: 70;
+  transition: right 0.3s ease;
+  overflow-y: auto;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-menu.active {
+  right: 0;
+}
+
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.close-menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.mobile-menu-content {
+  padding: 1rem;
+}
+
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mobile-nav-button {
+  display: block;
+  padding: 0.75rem 0;
+  font-size: 1rem;
+  color: var(--color-text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-submenu {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.mobile-submenu a {
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
+  color: #4b5563;
+  text-decoration: none;
+}
+
+.mobile-menu-divider {
+  height: 1px;
+  background-color: var(--color-devider);
+  margin: 1rem 0;
+}
+
+.mobile-section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.mobile-language-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mobile-language-option {
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  text-decoration: none;
+  color: #4b5563;
+}
+
+.mobile-language-option.active {
+  background-color: #f3f4f6;
+  color: #2563eb;
+}
+
+.mobile-user-info {
+  margin-top: 0.5rem;
+}
+
+.mobile-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.mobile-user-profile:hover {
+  background-color: var(--color-border-hover);
+}
+
+.mobile-user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-username {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.mobile-user-description {
+  font-size: 0.75rem;
+  color: var(--color-text-2);
+}
+
+.mobile-settings-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: none;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  width: 100%;
+  cursor: pointer;
+  color: #4b5563;
+}
+
+.mobile-settings-button:hover {
+  background-color: #f3f4f6;
+}
+
+.mobile-auth-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.mobile-login-button {
+  width: 100%;
+  display: block;
+  padding: 0.5rem;
+  background-color: #2563eb;
+  color: white;
+  text-align: center;
+  border-radius: 0.375rem;
+  text-decoration: none;
+}
+
+.mobile-signup-button {
+  width: 100%;
+  display: block;
+  padding: 0.5rem;
+  background-color: white;
+  color: #2563eb;
+  text-align: center;
+  border: 1px solid #2563eb;
+  border-radius: 0.375rem;
+  text-decoration: none;
+}
+
+/* Desktop controls (language and user area) */
+.desktop-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .desktop-controls {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: block;
+  }
 }
 
 /* 使用深度选择器来影响Dropdown内部的a标签样式 */
@@ -196,4 +504,8 @@ onMounted(() => getUserProfile())
   background-color: #f3f4f6;
   border-radius: 0.375rem;
 }
+
+/* .icon-small {
+  transition: all 0.3s ease-in-out;
+} */
 </style>

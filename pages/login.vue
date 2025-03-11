@@ -10,11 +10,11 @@
         <el-button :icon="Close" circle class="close-btn" @click="goBack" />
       </div>
 
-      <el-input v-model="username" placeholder="请输入用户名" size="large" class="input-bar" />
+      <el-input v-model="account" placeholder="请输入用户名" size="large" class="input-bar" />
 
       <el-input v-model="password" placeholder="请输入密码" size="large" class="input-bar" show-password />
 
-      <el-button type="primary" size="large" class="submit-btn">
+      <el-button type="primary" size="large" class="submit-btn" @click="login">
         登录
       </el-button>
 
@@ -52,13 +52,15 @@
 </template>
 
 <script setup>
-import {
-  Close
-} from '@element-plus/icons-vue'
+import { Close } from '@element-plus/icons-vue'
+import { useUserStore } from '~/stores/userStore';
 
 const router = useRouter()
 
-const username = ref('')
+// 定义用户变量存储
+const userStore = useUserStore()
+
+const account = ref('')
 
 const password = ref('')
 
@@ -68,6 +70,14 @@ definePageMeta({
 
 const goBack = () => {
   router.push('/')
+}
+
+// 登录
+const login = async () => {
+  await userStore.userLogin({ account: account.value, password: password.value })
+  const { status, msg } = await userStore.getUserInfo()
+  ElMessage({ type: status, message: msg })
+  router.replace({ path: '/' })
 }
 </script>
 

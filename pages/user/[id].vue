@@ -1,25 +1,27 @@
 <!-- 用户个人页面 -->
 <script setup>
+import { useUserApi } from '~/api/user'
+
 const route = useRoute()
 const userId = route.params.id
-const userInfo = ref({})
+const userApi = useUserApi()
+const userInfo = ref({
+  userId: userId,
+  userName: "",
+  email: "",
+  avatar: "",
+  selfDescription: "",
+  registerDate: "",
+  counts: {
+    reply: 0,
+    topics: 0,
+    follower: 0,
+    following: 0
+  }
+})
 
 const getUserProfile = async (userId) => {
-  const res = await {
-    data: {
-      userId: '114514',
-      userName: '野兽先辈',
-      avatar: 'https://th.bing.com/th/id/R.302d3d33b7517b5ba691f0121f3cb70c?rik=DtmCYVM%2bGKcuCg&riu=http%3a%2f%2fe3f49eaa46b57.cdn.sohucs.com%2f2022%2f1%2f29%2f18%2f8%2fMTAwMTM1XzE2NDM0NTA5MzQ2ODc%3d.png&ehk=89geiY%2fK8bTH59efI2qV8vLTX5do6lx%2f4pkBusvICd8%3d&risl=&pid=ImgRaw&r=0',
-      selfDescription: '逸一时，误一世',
-      registerDate: '2019年8月10日',
-      counts: {
-        reply: 2151,
-        posts: 346,
-        likes: 5,
-        mentioned: 14
-      }
-    }
-  }
+  const res = await userApi.getUserInfo(userId)
   userInfo.value = res.data
 
   // 动态更新标题
@@ -30,13 +32,10 @@ const getUserProfile = async (userId) => {
 
 import {
   Timer,
-  Link,
-  Document,
   ChatDotRound,
   Menu,
   Star,
   User,
-  Warning,
   Back,
   MoreFilled
 } from '@element-plus/icons-vue';
@@ -111,14 +110,14 @@ const selectedNav = ref('reply');
               <ChatDotRound />
             </el-icon>
             <span>回复</span>
-            <span class="count">2151</span>
+            <span class="count">{{ userInfo.counts.reply }}</span>
           </div>
           <div class="nav-item" :class="{ active: selectedNav === 'posts' }" @click="selectedNav = 'posts'">
             <el-icon>
               <Menu />
             </el-icon>
             <span>主题</span>
-            <span class="count">346</span>
+            <span class="count">{{ userInfo.counts.topics }}</span>
           </div>
           <div class="nav-item" :class="{ active: selectedNav === 'likes' }" @click="selectedNav = 'likes'">
             <el-icon>

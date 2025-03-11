@@ -182,7 +182,7 @@ definePageMeta({
   background-color: #e0e0e0;
 }
 
-.tags-container {
+.light-mode .tags-container {
   --primary: oklch(.7 .14 var(--hue));
   --page-bg: oklch(.95 .01 var(--hue));
   --card-bg: white;
@@ -194,5 +194,19 @@ definePageMeta({
   --btn-plain-bg-active: oklch(.98 .01 var(--hue));
   --btn-card-bg-hover: oklch(.98 .005 var(--hue));
   --btn-card-bg-active: oklch(.9 .03 var(--hue));
+}
+
+.dark-mode .tags-container {
+  --primary: oklch(.75 .14 var(--hue));
+  --page-bg: oklch(.16 .014 var(--hue));
+  --card-bg: oklch(.23 .015 var(--hue));
+  --btn-content: oklch(.75 .1 var(--hue));
+  --btn-regular-bg: oklch(.33 .035 var(--hue));
+  --btn-regular-bg-hover: oklch(.38 .04 var(--hue));
+  --btn-regular-bg-active: oklch(.43 .045 var(--hue));
+  --btn-plain-bg-hover: oklch(.3 .035 var(--hue));
+  --btn-plain-bg-active: oklch(.27 .025 var(--hue));
+  --btn-card-bg-hover: oklch(.3 .03 var(--hue));
+  --btn-card-bg-active: oklch(.35 .035 var(--hue));
 }
 </style>

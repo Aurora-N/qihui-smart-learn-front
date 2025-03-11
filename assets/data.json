@@ -1,0 +1,1296 @@
+[
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "前端基础核心"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "HTML5",
+      "content": "超文本标记语言"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "前端基础核心"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "CSS3",
+      "content": "层叠样式表"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "前端基础核心"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "JavaScript(E6+)",
+      "content": "Web的编程语言"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "前端基础核心"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "TypeScript",
+      "content": "JavaScript的一个超集，支持ECMAScript6标准"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "前端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "React",
+      "content": "用于构建用户界面的JavaScript库"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "前端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Vue3",
+      "content": "一套构建用户界面的渐进式框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "前端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Angular",
+      "content": "一款开源JavaScript库，由Google维护，用来协助单一页面应用程序运行"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "打包工具"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "Vite前端",
+      "content": "一种基于原生ES模块的前端构建工具"
+    }
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "打包工具"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "Webpack",
+      "content": "一个用于现代JavaScript应用程序的静态模块打包工具"
+    }
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "打包工具"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "Rollup",
+      "content": "一个JavaScript模块打包器"
+    }
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "包管理"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "npm",
+      "content": "是一个JavaScript包管理工具，也是Node.js的默认包管理器"
+    }
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "包管理"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "yarn",
+      "content": "一款facebook发布的取代npm的包管理工具"
+    }
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "包管理"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "pnpm",
+      "content": "更高性能的npm"
+    }
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "代码规范"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "ESLint+Prettier",
+      "content": "代码格式化与静态分析及规则检查，代码风格与质量的自动化保证"
+    }
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "状态管理"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Redux",
+      "content": "JavaScript状态容器，提供可预测化的状态管理"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "状态管理"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Pinia",
+      "content": "一个Vue状态管理工具"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "状态管理"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Zustand",
+      "content": "一个轻量级的React状态管理库"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "状态管理"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "RxJS",
+      "content": "一个使用Observables的响应式编程的库，用observable序列来编写异步和基于事件的程序"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "UI组件与样式方案"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Tailwind CSS",
+      "content": "功能丰富、实用性优先的CSS框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "UI组件与样式方案"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Element Plus",
+      "content": "基于Vue3和Vite的组件库，提供了一套丰富的UI组件"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "SSR/SSG"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "SSR/SSG",
+      "content": "服务端渲染与静态站点生成"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "SSR/SSG"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Next.js",
+      "content": "用于构建全栈Web应用的React框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "SSR/SSG"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Nuxt.js",
+      "content": "一个基于Vue.js的轻量级应用框架，可用来创建服务端渲染(SSR)应用"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "SSR/SSG"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Astro",
+      "content": "适合构建博客、营销网站、电子商务网站等内容驱动网站的Web框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "深入",
+      "id": "微前端"
+    },
+    "depart": null,
+    "course1": {
+      "level": "深入",
+      "id": "qiankun",
+      "content": "基于single-spa的微前端实现库，是一套微前端框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "深入",
+      "id": "Module Federation"
+    },
+    "depart": null,
+    "course1": {
+      "level": "深入",
+      "id": "Module Federation",
+      "content": "Webpack5引入的新特性，允许不同web应用运行时共享代码"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "深入",
+      "id": "WebAssembly"
+    },
+    "depart": null,
+    "course1": {
+      "level": "深入",
+      "id": "WebAssembly",
+      "content": "一种低级的类汇编语言，具有紧凑的二进制格式，能够以接近原生的性能在web浏览器中运行"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "后端基础语言"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "Java",
+      "content": "一种可以撰写跨平台应用软件的面向对象的程序设计语言"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "后端基础语言"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "Python",
+      "content": "Python3.x版本，一门面向对象、解释性计算机编程语言"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "后端基础语言"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "Go",
+      "content": "Google推出的一种全新的编程语言"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "后端基础语言"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "Node.js",
+      "content": "运行在服务端的JavaScript"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "后端基础语言"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "Rust",
+      "content": "一种高效、可靠的通用高级语言"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "后端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Spring Boot3 + Spring Cloud",
+      "content": "一套广泛被应用的后端框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "后端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Django",
+      "content": "开放源代码的Web应用框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "后端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Flask",
+      "content": "一个轻量级Web应用框架，是python web开发领域最流行的框架之一"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "后端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Gin",
+      "content": "一个JSON-API框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "后端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "FastAPI",
+      "content": "一个用于构建API的现代、快速（高性能）的web框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "后端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Echo + Fiber",
+      "content": "高性能切快速的HTTP框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "后端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "ASP.NET Core",
+      "content": "微软推出的全新一代的跨平台的ASP.NET框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "后端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Express.js",
+      "content": "一个简洁而灵活的node.js Web应用框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "后端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Actix",
+      "content": "一个强大、高效的Rust Web异步并发框架，基于actor模型设计"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "后端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Rocket",
+      "content": "现代化的Rust Web框架"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "数据库"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "MySQL",
+      "content": "一个关系型数据库管理系统"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "数据库"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "MongoDB",
+      "content": "当前非常流行的一种非关系型数据库"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "数据库"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Redis",
+      "content": "一个高性能的key-value数据库"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "数据库"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "SQLite",
+      "content": "一款轻型数据库"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "数据库"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "InfluxDB",
+      "content": "一个开源的时序数据库"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "数据库"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Neo4j",
+      "content": "一个高性能的NOSQL图形数据库"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "数据库"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Elasticsearch",
+      "content": "一个基于Lucene的搜索服务器，提供分布式多用户能力的全文搜索引擎"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "数据库"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Amazon Aurora",
+      "content": "亚马逊云科技提供的云原生数据库服务"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "API开发与通信"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "RESTful API",
+      "content": "REST架构风格的API（应用程序编程接口）"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "API开发与通信"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "GraphQL",
+      "content": "一种应用于API（应用程序编程接口）的查询语言"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "API开发与通信"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "gRPC",
+      "content": "一个开源高性能远程过程调用（RPC）框架，可以高效连接数据中心内和跨数据中心的服务"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "API开发与通信"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "WebSocket",
+      "content": "一种在单个TCP连接上进行全双工通信的协议"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "缓存与消息队列"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Redis",
+      "content": "一个高性能的key-value数据库"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "缓存与消息队列"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Kafka",
+      "content": "由Apache软件基金会开发的一个开源流处理平台"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "缓存与消息队列"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "RabbitMQ",
+      "content": "实现楽高级消息队列协议（AMQP）的开源消息代理软件"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "缓存与消息队列"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "NATS",
+      "content": "开源云原生消息系统"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "容器化与云原生"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Docker",
+      "content": "基于Go语言的开源的应用容器引擎"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "容器化与云原生"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "K8s",
+      "content": "kubernetes，一个开源的用于管理云平台中多个主机上的容器化的应用"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "容器化与云原生"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Azure Functions",
+      "content": "一种基于云的计算服务，为Azure提供事件驱动的可缩放无服务器计算"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "容器化与云原生"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "AWS Lambda",
+      "content": "一个用于部署代码、管理服务以及监控轻量级服务运行状态的细粒度方法"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "容器化与云原生"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Istio",
+      "content": "一个开源的服务网络"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "深入",
+      "id": "架构模式"
+    },
+    "depart": null,
+    "course1": {
+      "level": "深入",
+      "id": "Controller-Service-DAO",
+      "content": "“表现层-业务逻辑层-数据访问层”三层架构"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "深入",
+      "id": "架构模式"
+    },
+    "depart": null,
+    "course1": {
+      "level": "深入",
+      "id": "Spring Cloud",
+      "content": "微服务架构的一套技术栈"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "深入",
+      "id": "架构模式"
+    },
+    "depart": null,
+    "course1": {
+      "level": "深入",
+      "id": "CQRS + Event Sourcing",
+      "content": "命令查询责任分离与事件溯源，用于处理高并发场景和复杂业务逻辑"
+    },
+    "course2": null
+  },
+  {
+    "all": {
+      "id": "技术改变生活"
+    },
+    "category": {
+      "id": "后端"
+    },
+    "part": {
+      "level": "深入",
+      "id": "架构模式"
+    },
+    "depart": null,
+    "course1": {
+      "level": "深入",
+      "id": "Apache Spark",
+      "content": "专为大规模数据处理而设计的快速通用的计算引擎"
+    },
+    "course2": null
+  }
+]

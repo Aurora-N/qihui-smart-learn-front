@@ -18,8 +18,20 @@ const props = defineProps({
 </template>
 
 <style scoped>
+.light-mode .banner {
+  --banner-color: oklch(.97 .01 var(--hue));
+  --title: #374151;
+  --sub-title: #6b7280;
+}
+
+.dark-mode .banner {
+  --banner-color: oklch(.20 .014 var(--hue));
+  --title: rgb(248, 250, 252);
+  --sub-title: rgb(231, 236, 243);
+}
+
 .banner {
-  background-color: oklch(.97 .01 var(--hue));
+  background-color: var(--banner-color);
   /* #f3f4f6 */
   padding: 3rem 1rem;
   text-align: center;
@@ -28,12 +40,12 @@ const props = defineProps({
 .banner-title {
   font-size: 1.875rem;
   font-weight: bold;
-  color: #374151;
+  color: var(--title);
   margin-bottom: 0.5rem;
 }
 
 .banner-subtitle {
-  color: #6b7280;
+  color: var(--sub-title);
   margin-bottom: 1rem;
 }
 </style>

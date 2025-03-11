@@ -1,53 +1,119 @@
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  --white: #ffffff;
+  --white-soft: #f8f8f8;
+  --white-mute: #f2f2f2;
+  --white-blur: rgba(255, 255, 255, 0.8);
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  --black: #181818;
+  --black-soft: #222222;
+  --black-mute: #282828;
+  --black-blur: rgba(1, 1, 1, 0.5);
 
-  --vt-c-indigo: #2c3e50;
+  --indigo: #2c3e50;
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+  --divider-light-1: rgba(60, 60, 60, 0.29);
+  --divider-light-2: rgba(60, 60, 60, 0.12);
+  --divider-dark-1: rgba(84, 84, 84, 0.65);
+  --divider-dark-2: rgba(84, 84, 84, 0.48);
 
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
-}
+  --text-light-1: var(--indigo);
+  --text-light-2: rgba(60, 60, 60, 0.66);
+  --text-dark-1: var(--white);
+  --text-dark-2: rgb(241, 245, 249);
+  
+  --marker-light: rgb(210, 215, 221);
+  --marker-dark: rgb(241, 245, 249);
 
-/* semantic color variables for this project */
-:root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+  --main-color: #2563eb;
+  --main-color-hover-darker: #1d4ed8;
+  --main-color-hover-lighter: #1d4ed8;
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
-
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --link-color: #0069c2;
 
   --section-gap: 160px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
+/* semantic color variables for this project */
+/* Define light mode colors */
+.light-mode {
+  --color-background: #fff;
+  --color-background-soft: var(--white-soft);
+  --color-background-mute: var(--white-mute);
+  --color-background-blur: var(--white-blur);
+  --color-background-hover: #f5f5f5;
+  --color-background-quote: rgb(248, 250, 252);
+  --color-border-quote: rgb(231, 236, 243);
 
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
+  --color-border: var(--divider-light-2);
+  --color-border-hover: var(--divider-light-2);
 
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
-  }
+  --color-heading: var(--text-light-1);
+  --color-text: var(--text-light-1);
+  --color-text-2: #6b7280;
+
+  --color-devider: var(--divider-light-2);
+  --color-marker: var(--marker-light);
+}
+
+/* Define dark mode colors */
+.dark-mode {
+  --color-background: #1b1b1b;
+  --color-background-soft: var(--black-soft);
+  --color-background-mute: var(--black-mute);
+  --color-background-blur: var(--black-blur);
+  --color-background-hover: #6262626e;
+  --color-background-quote: rgb(30,41,59);
+  --color-border-quote: rgb(44,57,77);
+
+  --color-border: var(--divider-dark-2);
+  --color-border-hover: var(--divider-dark-1);
+
+  --color-heading: var(--text-dark-1);
+  --color-text: var(--text-dark-2);
+  --color-text-2: #cdcdcd;
+
+  --color-devider: var(--divider-dark-2);
+  --color-marker: var(--marker-dark);
+
+
+}
+
+
+/* hue: color palette from <https://github.com/saicaca/fuwari/blob/main/src/styles/main.css> */
+.light-mode {
+  --primary: oklch(.7 .14 var(--hue));
+  --page-bg: oklch(.95 .01 var(--hue));
+  --card-bg: white;
+  --btn-content: oklch(.55 .12 var(--hue));
+  --btn-regular-bg: oklch(.95 .025 var(--hue));
+  --btn-regular-bg-hover: oklch(.9 .05 var(--hue));
+  --btn-regular-bg-active: oklch(.85 .08 var(--hue));
+  --btn-plain-bg-hover: oklch(.95 .025 var(--hue));
+  --btn-plain-bg-active: oklch(.98 .01 var(--hue));
+  --btn-card-bg-hover: oklch(.98 .005 var(--hue));
+  --btn-card-bg-active: oklch(.9 .03 var(--hue));
+}
+
+.dark-mode {
+  --primary: oklch(.75 .14 var(--hue));
+  --page-bg: oklch(.16 .014 var(--hue));
+  --card-bg: oklch(.23 .015 var(--hue));
+  --btn-content: oklch(.75 .1 var(--hue));
+  --btn-regular-bg: oklch(.33 .035 var(--hue));
+  --btn-regular-bg-hover: oklch(.38 .04 var(--hue));
+  --btn-regular-bg-active: oklch(.43 .045 var(--hue));
+  --btn-plain-bg-hover: oklch(.3 .035 var(--hue));
+  --btn-plain-bg-active: oklch(.27 .025 var(--hue));
+  --btn-card-bg-hover: oklch(.3 .03 var(--hue));
+  --btn-card-bg-active: oklch(.35 .035 var(--hue));
+}
+
+/* Apply colors based on selected theme */
+html {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 *,

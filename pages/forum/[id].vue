@@ -1,6 +1,4 @@
 <script setup>
-const route = useRoute();
-
 const res = {
   "status": "success",
   "data": {
