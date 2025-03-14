@@ -157,6 +157,8 @@ provide("bannerConfig", bannerConfig)
 </template>
 
 <style scoped>
+@import url(~/assets/css/tag_color.css);
+
 .container {
   min-height: 100vh;
   background-color: while;
@@ -170,7 +172,7 @@ provide("bannerConfig", bannerConfig)
 }
 
 .banner-links a {
-  color: #2563eb;
+  color: var(--main-color);
   text-decoration: none;
 }
 
@@ -200,15 +202,15 @@ provide("bannerConfig", bannerConfig)
   display: flex;
   align-items: center;
   padding: 12px 0;
-  color: #606266;
+  color: var(--color-text-2);
   cursor: pointer;
   transition: all 0.3s ease-out;
   padding-right: 1px;
 }
 
 .nav-item:hover {
-  color: #2563eb;
-  background-color: rgb(248, 250, 252);
+  color: var(--main-color);
+  background-color: var(--color-background-nav-hover);
   border-radius: 6px;
   padding-left: 10px;
 }
@@ -217,25 +219,25 @@ provide("bannerConfig", bannerConfig)
   display: flex;
   align-items: center;
   padding: 12px 0;
-  color: #606266;
+  color: var(--color-text-2);
   cursor: pointer;
   transition: all 0.3s ease-out;
   padding-right: 1px;
 }
 
 .nav-item-tag:hover {
-  color: oklch(.55 .12 var(--hue));
-  background-color: oklch(.95 .025 var(--hue));
+  color: var(--btn-content);
+  background-color: var(--btn-regular-bg);
   border-radius: 6px;
   padding-left: 10px;
 }
 
 .active {
-  color: #2563eb;
+  color: var(--main-color);
 }
 
 .active-tag {
-  color: oklch(.55 .12 var(--hue));
+  color: var(--btn-content);
 }
 
 .nav-item .el-icon,
@@ -246,7 +248,7 @@ provide("bannerConfig", bannerConfig)
 .nav-item .count,
 .nav-item-tag .count {
   margin-left: auto;
-  color: #909399;
+  color: var(--color-text-2);
 }
 
 .publish-button {
@@ -267,6 +269,7 @@ provide("bannerConfig", bannerConfig)
   box-shadow: 0 0 5px oklch(0.52 0.21 var(--hue) / 0.5);
   /* rgba(0, 96, 223, 0.5) */
 }
+
 
 /* 移动端菜单样式 */
 .mobile-menu-toggle {

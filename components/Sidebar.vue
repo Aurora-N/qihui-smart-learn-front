@@ -36,7 +36,7 @@ const props = defineProps({
 .lists {
   padding: 1rem;
   border-radius: 6px;
-  border: 1px solid rgb(231, 236, 243);
-  background-color: white;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
 }
 </style>

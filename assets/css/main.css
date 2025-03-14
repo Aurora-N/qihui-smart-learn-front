@@ -18,20 +18,24 @@
   --divider-dark-2: rgba(84, 84, 84, 0.48);
 
   --text-light-1: var(--indigo);
-  --text-light-2: rgba(60, 60, 60, 0.66);
+  --text-light-2: #606266;
   --text-dark-1: var(--white);
   --text-dark-2: rgb(241, 245, 249);
-  
+
   --marker-light: rgb(210, 215, 221);
   --marker-dark: rgb(241, 245, 249);
 
-  --main-color: #2563eb;
-  --main-color-hover-darker: #1d4ed8;
-  --main-color-hover-lighter: #1d4ed8;
+  --main-color: #0060DF;
+  /* #2563eb */
+  --main-color-hover-darker: #0250BB;
+  --main-color-hover-lighter: #1576ff;
+  --main-color-hover-shadow: rgba(0, 110, 255, 0.5);
 
   --link-color: #0069c2;
 
   --section-gap: 160px;
+
+  /* transition: 0.5s, background-color 0.5s; */
 }
 
 /* semantic color variables for this project */
@@ -42,15 +46,19 @@
   --color-background-mute: var(--white-mute);
   --color-background-blur: var(--white-blur);
   --color-background-hover: #f5f5f5;
+  --color-background-nav-hover: rgb(248, 250, 252);
   --color-background-quote: rgb(248, 250, 252);
+  --color-background-layer: rgb(255, 255, 255);
   --color-border-quote: rgb(231, 236, 243);
+  --color-border-shadow: #8f8f8f7d;
 
   --color-border: var(--divider-light-2);
   --color-border-hover: var(--divider-light-2);
 
   --color-heading: var(--text-light-1);
   --color-text: var(--text-light-1);
-  --color-text-2: #6b7280;
+  --color-text-2: var(--text-light-2);
+  --color-meta-text: #6b7280;
 
   --color-devider: var(--divider-light-2);
   --color-marker: var(--marker-light);
@@ -63,8 +71,11 @@
   --color-background-mute: var(--black-mute);
   --color-background-blur: var(--black-blur);
   --color-background-hover: #6262626e;
-  --color-background-quote: rgb(30,41,59);
-  --color-border-quote: rgb(44,57,77);
+  --color-background-nav-hover: rgb(30, 41, 59);
+  --color-background-quote: rgb(30, 41, 59);
+  --color-background-layer: #242424;
+  --color-border-quote: rgb(44, 57, 77);
+  --color-border-shadow: #0000007d;
 
   --color-border: var(--divider-dark-2);
   --color-border-hover: var(--divider-dark-1);
@@ -72,48 +83,16 @@
   --color-heading: var(--text-dark-1);
   --color-text: var(--text-dark-2);
   --color-text-2: #cdcdcd;
+  --color-meta-text: #adb5c3;
 
   --color-devider: var(--divider-dark-2);
   --color-marker: var(--marker-dark);
-
-
-}
-
-
-/* hue: color palette from <https://github.com/saicaca/fuwari/blob/main/src/styles/main.css> */
-.light-mode {
-  --primary: oklch(.7 .14 var(--hue));
-  --page-bg: oklch(.95 .01 var(--hue));
-  --card-bg: white;
-  --btn-content: oklch(.55 .12 var(--hue));
-  --btn-regular-bg: oklch(.95 .025 var(--hue));
-  --btn-regular-bg-hover: oklch(.9 .05 var(--hue));
-  --btn-regular-bg-active: oklch(.85 .08 var(--hue));
-  --btn-plain-bg-hover: oklch(.95 .025 var(--hue));
-  --btn-plain-bg-active: oklch(.98 .01 var(--hue));
-  --btn-card-bg-hover: oklch(.98 .005 var(--hue));
-  --btn-card-bg-active: oklch(.9 .03 var(--hue));
-}
-
-.dark-mode {
-  --primary: oklch(.75 .14 var(--hue));
-  --page-bg: oklch(.16 .014 var(--hue));
-  --card-bg: oklch(.23 .015 var(--hue));
-  --btn-content: oklch(.75 .1 var(--hue));
-  --btn-regular-bg: oklch(.33 .035 var(--hue));
-  --btn-regular-bg-hover: oklch(.38 .04 var(--hue));
-  --btn-regular-bg-active: oklch(.43 .045 var(--hue));
-  --btn-plain-bg-hover: oklch(.3 .035 var(--hue));
-  --btn-plain-bg-active: oklch(.27 .025 var(--hue));
-  --btn-card-bg-hover: oklch(.3 .03 var(--hue));
-  --btn-card-bg-active: oklch(.35 .035 var(--hue));
 }
 
 /* Apply colors based on selected theme */
 html {
   background-color: var(--color-background);
   color: var(--color-text);
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 *,
@@ -122,15 +101,14 @@ html {
   box-sizing: border-box;
   margin: 0;
   font-weight: normal;
+  transition: background-color 0.1s ease, color 0.1s ease;
+
 }
 
 body {
   min-height: 100vh;
   color: var(--color-text);
-  background: var(--color-background);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
+  background: var(--color-background-layer);
   line-height: 1.6;
   font-family:
     Inter,
@@ -153,7 +131,7 @@ body {
 
 hr {
   border-top: none;
-  border-bottom: 1px solid rgb(231, 236, 243);
+  border-bottom: 1px solid var(--color-border);
   margin: 1rem 0;
 }
 

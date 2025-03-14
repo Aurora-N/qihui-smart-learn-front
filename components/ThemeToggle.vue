@@ -1,12 +1,11 @@
 <template>
-  <div class="theme-toggle-container">
-    <button class="theme-toggle" @click="toggleColorMode" :title="buttonTitle" aria-label="Toggle theme"
-      ref="toggleButton">
+  <div class="theme-toggle-container" @click="toggleColorMode" :title="buttonTitle" aria-label="Toggle theme">
+    <button class="theme-toggle" ref="toggleButton">
       <SunIcon v-if="colorMode.value === 'dark'" class="icon" />
       <MoonIcon v-else class="icon" />
     </button>
     <!-- Animation overlay -->
-    <Teleport to="body">
+    <Teleport to="root">
       <div class="theme-transition-overlay" :class="{
         'light-expanding': isAnimating && targetMode === 'light',
         'dark-contracting': isAnimating && targetMode === 'dark'
@@ -52,6 +51,8 @@ function calculateMaxDistance(x, y) {
 }
 
 async function toggleColorMode() {
+  console.log('before: ', colorMode)
+
   targetMode.value = colorMode.value === 'dark' ? 'light' : 'dark'
 
   if (toggleButton.value) {
@@ -72,6 +73,8 @@ async function toggleColorMode() {
       isAnimating.value = false
     }, 100)
   }, 300)
+
+  console.log('after: ', colorMode)
 }
 </script>
 
@@ -90,13 +93,13 @@ async function toggleColorMode() {
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  z-index: 2;
+  z-index: 102;
   padding: 0;
+  width: 20px;
+  height: 20px;
 }
 
 .theme-toggle .icon {
-  width: 20px;
-  height: 20px;
   color: var(--color-text);
 }
 
@@ -108,7 +111,7 @@ async function toggleColorMode() {
   right: 0;
   bottom: 0;
   pointer-events: none;
-  z-index: 1000;
+  z-index: 1002;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -125,7 +128,6 @@ async function toggleColorMode() {
   background-color: #222222;
   clip-path: circle(150% at var(--button-x) var(--button-y));
   animation: contract-dark 0.6s ease-out forwards;
-  /* mix-blend-mode: hard-light; */
 }
 
 @keyframes expand-light {

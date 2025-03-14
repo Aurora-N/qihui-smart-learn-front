@@ -52,16 +52,6 @@ const logout = () => {
 
       <!-- Desktop language and user area -->
       <div class="desktop-controls">
-        <!-- <Dropdown open-on="click">
-          <template #trigger>
-            <button class="nav-button">
-              简体中文
-              <chevron-down-icon class="icon-small" />
-            </button>
-          </template>
-          <a href="#">English</a>
-          <a href="#">简体中文</a>
-        </Dropdown> -->
         <ThemeToggle class="nav-button" />
         <div class="user" v-if="userStore.userInfo.data">
           <el-dropdown class="dropdown">
@@ -176,15 +166,16 @@ const logout = () => {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 50;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--color-border);
-  background: var(--color-background-blur);
+  /* background: var(--color-background-blur); */
   backdrop-filter: blur(64px);
   -webkit-backdrop-filter: blur(64px);
+  max-height: 56px;
 }
 
 .nav-left,
@@ -491,21 +482,4 @@ const logout = () => {
     display: block;
   }
 }
-
-/* 使用深度选择器来影响Dropdown内部的a标签样式 */
-:deep(.dropdown-content a) {
-  display: block;
-  padding: 0.5rem 1rem;
-  color: #374151;
-  text-decoration: none;
-}
-
-:deep(.dropdown-content a:hover) {
-  background-color: #f3f4f6;
-  border-radius: 0.375rem;
-}
-
-/* .icon-small {
-  transition: all 0.3s ease-in-out;
-} */
 </style>

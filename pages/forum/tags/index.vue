@@ -53,16 +53,13 @@ definePageMeta({
           </button>
         </div>
       </div>
-
-
-      <!-- <NuxtLink :to="`/forum/tags/${tag.tagId}`" class="tag-card" v-for="tag in tags" :key="tag.tagId" :style="{
-        '--hue': tag.hueColor
-      }"> -->
     </div>
   </div>
 </template>
 
 <style scoped>
+@import url(~/assets/css/tag_color.css);
+
 .tags-container {
   width: 100%;
 }
@@ -80,16 +77,16 @@ definePageMeta({
 .tag-card {
   width: 49%;
   border-radius: 12px;
-  background-color: white;
+  background-color: var(--color-background);
   padding: 20px;
-  transition: all 0.3s ease;
-  border: 1px solid rgb(231, 236, 243);
+  transition: 0.3s ease;
+  border: 1px solid var(--color-border);
   position: relative;
   overflow: hidden;
 }
 
 .tag-card:hover {
-  border: 1px solid oklch(.7 .14 var(--hue));
+  border: 1px solid var(--primary);
 }
 
 .tag-header {
@@ -103,8 +100,7 @@ definePageMeta({
   display: flex;
   align-items: center;
   font-size: 14px;
-  color: #666;
-  background-color: oklch(.95 .025 var(--hue));
+  background-color: var(--btn-regular-bg);
   padding: 4px 8px;
   border-radius: 5px;
 }
@@ -113,24 +109,24 @@ definePageMeta({
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: oklch(.7 .14 var(--hue));
+  background-color: var(--primary);
   margin-right: 10px;
 }
 
 .tag-name {
   font-size: 18px;
-  color: #333;
+  color: var(--color-heading);
   margin: 0;
 }
 
 .tag-posts-count {
   font-size: 14px;
-  color: #666;
+  color: var(--color-meta-text);
   /* background-color: #f5f5f5; */
 }
 
 .tag-description {
-  color: #555;
+  color: var(--color-text-2);
   font-size: 14px;
   line-height: 1.5;
   margin-bottom: 16px;
@@ -144,7 +140,7 @@ definePageMeta({
   align-items: center;
   margin-bottom: 16px;
   font-size: 13px;
-  color: #777;
+  color: var(--color-meta-text);
 }
 
 .tag-recent,
@@ -155,7 +151,7 @@ definePageMeta({
 
 .icon {
   margin-right: 6px;
-  color: #888;
+  color: var(--color-meta-text);
 }
 
 .tag-footer {
@@ -164,12 +160,12 @@ definePageMeta({
   align-items: center;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--color-devider);
 }
 
 .link-btn {
-  background-color: #f0f0f0;
-  color: #555;
+  background-color: var(--color-background-mute);
+  color: var(--color-text-2);
   border: none;
   border-radius: 5px;
   padding: 6px 16px;
@@ -179,34 +175,6 @@ definePageMeta({
 }
 
 .link-btn:hover {
-  background-color: #e0e0e0;
-}
-
-.light-mode .tags-container {
-  --primary: oklch(.7 .14 var(--hue));
-  --page-bg: oklch(.95 .01 var(--hue));
-  --card-bg: white;
-  --btn-content: oklch(.55 .12 var(--hue));
-  --btn-regular-bg: oklch(.95 .025 var(--hue));
-  --btn-regular-bg-hover: oklch(.9 .05 var(--hue));
-  --btn-regular-bg-active: oklch(.85 .08 var(--hue));
-  --btn-plain-bg-hover: oklch(.95 .025 var(--hue));
-  --btn-plain-bg-active: oklch(.98 .01 var(--hue));
-  --btn-card-bg-hover: oklch(.98 .005 var(--hue));
-  --btn-card-bg-active: oklch(.9 .03 var(--hue));
-}
-
-.dark-mode .tags-container {
-  --primary: oklch(.75 .14 var(--hue));
-  --page-bg: oklch(.16 .014 var(--hue));
-  --card-bg: oklch(.23 .015 var(--hue));
-  --btn-content: oklch(.75 .1 var(--hue));
-  --btn-regular-bg: oklch(.33 .035 var(--hue));
-  --btn-regular-bg-hover: oklch(.38 .04 var(--hue));
-  --btn-regular-bg-active: oklch(.43 .045 var(--hue));
-  --btn-plain-bg-hover: oklch(.3 .035 var(--hue));
-  --btn-plain-bg-active: oklch(.27 .025 var(--hue));
-  --btn-card-bg-hover: oklch(.3 .03 var(--hue));
-  --btn-card-bg-active: oklch(.35 .035 var(--hue));
+  background-color: var(--color-background-hover);
 }
 </style>

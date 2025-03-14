@@ -106,6 +106,7 @@ const handleKeyDown = (e) => {
 <style scoped>
 .search-container {
   position: relative;
+  transition: all 0.3s ease-in-out;
 }
 
 /* Desktop search trigger button */
@@ -135,6 +136,7 @@ const handleKeyDown = (e) => {
   padding: 0.5rem;
   cursor: pointer;
   color: var(--color-text);
+  border-radius: 6px;
 }
 
 .search-icon {
@@ -262,9 +264,14 @@ const handleKeyDown = (e) => {
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .desktop-search {
     display: none;
+  }
+
+  .search-container:hover {
+    background-color: var(--color-background-hover);
+    border-radius: 0.375rem;
   }
 
   .mobile-search-button {

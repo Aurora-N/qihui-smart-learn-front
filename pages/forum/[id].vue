@@ -222,8 +222,9 @@ html {
 }
 
 .sidebar .reply-btn:hover {
-  background-color: #0250BB;
-  border-color: #0250BB;
+  background-color: var(--main-color-hover-lighter);
+  border-color: var(--main-color-hover-lighter);
+  box-shadow: 0 0 5px var(--main-color-hover-shadow);
 }
 
 .sidebar .other-btn {
@@ -231,12 +232,12 @@ html {
   margin-top: 1rem;
   height: 48px;
   font-size: 1rem;
-  color: #666;
-  background-color: white;
-  border-color: #e5e7eb;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  border-color: var(--color-border);
 }
 
 .sidebar .other-btn:hover {
-  background-color: #f9fafb;
+  background-color: var(--color-background-hover);
 }
 </style>

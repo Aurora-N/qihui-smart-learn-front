@@ -3,8 +3,10 @@
     <div class="trigger">
       <slot name="trigger"></slot>
     </div>
-    <div class="dropdown-content" v-if="isOpen">
-      <slot></slot>
+    <div class="dropdown-wrapper" v-if="isOpen">
+      <div class="dropdown-content">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -46,16 +48,37 @@ const onMouseLeave = () => {
   position: relative;
 }
 
-.dropdown-content {
+.dropdown-wrapper {
   position: absolute;
   top: 100;
+  padding-top: 6px;
+}
+
+.dropdown-content {
   left: 0;
-  background-color: white;
-  border: 1px solid #e5e7eb;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
   border-radius: 0.375rem;
   padding: 0.375rem;
   min-width: 8rem;
   z-index: 10;
   white-space: nowrap;
+}
+</style>
+
+<style>
+/* Dropdown内部的a标签样式 */
+.dropdown-content a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.dropdown-content a:hover {
+  background-color: var(--color-background-hover);
+  border-radius: 0.375rem;
+  text-decoration: none;
 }
 </style>

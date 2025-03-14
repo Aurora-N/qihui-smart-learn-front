@@ -28,8 +28,8 @@ const props = defineProps({
 .container {
   padding: 1rem;
   border-radius: 6px;
-  border: 2px dashed rgb(231, 236, 243);
-  background-color: rgb(248, 250, 252);
+  border: 2px dashed var(--color-border-quote);
+  background-color: var(--color-background-quote);
 }
 
 .header {

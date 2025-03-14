@@ -39,6 +39,16 @@ onMounted
 .breadcrumb {
   margin-top: 1rem;
   margin-bottom: 2rem;
+  --el-text-color-primary: var(--color-text-2);
+  --el-text-color-regular: var(--color-text)
+}
+
+:deep(.el-breadcrumb__item .el-breadcrumb__inner, .is-link) {
+  font-weight: normal;
+}
+
+:deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
+  font-weight: bold;
 }
 
 .breadcrumb:hover {

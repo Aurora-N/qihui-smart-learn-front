@@ -1,0 +1,145 @@
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background-color: var(--color-background-layer);
+}
+
+.logo {
+    max-width: 75px;
+    margin-bottom: 4rem;
+}
+
+.logo img {
+    width: 100%;
+    height: auto;
+}
+
+.login-card {
+    background-color: var(--color-background);
+    border-color: var(--color-border);
+    width: 100%;
+    max-width: 460px;
+}
+
+:deep(.el-card) {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.header h1 {
+    color: var(--color-text);
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.header .close-btn {
+    border-color: #e5e7eb;
+    height: 2rem;
+}
+
+.header .close-btn:hover {
+    background-color: #f9fafb;
+}
+
+:deep(.el-input) {
+    margin-bottom: 1rem;
+}
+
+:deep(.el-input__wrapper) {
+    padding: 0.75rem 1rem;
+    background: var(--color-background);
+}
+
+:deep(.el-input__wrapper:hover) {
+    padding: 0.75rem 1rem;
+    background: var(--color-background-hover);
+}
+
+:deep(.el-input__inner) {
+    color: var(--color-text);
+}
+
+.input-bar {
+    height: 48px;
+}
+
+.submit-btn {
+    width: 100%;
+    margin-bottom: 1rem;
+    height: 48px;
+    font-size: 1rem;
+    background-color: var(--main-color);
+    border-color: var(--main-color);
+}
+
+.submit-btn:hover {
+    background-color: var(--main-color-hover-lighter);
+    border-color: var(--main-color-hover-lighter);
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 0 1.5rem 0;
+    color: var(--color-text-2);
+    font-size: 0.875rem;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-devider);
+}
+
+.divider span {
+    padding: 0 1rem;
+}
+
+.other-btn {
+    width: 100%;
+    margin-bottom: 1rem;
+    height: 48px;
+    font-size: 1rem;
+    font-weight: normal;
+    color: var(--color-text);
+    background: var(--color-background);
+    border-color: var(--color-border);
+}
+
+.other-btn:hover {
+    background-color: var(--color-background-hover);
+}
+
+.social-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.75rem;
+}
+
+.terms {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-text-2);
+    line-height: 1.5;
+}
+
+.terms a {
+    color: var(--main-color);
+    text-decoration: none;
+}
+
+.terms a:hover {
+    text-decoration: underline;
+}

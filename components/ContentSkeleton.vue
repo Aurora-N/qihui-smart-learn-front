@@ -56,8 +56,19 @@
   display: flex;
   justify-content: center;
   margin: 2rem 0;
-  margin-top: 80px;
+  margin-top: 55px;
+  padding-top: 25px;
   height: 100vh;
+}
+
+.light-mode .main-container {
+  --background-color-sidebar: #f8f8f8;
+  --item-color: #e0e0e0;
+}
+
+.dark-mode .main-container {
+  --background-color-sidebar: #454545;
+  --item-color: #666666;
 }
 
 .content {
@@ -73,7 +84,7 @@
 
 /* Skeleton styles */
 .skeleton-sidebar {
-  background-color: #f8f8f8;
+  background-color: var(--background-color-sidebar);
   border-radius: 8px;
   padding: 1rem;
   height: 20rem;
@@ -84,7 +95,7 @@
 .skeleton-sidebar-title {
   height: 1.5rem;
   width: 50%;
-  background-color: #e0e0e0;
+  background-color: var(--item-color);
   border-radius: 4px;
   margin-bottom: 1rem;
   animation: pulse 1.5s infinite;
@@ -98,7 +109,7 @@
 
 .skeleton-menu-item {
   height: 2rem;
-  background-color: #e0e0e0;
+  background-color: var(--item-color);
   border-radius: 6px;
   animation: pulse 1.5s infinite;
 }
@@ -106,7 +117,7 @@
 .skeleton-breadcrumb {
   height: 1.25rem;
   width: 40%;
-  background-color: #e0e0e0;
+  background-color: var(--item-color);
   border-radius: 4px;
   margin-bottom: 1rem;
   animation: pulse 1.5s infinite;
@@ -115,7 +126,7 @@
 .skeleton-title {
   height: 2rem;
   width: 70%;
-  background-color: #e0e0e0;
+  background-color: var(--item-color);
   border-radius: 4px;
   margin-bottom: 2rem;
   animation: pulse 1.5s infinite;
@@ -130,7 +141,7 @@
 
 .skeleton-paragraph {
   height: 1rem;
-  background-color: #e0e0e0;
+  background-color: var(--item-color);
   border-radius: 4px;
   animation: pulse 1.5s infinite;
 }
@@ -146,7 +157,7 @@
 .skeleton-heading {
   height: 1.5rem;
   width: 50%;
-  background-color: #e0e0e0;
+  background-color: var(--item-color);
   border-radius: 4px;
   margin-top: 0.5rem;
   animation: pulse 1.5s infinite;
@@ -159,7 +170,7 @@
 .skeleton-recommend-title {
   height: 1.5rem;
   width: 30%;
-  background-color: #e0e0e0;
+  background-color: var(--item-color);
   border-radius: 4px;
   margin-bottom: 1rem;
   animation: pulse 1.5s infinite;
@@ -174,7 +185,7 @@
 .skeleton-recommend-item {
   height: 2.5rem;
   width: 10rem;
-  background-color: #e0e0e0;
+  background-color: var(--item-color);
   border-radius: 6px;
   animation: pulse 1.5s infinite;
 }

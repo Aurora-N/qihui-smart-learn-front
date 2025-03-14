@@ -16,6 +16,6 @@ definePageMeta({
 
 <style scoped>
 .container {
-  margin: 1rem 0;
+  padding: 1rem 0;
 }
 </style>

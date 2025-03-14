@@ -97,7 +97,8 @@ const recommendPostsList = ref([
   display: flex;
   justify-content: center;
   margin: 2rem 0;
-  margin-top: 80px;
+  margin-top: 55px;
+  padding-top: 25px;
 }
 
 .content {

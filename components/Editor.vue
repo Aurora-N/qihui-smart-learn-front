@@ -267,14 +267,14 @@ const insertTable = () => {
   width: 40px;
   height: 40px;
   border: none;
-  box-shadow: 0 0 5px #8f8f8f7d;
-  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 5px var(--color-border-shadow);
+  background: var(--color-background-blur);
   backdrop-filter: blur(64px);
   -webkit-backdrop-filter: blur(64px);
 }
 
 .header .back-btn:hover {
-  background-color: #f0f0f0;
+  background-color: var(--color-background-hover);
 }
 
 .editor-container .menu-bar {
@@ -286,9 +286,9 @@ const insertTable = () => {
   padding: 5px;
   margin: 10px 0;
   border-radius: 50rem;
-  box-shadow: 0 0 5px #8f8f8f7d;
+  box-shadow: 0 0 5px var(--color-border-shadow);
 
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--color-background-blur);
   backdrop-filter: blur(64px);
   -webkit-backdrop-filter: blur(64px);
 }
@@ -299,8 +299,9 @@ const insertTable = () => {
 }
 
 .editor-container .menu-bar .menu-group:not(:last-child) {
-  border-right: 1px solid #ddd;
+  border-right: 1px solid var(--color-border);
   padding-right: 10px;
+  gap: 0.2rem;
 }
 
 .menu-group button {
@@ -319,18 +320,18 @@ const insertTable = () => {
 }
 
 .menu-group button:hover {
-  background-color: #f0f0f0;
+  background-color: var(--color-background-hover);
 }
 
 .menu-group button.is-active {
-  background-color: #f0f0f0;
+  background-color: var(--color-background-mute);
   font-weight: bold;
 }
 
 .header .icon {
   font-size: 16px;
   line-height: 1;
-  color: #666;
+  color: var(--color-meta-text);
 }
 
 .menu-bar .menu-group-left {
@@ -350,13 +351,13 @@ const insertTable = () => {
 .menu-bar .submit-btn {
   padding: 0.5rem 1rem;
   border-radius: 50rem;
-  background-color: #0060DF;
-  border-color: #0060DF;
+  background-color: var(--main-color);
+  border-color: var(--main-color);
 }
 
 .menu-bar .submit-btn:hover {
-  background-color: #1576ff;
-  box-shadow: 0 0 5px rgba(0, 96, 223, 0.5);
+  background-color: var(--main-color-hover-lighter);
+  box-shadow: 0 0 5px var(--main-color-hover-shadow);
 }
 
 .menu-bar .submit-btn-inner {

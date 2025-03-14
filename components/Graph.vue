@@ -1064,12 +1064,12 @@ onBeforeUnmount(() => {
 .dark-mode .knowledge-graph-container {
   --primary-color: #2563eb;
   --primary-color-hover: #1d4ed8;
-  --background-color: #1b2535;
+  --background-color: #2d2d2d;
   --card-background: #1b1b1b;
   --text-color: #ffffff;
   --border-color: #2c3e50;
   --shadow-color: rgba(0, 0, 0, 0.517);
-  --sidebar-header: rgb(44, 57, 77);
+  --sidebar-header: rgb(69, 69, 69);
   --sidebar-header-title: #fbfbfb;
   --sidebar-hover: #314361;
   --close-btn-color: #eee;
