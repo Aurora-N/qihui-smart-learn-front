@@ -172,7 +172,7 @@ const logout = () => {
   align-items: center;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--color-border);
-  /* background: var(--color-background-blur); */
+  background: var(--color-background-blur);
   backdrop-filter: blur(64px);
   -webkit-backdrop-filter: blur(64px);
   max-height: 56px;

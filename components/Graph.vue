@@ -318,12 +318,13 @@ const initMiniGraph = () => {
 
   // 创建链接
   miniG.append('g')
-    .selectAll('line')
+    .selectAll('path')
     .data(links)
-    .enter().append('line')
+    .enter().append('path')
     .attr('stroke', '#999')
     .attr('stroke-opacity', 0.6)
-    .attr('stroke-width', d => Math.sqrt(d.value) * 0.5); // 缩小线宽
+    .attr('stroke-width', d => Math.sqrt(d.value) * 0.5)  // 缩小线宽
+    .attr('fill', 'none');
 
   // 创建节点
   miniG.append('g')
@@ -344,15 +345,22 @@ const initMiniGraph = () => {
 
   // 更新函数
   miniSimulation.on('tick', () => {
-    miniG.selectAll('line')
-      .attr('x1', d => d.source.x)
-      .attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x)
-      .attr('y2', d => d.target.y);
+    // miniG.selectAll('line')
+    //   .attr('x1', d => d.source.x)
+    //   .attr('y1', d => d.source.y)
+    //   .attr('x2', d => d.target.x)
+    //   .attr('y2', d => d.target.y);
 
     miniG.selectAll('circle')
       .attr('cx', d => d.x)
       .attr('cy', d => d.y);
+
+    miniG.selectAll('path').attr('d', d => {
+      const dx = d.target.x - d.source.x;
+      const dy = d.target.y - d.source.y;
+      const dr = Math.sqrt(dx * dx + dy * dy) * 1; // 控制弧度的系数，可以调整
+      return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
+    });
   });
 
   // 运行模拟一段时间后停止
@@ -428,14 +436,15 @@ const initGraph = () => {
     .attr('fill', '#999')
     .attr('d', 'M0,-5L10,0L0,5');
 
-  // 创建链接
+  // 创建弯曲的链接
   const link = g.append('g')
-    .selectAll('line')
+    .selectAll('path')
     .data(links)
-    .enter().append('line')
+    .enter().append('path')
     .attr('stroke', '#999')
     .attr('stroke-opacity', 0.6)
     .attr('stroke-width', d => Math.sqrt(d.value))
+    .attr('fill', 'none')
     .attr('marker-end', 'url(#arrow)');
 
   // 创建链接标签
@@ -501,11 +510,12 @@ const initGraph = () => {
 
   // 更新函数
   simulation.on('tick', () => {
-    link
-      .attr('x1', d => d.source.x)
-      .attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x)
-      .attr('y2', d => d.target.y);
+    link.attr('d', d => {
+      const dx = d.target.x - d.source.x;
+      const dy = d.target.y - d.source.y;
+      const dr = Math.sqrt(dx * dx + dy * dy) * 1.5; // 控制弧度的系数，可以调整
+      return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
+    });
 
     node
       .attr('cx', d => d.x)
@@ -1053,7 +1063,7 @@ onBeforeUnmount(() => {
   --background-color: #f8f9fa;
   --card-background: #ffffff;
   --text-color: #1f2937;
-  --border-color: #e5e7eb;
+  --border-color: var(--color-border);
   --shadow-color: rgba(0, 0, 0, 0.1);
   --sidebar-header: #f9fafb;
   --sidebar-header-title: #333;
@@ -1067,7 +1077,7 @@ onBeforeUnmount(() => {
   --background-color: #2d2d2d;
   --card-background: #1b1b1b;
   --text-color: #ffffff;
-  --border-color: #2c3e50;
+  --border-color: var(--color-border);
   --shadow-color: rgba(0, 0, 0, 0.517);
   --sidebar-header: rgb(69, 69, 69);
   --sidebar-header-title: #fbfbfb;
