@@ -108,6 +108,6 @@ onMounted(async () => {
   </main>
 </template>
 
-<style>
+<style scoped>
 @import url(~/assets/css/forum_interface.css);
 </style>

@@ -3,12 +3,11 @@
     <div class="container">
       <div class="hero-content">
         <h1 class="hero-title">
-          <span class="hero-title-primary">改变你的学习方式</span>
-          <span class="hero-title-secondary">与知识图谱合作</span>
+          <span class="hero-title-primary">启慧智学</span>
+          <span class="hero-title-secondary">基于多模态知识图谱的Web开发学习平台</span>
         </h1>
         <p class="hero-description">
-          Boost productivity and streamline your business processes with our powerful SaaS platform. Designed for
-          teams of all sizes.
+          改变你的学习方式，与知识图谱合作
         </p>
         <div class="hero-buttons">
           <NuxtLink to="/learn" class="btn btn-primary">开始学习</NuxtLink>

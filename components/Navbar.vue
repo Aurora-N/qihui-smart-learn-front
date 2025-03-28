@@ -19,36 +19,50 @@ const logout = () => {
   userStore.clearUserInfo()
   router.replace({ path: '/' })
 }
+
+const props = defineProps({
+  title: String,
+  transparent: {
+    type: Boolean,
+    default: true
+  }
+})
 </script>
 
 <template>
   <!-- Navigation Bar -->
-  <nav class="navbar">
+  <nav class="navbar" :class="{ 'navbar-transparent': transparent }">
+    <img class="logo" :src="`/logo_${useColorMode().preference === 'system' ? 'light' : useColorMode().preference}.png`"
+      alt="OurLogo" @click="$router.push('/')" />
     <div class="nav-left">
-      <a href="/" class="logo">LOGO</a>
-      <div class="nav-links">
-        <NuxtLink to="/learn" class="nav-button">学习方向</NuxtLink>
+      <div v-if="!props.title" class="nav-links">
+        <NuxtLink to="/learn" class="nav-button">
+          <IconsLearn />学习方向
+        </NuxtLink>
         <Dropdown open-on="hover">
           <template #trigger>
-            <NuxtLink to="/articles" class="nav-button">文章</NuxtLink>
+            <NuxtLink to="/articles" class="nav-button">
+              <IconsArticle />文章
+            </NuxtLink>
           </template>
           <NuxtLink to="/articles/前端">前端</NuxtLink>
           <NuxtLink to="/articles/后端">后端</NuxtLink>
         </Dropdown>
-        <NuxtLink to="/chat" class="nav-button">在线答疑</NuxtLink>
-        <NuxtLink to="/forum" class="nav-button">论坛</NuxtLink>
-        <Dropdown open-on="hover">
-          <template #trigger>
-            <NuxtLink to="/about" class="nav-button">关于</NuxtLink>
-          </template>
-          <a href="#">About</a>
-          <a href="#">Contact</a>
-        </Dropdown>
+        <NuxtLink to="/chat" class="nav-button">
+          <IconsChat />在线答疑
+        </NuxtLink>
+        <NuxtLink to="/forum" class="nav-button">
+          <IconsForum />论坛
+        </NuxtLink>
+        <NuxtLink to="/quiz" class="nav-button">
+          <IconsAbout />关于
+        </NuxtLink>
       </div>
+      <div v-else class="navbar-title">{{ props.title }}</div>
     </div>
 
     <div class="nav-right">
-      <SearchModal @search="handleSearch" />
+      <SearchModal />
 
       <!-- Desktop language and user area -->
       <div class="desktop-controls">
@@ -87,7 +101,7 @@ const logout = () => {
   <div class="mobile-menu-overlay" :class="{ 'active': isMobileMenuOpen }" @click="toggleMobileMenu"></div>
   <div class="mobile-menu" :class="{ 'active': isMobileMenuOpen }">
     <div class="mobile-menu-header">
-      <a href="/" class="logo">LOGO</a>
+      <!-- <a href="/" class="logo">LOGO</a> -->
       <button class="close-menu-button" @click="toggleMobileMenu">
         <x-icon class="icon-small" />
       </button>
@@ -103,7 +117,6 @@ const logout = () => {
         </div>
         <NuxtLink to="/chat" class="mobile-nav-button">在线答疑</NuxtLink>
         <NuxtLink to="/forum" class="mobile-nav-button">论坛</NuxtLink>
-
         <NuxtLink to="/about" class="mobile-nav-button">关于</NuxtLink>
         <div class="mobile-submenu">
           <a href="#">About</a>
@@ -112,15 +125,6 @@ const logout = () => {
       </div>
 
       <div class="mobile-menu-divider"></div>
-
-      <!-- Language selector in mobile menu -->
-      <!-- <div class="mobile-language">
-        <div class="mobile-section-title">语言</div>
-        <div class="mobile-language-options">
-          <a href="#" class="mobile-language-option active">简体中文</a>
-          <a href="#" class="mobile-language-option">English</a>
-        </div>
-      </div> -->
 
       <!-- <div class="mobile-menu-divider"></div> -->
 
@@ -166,16 +170,24 @@ const logout = () => {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--color-border);
+  background: var(--color-background);
+  max-height: 56px;
+}
+
+.navbar-transparent {
   background: var(--color-background-blur);
   backdrop-filter: blur(64px);
   -webkit-backdrop-filter: blur(64px);
-  max-height: 56px;
+}
+
+.navbar-title {
+  font-size: large;
 }
 
 .nav-left,
@@ -186,6 +198,9 @@ const logout = () => {
 }
 
 .logo {
+  box-sizing: border-box;
+  width: 50px;
+  height: 50px;
   color: #2563eb;
   font-size: 1.25rem;
   font-weight: bold;
@@ -205,7 +220,7 @@ const logout = () => {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: 1.1rem;
   color: var(--color-text);
   text-decoration: none;
   transition: all 0.3s ease-in-out;
@@ -245,13 +260,14 @@ const logout = () => {
 }
 
 .login-button {
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 1rem;
   background-color: var(--main-color);
   color: white;
   border: none;
   border-radius: 0.375rem;
   cursor: pointer;
   text-decoration: none;
+  font-size: 1.1rem;
 }
 
 .login-button:hover {

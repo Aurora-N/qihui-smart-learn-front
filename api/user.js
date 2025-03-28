@@ -19,10 +19,13 @@ export const useUserApi = () => {
             tokenCookie.value = null; // 退出时清除 token
         },
 
-        getUserInfo: (userId) => nuxtApp.$axios.get(`/user/profile/${userId}`), // 获取用户信息
+        getKey: async () => nuxtApp.$axios.get("/login/publicKey"), // 获取公钥
+
+        getUserInfo: async (userId) => nuxtApp.$axios.get(`/user/profile/${userId}`), // 获取用户信息
 
         updateUserInfo: async (userData) => {
             // 构造FormData
+            console.log('userData', userData);
             const formData = new FormData();
             // 遍历userData并将非空的字段添加到 FormData 中
             Object.entries(userData).forEach(([key, value])=> {
@@ -30,6 +33,10 @@ export const useUserApi = () => {
                     formData.append(key, value);
                 }
             })
+            console.log(formData);
+            formData.forEach((value, key) => {
+                console.log(key, value);
+            });
             // 发起网络请求, 修改用户信息
             const response = nuxtApp.$axios.put('/user/setting', formData);
             return response;

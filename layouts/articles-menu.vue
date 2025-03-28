@@ -22,7 +22,7 @@ const selectCategory = (id) => {
   // router.push(`${route.fullPath}/${id}`);
 }
 
-onMounted(() => currentArticleCategory.value = articlesList.value[0])
+onMounted(async () => currentArticleCategory.value = articlesList.value[0])
 </script>
 
 <template>

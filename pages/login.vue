@@ -1,53 +1,47 @@
 <template>
-  <div class="login-container">
-    <!-- <div class="logo">
-      <img src="~/assets/logo.png" alt="OurLogo" />
-    </div> -->
-
-    <el-card class="login-card">
-      <div class="header">
-        <h1>登录</h1>
-        <el-button :icon="Close" circle class="close-btn" @click="goBack" />
+  <div class="login">
+    <div class="login-container">
+      <div class="bg-container">
+        <img class="background" src="/login_bg.jpeg" alt="login background" />
       </div>
 
-      <el-input v-model="account" placeholder="请输入用户名" size="large" class="input-bar" />
+      <el-card class="login-card">
+        <div class="header">
+          <div class="header-left">
+            <img class="logo"
+              :src="`/logo_${useColorMode().preference === 'system' ? useColorMode().preference : 'light'}.png`"
+              alt="OurLogo" />
+            <h1>登录</h1>
+          </div>
 
-      <el-input v-model="password" placeholder="请输入密码" size="large" class="input-bar" show-password />
+          <el-button :icon="Close" circle class="close-btn" @click="goBack" />
+        </div>
 
-      <el-button type="primary" size="large" class="submit-btn" @click="login">
-        登录
-      </el-button>
+        <el-input v-model="account" placeholder="请输入用户名" size="large" class="input-bar" />
 
-      <div>
-        <el-button class="other-btn" size="large" @click="$router.push('/signup')">
-          注册
+        <el-input v-model="password" placeholder="请输入密码" size="large" class="input-bar" show-password />
+
+        <el-button type="primary" size="large" class="submit-btn" @click="login">
+          登录
         </el-button>
-      </div>
 
-      <div class="divider">
-        <span>or</span>
-      </div>
+        <div>
+          <el-button class="other-btn" size="large" @click="$router.push('/signup')">
+            注册
+          </el-button>
+        </div>
 
-      <div>
-        <el-button class="other-btn" size="large">
-          <!-- <img src="/google-icon.svg" alt="" class="social-icon" /> -->
-          Continue with Google
-        </el-button>
-      </div>
+        <!-- <div class="divider">
+          <span>or</span>
+        </div> -->
 
-      <div>
-        <el-button class="other-btn" size="large">
-          <!-- <img src="/apple-icon.svg" alt="" class="social-icon" /> -->
-          Continue with Apple
-        </el-button>
-      </div>
-
-      <p class="terms">
-        要继续登录，请同意我们的
-        <a href="#">服务政策</a> 和
-        <a href="#">隐私政策</a>
-      </p>
-    </el-card>
+        <p class="terms">
+          要继续登录，请同意我们的
+          <a href="#">服务政策</a> 和
+          <a href="#">隐私政策</a>
+        </p>
+      </el-card>
+    </div>
   </div>
 </template>
 

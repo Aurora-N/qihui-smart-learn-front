@@ -101,7 +101,7 @@ definePageMeta({
 })
 </script>
 
-<style>
+<style scoped>
 .avatar-upload {
   display: inline-block;
 }

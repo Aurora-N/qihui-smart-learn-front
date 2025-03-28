@@ -1,14 +1,14 @@
 <template>
   <div class="search-container">
     <!-- Desktop search trigger button -->
-    <button class="search-trigger desktop-search" @click="openSearch">
+    <!-- <button class="search-trigger desktop-search" @click="openSearch">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
       <span>搜索</span>
-    </button>
+    </button> -->
 
     <!-- Mobile search icon button -->
     <button class="mobile-search-button" @click="openSearch">
@@ -130,13 +130,21 @@ const handleKeyDown = (e) => {
 
 /* Mobile search button */
 .mobile-search-button {
-  display: none;
+  /* display: none; */
   background: none;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.5rem;
   cursor: pointer;
   color: var(--color-text);
   border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.mobile-search-button:hover {
+  background-color: var(--color-background-hover);
 }
 
 .search-icon {

@@ -1,23 +1,32 @@
 <script setup>
 onMounted(() => {
   const script = document.createElement('script');
-  script.src = 'http://localhost:8080/api/application/embed?protocol=http&host=localhost:8080&token=5bfb22ba0d4da3ed';
+  script.src = 'http://hekabi.a1.luyouxia.net:25333/api/application/embed?protocol=http&host=hekabi.a1.luyouxia.net:25333&token=5bfb22ba0d4da3ed';
   script.async = true;
   script.defer = true;
   document.body.appendChild(script);
 });
+
+useSeoMeta({
+  title: '计算机在线学习平台问答助手'
+})
+
+definePageMeta({
+  layout: false,
+})
 </script>
 
 <template>
+  <Navbar title="计算机在线学习平台问答助手" :transparent="false" />
   <div class="container">
-    <iframe src="http://localhost:8080/ui/chat/5bfb22ba0d4da3ed" style="width: 100%; height: 100%;" frameborder="0"
-      allow="microphone">
+    <iframe src="http://hekabi.a1.luyouxia.net:25333/ui/chat/5bfb22ba0d4da3ed" style="width: 100%; height: 100%;"
+      frameborder="0" allow="microphone">
     </iframe>
   </div>
 </template>
 
 <style scoped>
 .container {
-  margin-top: 55px;
+  height: 100vh;
 }
 </style>

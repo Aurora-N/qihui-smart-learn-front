@@ -1,7 +1,7 @@
 <template>
   <!-- 学习方向板块 -->
   <div class="learn">
-    <ForumBanner title="学习方向" sub-title="选择你感兴趣的知识进行学习吧！">
+    <ForumBanner title="学习方向" sub-title="选择你感兴趣的知识进行学习吧！" content-width="1100px">
       <div class="graph">
         <Graph title="总览" :max-depth="3" />
         <Graph title="前端" graph-id="前端" />

@@ -503,8 +503,8 @@ const initGraph = () => {
 
   // 创建力导向模拟
   simulation = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(links).id(d => d.uniqueId).distance(100))
-    .force('charge', d3.forceManyBody().strength(-300))
+    .force('link', d3.forceLink(links).id(d => d.uniqueId).distance(150))
+    .force('charge', d3.forceManyBody().strength(-600))
     .force('center', d3.forceCenter(width / 2, height / 2))
     .force('collision', d3.forceCollide().radius(d => getNodeRadius(d) + 10));
 
@@ -1148,7 +1148,7 @@ onBeforeUnmount(() => {
   right: 0;
   bottom: 0;
   background-color: var(--background-color);
-  z-index: 1000;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   animation: fadeIn 0.3s ease;

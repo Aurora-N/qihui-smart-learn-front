@@ -40,9 +40,19 @@ const footerColumns = [
 </script>
 
 <template>
-  <div>
+  <div class="default-container">
     <Navbar />
     <slot />
     <Footer :columns="footerColumns" />
   </div>
 </template>
+
+<style scoped>
+.default-container {
+  width: 100%;
+}
+
+:deep(.el-card) {
+  border-radius: 20px;
+}
+</style>

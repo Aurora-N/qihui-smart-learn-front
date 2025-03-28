@@ -1,23 +1,23 @@
-import { useFetch } from '#imports';
+import { useUserApi } from '~/api/user';
 import JSEncrypt from 'jsencrypt';
 
 let cachedPublicKey = '';
 
 async function getPublicKey() {
     if (!cachedPublicKey) {
-        const { data } = await useFetch('/api/publicKey');
-        cachedPublicKey = data.value?.publicKey || '';
+        const { key } = await useUserApi().getKey();
+        cachedPublicKey = key || '';
+        console.log(key);
     }
+    console.log(cachedPublicKey);
     return cachedPublicKey;
-    // const data = await useFetch('/api/publicKey');
-    // console.log(data)
 }
 
 export async function encryptWithRSA(text) {
     const publicKey = await getPublicKey();
-    if (!publicKey) throw new Error('公钥获取失败');
     console.log(publicKey);
+    if (!publicKey) throw new Error('公钥获取失败');
     const encryptor = new JSEncrypt();
-    encryptor.setPublicKey(publicKey);
+    encryptor.setPublicKey(`${publicKey}`);
     return encryptor.encrypt(text);
 }

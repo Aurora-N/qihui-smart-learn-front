@@ -129,20 +129,11 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
 }
 
 hr {
   border-top: none;
   border-bottom: 1px solid var(--color-border);
   margin: 1rem 0;
-}
-
-/*  覆盖伪类 */
-a::before {
-  content: none;
-  display: block;
-  height: 0;
-  /* 占位高度 */
-  margin-top: 0;
-  /* 抵消滚动位置 */
 }

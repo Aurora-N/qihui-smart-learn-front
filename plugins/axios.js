@@ -1,13 +1,14 @@
 import axios from 'axios'
 import { useUserStore } from '~/stores/userStore'
 
+
 export default defineNuxtPlugin((nuxtApp) => {
     const apiClient = axios.create({
-        baseURL: 'http://127.0.0.1:4523/m1/5842556-5528325-default', // 服务器地址
+        baseURL: 'http://120.76.138.103:5050', // 服务器地址
         timeout: 5000,
         headers: {
             'Content-Type': 'application/json',
-        }
+        },
     })
 
     // 请求拦截器：自动添加 Token

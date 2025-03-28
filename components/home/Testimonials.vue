@@ -2,9 +2,9 @@
   <div id="testimonials" class="testimonials-section">
     <div class="container">
       <div class="testimonials-header">
-        <h2 class="testimonials-title">Trusted by businesses worldwide</h2>
+        <h2 class="testimonials-title">热门文章</h2>
         <p class="testimonials-description">
-          Here's what our satisfied customers have to say about StreamLine
+          来看看大家都在看哪些文章
         </p>
       </div>
 

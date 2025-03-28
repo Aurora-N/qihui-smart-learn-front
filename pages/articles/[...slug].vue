@@ -131,14 +131,13 @@ const recommendPostsList = ref([
   border-radius: 6px;
 }
 
-.content article a::before {
+/* .content article a::before {
   content: "";
   display: block;
   height: 80px;
-  /* 占位高度 */
   margin-top: -80px;
-  /* 抵消滚动位置 */
-}
+  pointer-events: none;
+} */
 
 .arrow {
   margin: 0 -5px 2px -5px;
