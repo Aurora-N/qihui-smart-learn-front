@@ -16,6 +16,8 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/color-mode',
+    '@nuxt/test-utils',
+    '@nuxt/test-utils/module'
   ],
 
   // shiki: {

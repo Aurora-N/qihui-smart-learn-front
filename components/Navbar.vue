@@ -27,35 +27,45 @@ const props = defineProps({
     default: true
   }
 })
+
+const activeItem = ref('')
 </script>
 
 <template>
   <!-- Navigation Bar -->
   <nav class="navbar" :class="{ 'navbar-transparent': transparent }">
-    <img class="logo" :src="`/logo_${useColorMode().preference === 'system' ? 'light' : useColorMode().preference}.png`"
-      alt="OurLogo" @click="$router.push('/')" />
+    <div class="navbar-head" @click="$router.push('/')">
+      <img class="logo" :src="`/logo_${useColorMode().preference === 'system' ? 'light' : useColorMode().preference}.png`"
+      alt="OurLogo" />
+      启慧智学
+    </div>
+
+      
     <div class="nav-left">
       <div v-if="!props.title" class="nav-links">
+        <NuxtLink to="/" class="nav-button">
+          <IconsHome class="nav-icon" />首页
+        </NuxtLink>
         <NuxtLink to="/learn" class="nav-button">
-          <IconsLearn />学习方向
+          <IconsLearn class="nav-icon" />学习方向
         </NuxtLink>
         <Dropdown open-on="hover">
           <template #trigger>
             <NuxtLink to="/articles" class="nav-button">
-              <IconsArticle />文章
+              <IconsArticle class="nav-icon" />文章
             </NuxtLink>
           </template>
           <NuxtLink to="/articles/前端">前端</NuxtLink>
           <NuxtLink to="/articles/后端">后端</NuxtLink>
         </Dropdown>
         <NuxtLink to="/chat" class="nav-button">
-          <IconsChat />在线答疑
+          <IconsChat class="nav-icon" />在线答疑
         </NuxtLink>
         <NuxtLink to="/forum" class="nav-button">
-          <IconsForum />论坛
+          <IconsForum class="nav-icon" />论坛
         </NuxtLink>
         <NuxtLink to="/quiz" class="nav-button">
-          <IconsAbout />关于
+          <IconsAbout class="nav-icon" />关于
         </NuxtLink>
       </div>
       <div v-else class="navbar-title">{{ props.title }}</div>
@@ -190,6 +200,29 @@ const props = defineProps({
   font-size: large;
 }
 
+.navbar-head {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  gap: 0.5rem;
+  user-select: none; /* 标准写法 */
+  -webkit-user-select: none; /* Chrome、Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+
+.light-mode .navbar-head {
+  background: linear-gradient(-30deg, #0851bf, #3cfb92);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark-mode .navbar-head {
+  background: linear-gradient(-30deg, #3160e6, #3cf992);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .nav-left,
 .nav-right {
   display: flex;
@@ -229,6 +262,11 @@ const props = defineProps({
 .nav-button:hover {
   background-color: var(--color-background-hover);
   border-radius: 0.375rem;
+}
+
+.nav-button .nav-icon {
+  height: 1.1rem;
+  width: 1.1rem;
 }
 
 .user {

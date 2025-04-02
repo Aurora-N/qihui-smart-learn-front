@@ -1,8 +1,9 @@
 <template>
+  <div class="signup">
   <div class="login-container">
-    <!-- <div class="logo">
-        <img src="~/assets/logo.png" alt="OurLogo" />
-      </div> -->
+    <div class="bg-container">
+        <img class="background" src="/signup_bg.png" alt="login background" />
+      </div>
 
     <el-card class="login-card">
       <div class="header">
@@ -27,6 +28,7 @@
       </div>
     </el-card>
   </div>
+</div>
 </template>
 
 <script setup>

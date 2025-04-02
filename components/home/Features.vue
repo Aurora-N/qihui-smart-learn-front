@@ -1,32 +1,19 @@
 <template>
   <div id="features" class="features-section">
     <div class="container">
-      <div class="features-header">
-        <h2 class="features-subtitle">Features</h2>
-        <p class="features-title">Everything you need to streamline your workflow</p>
-        <p class="features-description">
-          StreamLine offers a comprehensive set of features designed to boost your productivity and simplify your
-          business processes.
-        </p>
-      </div>
-
-      <div class="features-grid">
-        <div v-for="(feature, index) in features" :key="feature.name" class="feature-item">
-          <div class="feature-icon">
-            <component :is="feature.icon" />
-          </div>
-          <div class="feature-content">
-            <h3 class="feature-name">{{ feature.name }}</h3>
-            <p class="feature-description">{{ feature.description }}</p>
+      <div class="features">
+        <div v-for="(feature, index) in features" :key="feature.name" class="feature-container" @click="$router.push(`${feature.path}`)">
+          <div class="feature-item">
+            <div class="feature-icon">
+              <component :is="feature.icon" />
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-name">{{ feature.name }}</h3>
+              <p class="feature-description">{{ feature.description }}</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Background elements -->
-    <div class="features-background">
-      <div class="bg-circle bg-circle-1"></div>
-      <div class="bg-circle bg-circle-2"></div>
     </div>
   </div>
 </template>
@@ -41,23 +28,27 @@ const ForumIcon = resolveComponent('IconsForum');
 const features = [
   {
     name: "学习方向",
-    description: "Our platform is optimized for speed, ensuring quick load times and responsive interactions.",
+    description: "选择感兴趣的学习方向",
     icon: LearnIcon,
+    path: '/learn'
   },
   {
     name: "文章",
-    description: "A user-friendly interface that's easy to navigate, making your work more efficient.",
+    description: "浏览学习资源文章",
     icon: ArticleIcon,
+    path: '/articles'
   },
   {
     name: "在线答疑",
-    description: "Seamlessly work together with your team members in real-time.",
+    description: "AI助手边问边学",
     icon: ChatIcon,
+    path: '/chat'
   },
   {
     name: "论坛",
-    description: "Gain valuable insights with our powerful analytics and reporting tools.",
+    description: "和志同道合的人一起讨论",
     icon: ForumIcon,
+    path: '/forum'
   },
 ];
 </script>
@@ -71,51 +62,46 @@ const features = [
 }
 
 .container {
-  max-width: 1280px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 0 1rem;
   position: relative;
   z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }
 
-.features-header {
-  text-align: center;
-  max-width: 48rem;
-  margin: 0 auto;
+.features {
+  width:80vw;
+  display: flex;
+  gap: 1.5rem;
+  justify-content: space-between;
+  border: 1px solid var(--color-border);
+  padding: 1.5rem;
+  border-radius: 10px;
 }
 
-.features-subtitle {
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--primary-color);
-  margin-bottom: 0.5rem;
+.feature-container {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
 }
 
-.features-title {
-  font-size: 2rem;
-  font-weight: 800;
-  line-height: 1.2;
-  color: var(--text-color);
-  margin-bottom: 1rem;
-}
-
-.features-description {
-  font-size: 1.25rem;
-  color: var(--text-muted);
-  margin-bottom: 3rem;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.5rem;
+.feature-container:hover {
+  padding: 1rem;
+  background-color: var(--color-background-hover);
 }
 
 .feature-item {
   position: relative;
 }
+
+/* .feature-item:hover {
+  background-color: var(--color-background-hover);
+  border-radius: 6px;
+  outline: 10px solid var(--color-background-hover);
+} */
 
 .feature-icon {
   position: absolute;
@@ -138,12 +124,14 @@ const features = [
   font-size: 1.125rem;
   font-weight: 500;
   color: var(--text-color);
-  margin-bottom: 0.5rem;
+  margin: 0;
+  padding: 0;
 }
 
 .feature-description {
   font-size: 1rem;
   color: var(--text-muted);
+  margin: 0;
 }
 
 .features-background {

@@ -2,14 +2,13 @@
   <div class="cta-section">
     <div class="container">
       <h2 class="cta-title">
-        <span class="cta-title-line">Ready to streamline your workflow?</span>
-        <span class="cta-title-line">Start your free trial today.</span>
+        <span class="cta-title-line">准备好和启慧智学一起启航了吗？</span>
       </h2>
       <p class="cta-description">
-        Join thousands of satisfied customers who have transformed their business with StreamLine.
+        快来使用基于多模态知识图谱的Web开发学习平台辅助学习吧！
       </p>
-      <button class="cta-button">
-        Get started for free
+      <button class="cta-button" @click="$router.push('/learn')">
+        选择学习方向
       </button>
     </div>
   </div>

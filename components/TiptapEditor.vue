@@ -2,7 +2,7 @@
   <div class="tiptap-editor">
     <editor-content :editor="editor" />
     <el-button v-if="btnShow" type="primary" class="submit-btn">
-      <span class="submit-btn-inner">
+      <span class="submit-btn-inner" @click="handleSubmit">
         <IconsSubmit />提交
       </span>
     </el-button>
@@ -20,13 +20,23 @@ const props = defineProps({
 });
 
 // 定义 `update:modelValue` 事件，用于父组件双向绑定
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "beforeSubmit"]);
 
 // 创建 editor
 const editor = ref(null);
 
 // 控制提交按钮显示与否
 const btnShow = ref(false);
+
+const handleSubmit = async () => {
+  const currentContent = editor.value.getHTML(); // 获取当前内容
+  // 先将当前内容传递给父组件
+  emit("beforeSubmit", currentContent);
+  // 清空编辑器内容
+  editor.value.commands.setContent(''); // 清空内容
+  // 返回编辑器内容给父组件
+  emit("update:modelValue", ''); // 向父组件传递空字符串（清空内容）
+}
 
 onMounted(() => {
   editor.value = new Editor({

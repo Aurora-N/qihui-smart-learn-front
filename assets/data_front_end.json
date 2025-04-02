@@ -1,0 +1,482 @@
+[
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "前端基础核心"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "HTML5",
+      "content": "超文本标记语言"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "前端基础核心"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "CSS3",
+      "content": "层叠样式表"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "前端基础核心"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "JavaScript(E6+)",
+      "content": "Web的编程语言"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "入门",
+      "id": "前端基础核心"
+    },
+    "depart": null,
+    "course1": {
+      "level": "入门",
+      "id": "TypeScript",
+      "content": "JavaScript的一个超集，支持ECMAScript6标准"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "前端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "React",
+      "content": "用于构建用户界面的JavaScript库"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "前端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Vue3",
+      "content": "一套构建用户界面的渐进式框架"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "前端主流框架"
+    },
+    "depart": null,
+    "course1": {
+      "level": "基础",
+      "id": "Angular",
+      "content": "一款开源JavaScript库，由Google维护，用来协助单一页面应用程序运行"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "打包工具"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "Vite前端",
+      "content": "一种基于原生ES模块的前端构建工具"
+    }
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "打包工具"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "Webpack",
+      "content": "一个用于现代JavaScript应用程序的静态模块打包工具"
+    }
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "打包工具"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "Rollup",
+      "content": "一个JavaScript模块打包器"
+    }
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "包管理"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "npm",
+      "content": "是一个JavaScript包管理工具，也是Node.js的默认包管理器"
+    }
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "包管理"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "yarn",
+      "content": "一款facebook发布的取代npm的包管理工具"
+    }
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "包管理"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "pnpm",
+      "content": "更高性能的npm"
+    }
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "基础",
+      "id": "构建工程化"
+    },
+    "depart": {
+      "level": "基础",
+      "id": "代码规范"
+    },
+    "course1": null,
+    "course2": {
+      "level": "基础",
+      "id": "ESLint+Prettier",
+      "content": "代码格式化与静态分析及规则检查，代码风格与质量的自动化保证"
+    }
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "状态管理"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Redux",
+      "content": "JavaScript状态容器，提供可预测化的状态管理"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "状态管理"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Pinia",
+      "content": "一个Vue状态管理工具"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "状态管理"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Zustand",
+      "content": "一个轻量级的React状态管理库"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "状态管理"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "RxJS",
+      "content": "一个使用Observables的响应式编程的库，用observable序列来编写异步和基于事件的程序"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "UI组件与样式方案"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Tailwind CSS",
+      "content": "功能丰富、实用性优先的CSS框架"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "UI组件与样式方案"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Element Plus",
+      "content": "基于Vue3和Vite的组件库，提供了一套丰富的UI组件"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "SSR/SSG"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "SSR/SSG",
+      "content": "服务端渲染与静态站点生成"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "SSR/SSG"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Next.js",
+      "content": "用于构建全栈Web应用的React框架"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "SSR/SSG"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Nuxt.js",
+      "content": "一个基于Vue.js的轻量级应用框架，可用来创建服务端渲染(SSR)应用"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "进阶",
+      "id": "SSR/SSG"
+    },
+    "depart": null,
+    "course1": {
+      "level": "进阶",
+      "id": "Astro",
+      "content": "适合构建博客、营销网站、电子商务网站等内容驱动网站的Web框架"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "深入",
+      "id": "微前端"
+    },
+    "depart": null,
+    "course1": {
+      "level": "深入",
+      "id": "qiankun",
+      "content": "基于single-spa的微前端实现库，是一套微前端框架"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "深入",
+      "id": "Module Federation"
+    },
+    "depart": null,
+    "course1": {
+      "level": "深入",
+      "id": "Module Federation",
+      "content": "Webpack5引入的新特性，允许不同web应用运行时共享代码"
+    },
+    "course2": null
+  },
+  {
+
+    "category": {
+      "id": "前端"
+    },
+    "part": {
+      "level": "深入",
+      "id": "WebAssembly"
+    },
+    "depart": null,
+    "course1": {
+      "level": "深入",
+      "id": "WebAssembly",
+      "content": "一种低级的类汇编语言，具有紧凑的二进制格式，能够以接近原生的性能在web浏览器中运行"
+    },
+    "course2": null
+  }
+]

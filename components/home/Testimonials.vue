@@ -9,7 +9,7 @@
       </div>
 
       <div class="testimonials-grid">
-        <div v-for="(testimonial, index) in testimonials" :key="testimonial.name" class="testimonial-card">
+        <div v-for="(testimonial, index) in testimonials" :key="testimonial.name" class="testimonial-card" @click="$router.push(`${testimonial.link}`)">
           <div class="testimonial-header">
             <img :src="testimonial.image" :alt="testimonial.name" class="testimonial-image" />
             <div class="testimonial-meta">
@@ -33,25 +33,28 @@
 <script setup>
 const testimonials = [
   {
-    name: "Sarah Thompson",
-    role: "CEO at TechCorp",
-    image: "/placeholder.svg?height=400&width=400",
+    name: "Vue 简介",
+    role: "渐进式 JavaScript 框架",
+    image: "https://tse4-mm.cn.bing.net/th/id/OIP-C.vve0ijhF8bqB4_qxOs21fAAAAA?rs=1&pid=ImgDetMain",
     quote:
-      "StreamLine has revolutionized our workflow. It's intuitive, powerful, and has significantly boosted our team's productivity.",
+      "Vue是一款用于构建用户界面的 JavaScript 框架。它基于标准 HTML、CSS 和 JavaScript 构建，并提供了一套声明式的、组件化的编程模型，帮助你高效地开发用户界面。无论是简单还是复杂的界面，Vue 都可以胜任。本文为Vue简介。",
+    link: "/articles/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E4%B8%BB%E6%B5%81%E6%A1%86%E6%9E%B6/Vue3/1.%E7%AE%80%E4%BB%8B"
   },
   {
-    name: "John Davis",
-    role: "Marketing Director at GrowthHub",
-    image: "/placeholder.svg?height=400&width=400",
+    name: "如何成为全栈高手",
+    role: "Uika",
+    image: "https://avatars.githubusercontent.com/u/35548919",
     quote:
-      "The analytics features in StreamLine have provided us with invaluable insights. It's been a game-changer for our marketing strategies.",
+      "在2023年StackOverflow开发者调查中，全栈工程师以55.2%的占比蝉联最受欢迎开发角色。这种既能画界面又能写API的全能选手，正在成为数字化转型浪潮中的核心人才。本文将揭示成为全栈高手的进阶密码。",
+    link: "/forum/1"
   },
   {
-    name: "Emily Chen",
-    role: "Product Manager at InnovateCo",
-    image: "/placeholder.svg?height=400&width=400",
+    name: "RestFul API 简明教程",
+    role: "RESTful API",
+    image: "https://img-blog.csdnimg.cn/5351e2a6a42948fda8158611d42b4584.png",
     quote:
-      "The collaboration tools in StreamLine have made remote work seamless for our team. It's an essential part of our daily operations now.",
+      "一篇文章简单聊聊后端程序员必备的 RESTful API 相关的知识。",
+    link: "articles/后端/API开发与通信/RESTful API/2.RestFul API 简明教程"
   },
 ];
 </script>

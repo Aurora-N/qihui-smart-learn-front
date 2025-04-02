@@ -14,12 +14,6 @@
 <script setup>
 import { getArticlesLists } from '~/utils/getArticles'
 
-// const { data: articles } = await useAsyncData('content', () =>
-//   queryCollection('content')
-//     // .select('title', 'path', 'id')
-//     .all()
-// )
-
 const { data: articles } = await getArticlesLists('前端')
 
 definePageMeta({

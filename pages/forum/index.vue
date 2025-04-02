@@ -15,10 +15,10 @@ const toggleDropdown = (name) => {
 const topics = ref([
   {
     id: 1,
-    title: '关于大一寒假',
-    author: '0x0001',
+    title: '如何成为全栈高手',
+    author: 'Uika',
     replyTime: '2 天前',
-    avatar: '/soyo.png',
+    avatar: 'https://avatars.githubusercontent.com/u/35548919',
     tags: [
       { text: '综合板块', type: 'main' },
       { text: '学习讨论', type: 'learn' },
@@ -28,15 +28,15 @@ const topics = ref([
   },
   {
     id: 2,
-    title: 'Rust学习伙伴',
-    author: '0x0001',
+    title: '寻找Rust学习伙伴',
+    author: 'soyo',
     replyTime: '3 天前',
-    avatar: '/anno.gif',
+    avatar: '/soyo.png',
     tags: [
       { text: '综合板块', type: 'main' },
       { text: 'Rust', type: 'basic' }
     ],
-    replyCount: 1
+    replyCount: 2
   },
   {
     id: 3,
@@ -52,40 +52,17 @@ const topics = ref([
   },
   {
     id: 4,
-    title: '我的 2024 - 稳中求进、热爱生活',
-    author: '0x0001',
+    title: '如何拥抱AI',
+    author: '阿农',
     replyTime: '7 天前',
-    avatar: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-22%20163813-glxOOqHLKGGQRNcY2ioERBWbWGADnq.png',
+    avatar: '/anno.gif',
     tags: [
       { text: '学习讨论', type: 'learn' },
-      { text: '水吧', type: 'water' }
+      { text: '综合板块', type: 'main' }
     ],
     replyCount: 1
   },
-  {
-    id: 5,
-    title: '我的 2024 - 稳中求进、热爱生活',
-    author: '0x0001',
-    replyTime: '7 天前',
-    avatar: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-22%20163813-glxOOqHLKGGQRNcY2ioERBWbWGADnq.png',
-    tags: [
-      { text: '学习讨论', type: 'learn' },
-      { text: '水吧', type: 'water' }
-    ],
-    replyCount: 1
-  },
-  {
-    id: 6,
-    title: '我的 2024 - 稳中求进、热爱生活',
-    author: '0x0001',
-    replyTime: '7 天前',
-    avatar: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-22%20163813-glxOOqHLKGGQRNcY2ioERBWbWGADnq.png',
-    tags: [
-      { text: '学习讨论', type: 'learn' },
-      { text: '水吧', type: 'water' }
-    ],
-    replyCount: 1
-  },
+
 ])
 
 definePageMeta({

@@ -162,7 +162,7 @@ provide("bannerConfig", bannerConfig)
 .container {
   min-height: 100vh;
   background-color: while;
-  margin-top: 55px;
+  padding-top: 55px;
 }
 
 .banner-links {

@@ -70,7 +70,7 @@ onMounted(async () => currentArticleCategory.value = articlesList.value[0])
 <style scoped>
 .posts {
   background-color: while;
-  margin-top: 55px;
+  padding-top: 55px;
   width: 100%;
 }
 

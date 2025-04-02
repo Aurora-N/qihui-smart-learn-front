@@ -7,9 +7,7 @@ import '~/assets/css/home.css'
     <!-- <HomeHeader /> -->
     <main>
       <HomeHero />
-      <HomeFeatures />
       <HomeTestimonials />
-      <HomePricing />
       <HomeCTA />
     </main>
     <HomeFooter />

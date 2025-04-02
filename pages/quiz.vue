@@ -5,7 +5,7 @@
         <template #header>
           <div class="quiz-header">
             <h1>前端开发测试题</h1>
-            <el-progress :percentage="progressPercentage" :format="progressFormat" />
+            <el-progress :percentage="progressPercentage" :format="progressFormat" :color="primaryColor" />
           </div>
         </template>
 
@@ -21,7 +21,7 @@
             <div class="option-buttons">
               <el-button v-for="(option, index) in currentQuestion.options" :key="index"
                 :type="selectedAnswer === option.label ? 'primary' : 'default'" class="option-button"
-                style="margin-left: 0;" @click="selectAnswer(option.label)" size="large">
+                style="margin-left: 0;" @click="selectAnswer(option.label)" size="large" :style="selectedAnswer === option.label ? {borderColor: primaryColor, backgroundColor: '#e6effd', color: primaryColor} : {}">
                 <div class="option-content">
                   <div class="option-label">{{ option.label }}</div>
                   <div class="option-text">{{ option.text }}</div>
@@ -31,11 +31,11 @@
           </div>
 
           <div class="navigation-buttons">
-            <el-button type="primary" plain @click="goToPreviousQuestion" :disabled="currentQuestionIndex === 0">
+            <el-button type="primary" plain @click="goToPreviousQuestion" :disabled="currentQuestionIndex === 0" :style="{borderColor: primaryColor, color: primaryColor}">
               上一题
             </el-button>
 
-            <el-button type="primary" @click="goToNextQuestion" :disabled="!selectedAnswer">
+            <el-button type="primary" @click="goToNextQuestion" :disabled="!selectedAnswer" :style="{backgroundColor: primaryColor, borderColor: primaryColor, color: 'while'}">
               {{ currentQuestionIndex === questions.length - 1 ? '完成答题' : '下一题' }}
             </el-button>
           </div>
@@ -54,15 +54,15 @@
             </el-table-column>
             <el-table-column prop="selectedAnswer" label="您的选择" width="100">
               <template #default="scope">
-                <el-tag v-if="scope.row.selectedAnswer" type="success">
-                  {{ scope.row.selectedAnswer }}
-                </el-tag>
+                <el-tag v-if="scope.row.selectedAnswer" type="success" :style="{backgroundColor: '#f0f9eb', color: '#67C23A', borderColor: '#67C23A'}">
+                {{ scope.row.selectedAnswer }}
+              </el-tag>
                 <el-tag v-else type="danger">未答</el-tag>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="100">
               <template #default="scope">
-                <el-button type="primary" link @click="editAnswer(scope.row.index)">
+                <el-button type="primary" link @click="editAnswer(scope.row.index)" :style="{color: primaryColor}">
                   修改
                 </el-button>
               </template>
@@ -74,7 +74,7 @@
 
             <div class="submit-buttons">
               <el-button @click="reviewMode = false">返回答题</el-button>
-              <el-button type="primary" @click="submitQuiz" :disabled="hasUnansweredQuestions && requireAllAnswered">
+              <el-button type="primary" @click="submitQuiz" :disabled="hasUnansweredQuestions && requireAllAnswered" :style="{backgroundColor: primaryColor, borderColor: primaryColor}">
                 提交答案
               </el-button>
             </div>
@@ -90,41 +90,54 @@
           </div>
 
           <div class="questions-review">
-            <el-collapse>
-              <el-collapse-item v-for="(question, index) in questions" :key="index"
-                :title="`问题 ${index + 1}: ${question.text.replace(/\[([^\]]+)\]/g, '$1')}`" :name="index">
-                <div class="question-review">
-                  <div class="question-text" v-html="formatQuestionText(question.text)"></div>
-                  <div class="options-review">
-                    <div v-for="option in question.options" :key="option.label" :class="[
-                      'option-item',
-                      userAnswers[index] === option.label ? 'user-selected' : '',
-                      question.answer === option.label ? 'correct-answer' : ''
-                    ]">
-                      {{ option.label }}) {{ option.text }}
+            <el-collapse class="custom-collapse" @change="handleCollapseChange">
+              <el-collapse-item title="答题情况" name="answer">
+                <el-collapse class="custom-answer-collapse">
+                  <el-collapse-item v-for="(question, index) in questions" :key="index"
+                    :title="`问题 ${index + 1}: ${question.text.replace(/\[([^\]]+)\]/g, '$1')}`" :name="index">
+                    <div class="question-review">
+                      <div class="question-text" v-html="formatQuestionText(question.text)"></div>
+                      <div class="options-review">
+                        <div v-for="option in question.options" :key="option.label" :class="[
+                          'option-item',
+                          userAnswers[index] === option.label ? 'user-selected' : '',
+                          question.answer === option.label ? 'correct-answer' : ''
+                        ]">
+                          <span class="review-option-label">{{ option.label }}</span>
+                          <span class="review-option-text">{{ option.text }}</span>
+                        </div>
+                      </div>
+                      <div class="explanation">
+                        <div class="correct-answer-label">
+                          <el-tag type="success">正确答案: {{ question.answer }}</el-tag>
+                          <el-tag v-if="userAnswers[index] && userAnswers[index] !== question.answer" type="danger"
+                            style="margin-left: 10px">
+                            您的答案: {{ userAnswers[index] }}
+                          </el-tag>
+                        </div>
+                        <div class="explanation-text">
+                          <el-alert title="解析" type="info" :description="question.explanation" :closable="false"
+                            show-icon />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div class="explanation">
-                    <div class="correct-answer-label">
-                      <el-tag type="success">正确答案: {{ question.answer }}</el-tag>
-                      <el-tag v-if="userAnswers[index] && userAnswers[index] !== question.answer" type="danger"
-                        style="margin-left: 10px">
-                        您的答案: {{ userAnswers[index] }}
-                      </el-tag>
-                    </div>
-                    <div class="explanation-text">
-                      <el-alert title="解析" type="info" :description="question.explanation" :closable="false"
-                        show-icon />
-                    </div>
-                  </div>
-                </div>
+                  </el-collapse-item>
+                </el-collapse>
+              </el-collapse-item>
+              <el-collapse-item title="学习路线推荐" name="roadmap">
+                <GraphRoadMap ref="graphEmbeded" :roadmap-data="recommendLearningPath.value" />
               </el-collapse-item>
             </el-collapse>
           </div>
 
-          <el-button type="primary" @click="restartQuiz" class="restart-button">
-            重新开始
-          </el-button>
+          <el-button 
+          type="primary" 
+          @click="restartQuiz" 
+          class="restart-button"
+          :style="{backgroundColor: primaryColor, borderColor: primaryColor}"
+        >
+          重新开始
+        </el-button>
         </div>
       </el-card>
     </div>
@@ -133,7 +146,23 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import localQuizData from '~/assets/quiz/test1.md?raw'
+import localQuizData from '~/assets/quiz/test.md?raw'
+import { useQuizApi } from '~/api/quiz'
+
+const graphEmbeded = ref(null); // 通过 `ref` 获取 GraphEmbeded 组件的实例
+
+const handleCollapseChange = (value) => {
+  if (Object.values(value).includes('roadmap')) {
+    nextTick(() => {
+      if (graphEmbeded.value) {
+        graphEmbeded.value.initGraph(); // 通过 `graphEmbeded.value` 调用方法
+      }
+    });
+  }
+}
+
+// 主色调
+const primaryColor = ref('#0060DF');
 
 // 解析题目数据
 const parseQuestions = (markdownText) => {
@@ -201,6 +230,8 @@ const showResults = ref(false);
 const score = ref(0);
 const reviewMode = ref(false);
 const requireAllAnswered = ref(false); // 是否要求所有题目都回答
+const userAnswersList = ref([]);
+const recommendLearningPath = ref([]);
 
 // 计算属性
 const currentQuestion = computed(() => questions.value[currentQuestionIndex.value] || {});
@@ -266,13 +297,22 @@ const editAnswer = (index) => {
   reviewMode.value = false;
 };
 
-const submitQuiz = () => {
+const getUserLearningPath = async () => {
+  const res = await useQuizApi().getLearningPath(userAnswersList.value);
+  recommendLearningPath.value = res;
+  console.log(recommendLearningPath.value);
+}
+
+const submitQuiz = async () => {
   calculateScore();
   reviewMode.value = false;
   showResults.value = true;
 
-  // 这里可以添加提交数据到服务器的逻辑
-  console.log('提交的答案:', userAnswers.value);
+  for (let i = 0; i < questions.value.length; i++) {
+    userAnswersList.value.push({ question: i+1, answer: userAnswers.value[i] === questions.value[i].answer});
+  }
+
+  await getUserLearningPath();
 };
 
 const calculateScore = () => {
@@ -302,11 +342,11 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  margin-top: 80px;
+  padding-top: 80px;
 }
 
 .quiz-container {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
   font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
@@ -341,7 +381,7 @@ onMounted(() => {
 
 .question-count span {
   font-weight: bold;
-  color: #409EFF;
+  color: #0060DF;
 }
 
 .question-text {
@@ -349,16 +389,6 @@ onMounted(() => {
   font-weight: 500;
   margin-bottom: 20px;
   line-height: 1.6;
-}
-
-.tag-highlight {
-  background-color: #ecf5ff;
-  color: #409EFF;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: bold;
-  margin: 0 2px;
-  display: inline-block;
 }
 
 .answer-section {
@@ -378,25 +408,30 @@ onMounted(() => {
   text-align: left;
   border-radius: 6px;
   transition: all 0.3s;
+  position: relative;
 }
 
 .option-content {
   display: flex;
-  align-items: flex-start;
-  width: 100%;
+  align-items: center;
 }
 
 .option-label {
   font-weight: bold;
-  margin-right: 10px;
   font-size: 16px;
-  min-width: 20px;
-  flex: 2;
+  min-width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: 15px;
 }
 
 .option-text {
-  flex: 8;
+  flex: 1;
   font-size: 16px;
+  text-align: center;
+  padding: 0 30px;
 }
 
 .navigation-buttons {
@@ -463,11 +498,23 @@ onMounted(() => {
   border-radius: 4px;
   margin-bottom: 8px;
   border: 1px solid #EBEEF5;
+  display: flex;
+  align-items: center;
+}
+
+.review-option-label {
+  font-weight: bold;
+  min-width: 30px;
+  margin-right: 10px;
+}
+
+.review-option-text {
+  flex: 1;
 }
 
 .user-selected {
-  background-color: #ebf5f9;
-  border-color: #d8e3f3;
+  background-color: #e6effd;
+  border-color: #0060DF;
 }
 
 .correct-answer {
@@ -488,5 +535,28 @@ onMounted(() => {
   display: block;
   margin: 20px auto;
   width: 200px;
+}
+</style>
+
+<style>
+.tag-highlight {
+  background-color: #e6effd;
+  color: #0060DF;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+  margin: 0 2px;
+  display: inline-block;
+}
+
+/* 增加折叠面板的字体大小 */
+.custom-collapse .el-collapse-item__header {
+  font-size: 18px;
+  padding: 15px;
+  line-height: 1.5;
+}
+
+.custom-collapse .el-collapse-item__content {
+  padding: 20px;
 }
 </style>

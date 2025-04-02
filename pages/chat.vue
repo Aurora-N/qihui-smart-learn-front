@@ -17,9 +17,9 @@ definePageMeta({
 </script>
 
 <template>
-  <Navbar title="计算机在线学习平台问答助手" :transparent="false" />
+  <Navbar :transparent="false" />
   <div class="container">
-    <iframe src="http://hekabi.a1.luyouxia.net:25333/ui/chat/5bfb22ba0d4da3ed" style="width: 100%; height: 100%;"
+    <iframe src="http://xg.frp.one:25333/ui/chat/5bfb22ba0d4da3ed" style="width: 100%; height: 100%;"
       frameborder="0" allow="microphone">
     </iframe>
   </div>

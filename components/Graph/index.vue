@@ -13,7 +13,11 @@
 
     <!-- 内嵌小窗口模式 -->
     <div class="knowledge-graph-card-embeded" @click="toggleFullscreen" v-else-if="!isFullscreen && isEmbedded">
-      <div class="mini-graph" ref="miniGraphContainer"></div>
+      <div class="embeded-graph-container">
+        <div ref="graphContainer" class="graph-container">
+          <img src="/vue3_graphs_mock.png" width="220px" class="mock-graph">
+        </div>
+      </div>
     </div>
 
     <!-- 全屏模式 -->
@@ -30,6 +34,25 @@
       </div>
 
       <div class="fullscreen-content">
+      <!-- 筛选控制面板 -->
+      <!-- <div class="filter-panel">
+      <div class="filter-input-container">
+        <input 
+          type="text" 
+          v-model="filterTerm" 
+          placeholder="输入节点名称进行筛选" 
+          class="filter-input"
+          @keyup.enter="applyFilter"
+        />
+        <button @click="applyFilter" class="filter-btn">筛选</button>
+        <button @click="resetFilter" class="reset-btn" :disabled="!isFiltered">重置</button>
+      </div>
+      <div v-if="isFiltered" class="filter-info">
+        <span>当前筛选: <strong>{{ currentFilterNode }}</strong></span>
+        <span class="filter-count">显示 {{ filteredNodeCount }} 个节点</span>
+      </div>
+    </div> -->
+
         <div class="controls">
           <button @click="resetZoom" class="control-btn">重置视图</button>
           <div class="checkbox-control">
@@ -202,7 +225,7 @@
                   <h4>相关知识图谱</h4>
                 </div>
                 <div class="sidebar-section-content">
-                  <Graph isEmbedded="true" :id="selectedNode.id" />
+                  <Graph isEmbedded="true" :graph-id="selectedNode.id" :title="selectedNode.id" />
                 </div>
               </div>
             </div>
@@ -239,9 +262,19 @@ const props = defineProps({
   }
 })
 
-// 引入数据
-import graphData from '~/assets/data.json';
+// 引入数据 mock
+import fullData from '~/assets/data.json';
+import frontData from '~/assets/data_front_end.json'
+import backData from '~/assets/data_back_end.json'
+import vueData from '~/assets/data_vue.json'
 import { IconsGraph } from '#components';
+
+const graphData = computed(() => {
+  if (props.title === '前端') return frontData;
+  else if (props.title === '后端') return backData;
+  else if (props.title === 'Vue3') return vueData;
+  else return fullData;
+})
 
 // 状态变量
 const isFullscreen = ref(false);
@@ -252,6 +285,11 @@ const selectedNode = ref(null);
 const matchedNodes = ref([]);
 const searchTimeout = ref(null);
 const isSearching = ref(false);
+
+const filterTerm = ref('');
+const isFiltered = ref(false);
+const currentFilterNode = ref('');
+const filteredNodeCount = ref(0);
 
 // 监听窗口大小
 const { width: windowWidth, height: windowHeight } = useWindowSize();
@@ -273,6 +311,9 @@ let zoom = null;
 let linkLabels = null;
 let nodes = [];
 let links = [];
+
+let allNodes = []; // 存储所有节点的原始副本
+let allLinks = []; // 存储所有链接的原始副本
 
 // 切换全屏/小窗口模式
 const toggleFullscreen = async () => {
@@ -296,7 +337,7 @@ const toggleLegend = () => {
 const initMiniGraph = () => {
   if (!miniGraphContainer.value) return;
 
-  const data = transformData(graphData, props.maxDepth);
+  const data = transformData(graphData.value, props.maxDepth);
   nodes = data.nodes;
   links = data.links;
 
@@ -345,12 +386,6 @@ const initMiniGraph = () => {
 
   // 更新函数
   miniSimulation.on('tick', () => {
-    // miniG.selectAll('line')
-    //   .attr('x1', d => d.source.x)
-    //   .attr('y1', d => d.source.y)
-    //   .attr('x2', d => d.target.x)
-    //   .attr('y2', d => d.target.y);
-
     miniG.selectAll('circle')
       .attr('cx', d => d.x)
       .attr('cy', d => d.y);
@@ -367,13 +402,20 @@ const initMiniGraph = () => {
   setTimeout(() => miniSimulation.stop(), 2000);
 };
 
+
+
 // 初始化全屏图表
-const initGraph = () => {
+const initGraph = (isFiltering = false) => {
   if (!graphContainer.value) return;
 
-  const data = transformData(graphData, props.maxDepth);
-  nodes = data.nodes;
-  links = data.links;
+  if (!isFiltering) {
+    const data = transformData(graphData.value, props.maxDepth);
+    nodes = data.nodes;
+    links = data.links;
+      // 保存原始数据的副本
+    allNodes = [...nodes];
+    allLinks = [...links];
+  }
 
   const width = graphContainer.value.clientWidth;
   const height = graphContainer.value.clientHeight;
@@ -595,7 +637,72 @@ const initGraph = () => {
     event.subject.fx = null;
     event.subject.fy = null;
   }
+
+  // 如果是筛选后的视图，自动调整缩放以适应所有可见节点
+  if (isFiltering && nodes.length > 0) {
+    setTimeout(() => {
+      zoomToFit();
+    }, 500);
+  }
 };
+
+
+// 缩放以适应所有可见节点
+const zoomToFit = () => {
+  if (!svg || !g || nodes.length === 0) return;
+  
+  // 计算所有节点的边界
+  const bounds = {
+    minX: Infinity,
+    minY: Infinity,
+    maxX: -Infinity,
+    maxY: -Infinity
+  };
+  
+  nodes.forEach(node => {
+    bounds.minX = Math.min(bounds.minX, node.x || 0);
+    bounds.minY = Math.min(bounds.minY, node.y || 0);
+    bounds.maxX = Math.max(bounds.maxX, node.x || 0);
+    bounds.maxY = Math.max(bounds.maxY, node.y || 0);
+  });
+  
+  // 添加边距
+  const padding = 50;
+  bounds.minX -= padding;
+  bounds.minY -= padding;
+  bounds.maxX += padding;
+  bounds.maxY += padding;
+  
+  // 计算缩放比例
+  const width = graphContainer.value.clientWidth;
+  const height = graphContainer.value.clientHeight;
+  const boundWidth = bounds.maxX - bounds.minX;
+  const boundHeight = bounds.maxY - bounds.minY;
+  
+  if (boundWidth === 0 || boundHeight === 0) return;
+  
+  const scale = Math.min(
+    width / boundWidth,
+    height / boundHeight,
+    2 // 最大缩放限制
+  ) * 0.9; // 稍微缩小一点，留出边距
+  
+  // 计算中心点
+  const centerX = bounds.minX + boundWidth / 2;
+  const centerY = bounds.minY + boundHeight / 2;
+  
+  // 应用缩放和平移
+  svg.transition()
+    .duration(750)
+    .call(
+      zoom.transform,
+      d3.zoomIdentity
+        .translate(width / 2, height / 2)
+        .scale(scale)
+        .translate(-centerX, -centerY)
+    );
+};
+
 
 // 高亮单个节点及其标签
 const highlightNode = (node) => {
@@ -669,8 +776,10 @@ const handleSearch = () => {
   const term = searchTerm.value.toLowerCase();
 
   // 重置所有节点、链接和标签的透明度
-  svg.selectAll('circle, line, text')
+  svg.selectAll('circle, line, text, #arrow')
     .attr('opacity', 1);
+  svg.selectAll('path').attr('stroke-opacity', 0.6);
+  svg.selectAll('#arrow').attr('fill', '#999');
 
   if (term) {
     // 找到匹配的节点
@@ -681,6 +790,8 @@ const handleSearch = () => {
       // 降低所有元素的透明度
       svg.selectAll('line, text')
         .attr('opacity', 0);
+      svg.selectAll('#arrow').attr('opacity', 0);
+      svg.selectAll('path').attr('stroke-opacity', 0);
       svg.selectAll('circle').attr('opacity', 0.1);
 
       // 高亮匹配的节点及其相关节点
@@ -772,7 +883,7 @@ const highlightNodeAndRelated = (node) => {
     links.forEach(link => {
       if (link.source.uniqueId === currentNode.uniqueId) {
         // 高亮连接
-        svg.selectAll('line')
+        svg.selectAll('path')
           .filter(d => d.source.uniqueId === currentNode.uniqueId && d.target.uniqueId === link.target.uniqueId)
           .attr('opacity', 1);
 
@@ -807,9 +918,16 @@ const highlightNodeAndRelated = (node) => {
   links.forEach(link => {
     if (link.target.uniqueId === node.uniqueId) {
       // 高亮连接
-      svg.selectAll('line')
-        .filter(d => d.target.uniqueId === node.uniqueId && d.source.uniqueId === link.source.uniqueId)
-        .attr('opacity', 1);
+      svg.selectAll('path')
+        .filter(function(d) {
+          return d.target && d.target.uniqueId === node.uniqueId && d.source.uniqueId === link.source.uniqueId;
+        })
+        .attr('stroke-opacity', 0.6);
+
+      // 不可直接写，需要套一个回调函数
+      // svg.selectAll('path')
+      //   .filter(d => d.target.uniqueId === node.uniqueId && d.source.uniqueId === link.source.uniqueId)
+      //   .attr('stroke-opacity', 0.6);
 
       // 高亮连接标签
       svg.selectAll('text')
@@ -899,8 +1017,8 @@ const getNodeResources = (node) => {
     );
   } else if (node.level === '基础') {
     resources.articles.push(
-      { title: '基础知识：' + node.id, url: '#' },
-      { title: '实践案例分析', url: '#' }
+      { title: '基础知识：' + node.id + '简介', url: '/articles/前端/前端主流框架/Vue3/1.简介' },
+      { title: '官方文档：' + 'Vue.js - 渐进式 JavaScript 框架', url: 'https://cn.vuejs.org/' }
     );
   } else if (node.level === '进阶') {
     resources.articles.push(
@@ -921,8 +1039,18 @@ const getNodeResources = (node) => {
     );
   }
 
+  if (node.id === 'Vue3') {
+    resources.articles.push(
+      { title: '实践：' + 'Vue SFC Playground', url: 'https://play.vuejs.org/' },
+    );
+    resources.videos.push(
+      { title: 'Vue3基础入门到实战项目教程——黑马程序员', embedUrl: '//player.bilibili.com/player.html?aid=870472773&bvid=BV1HV4y1a7n4&cid=1596651004&page=1&danmaku=0&autoplay=0' }
+    );
+  }
+
   return resources;
 };
+
 
 // 获取相关节点
 const getRelatedNodes = (node) => {
@@ -943,6 +1071,12 @@ const getRelatedNodes = (node) => {
     }
   });
 
+  // 暂时mock数据
+  if (node.id === 'Vue3') {
+    const targetNodes = [nodes.find(n => n.id === '前端基础核心'), nodes.find(n => n.id === 'Pinia'), nodes.find(n => n.id === 'Nuxt.js'), nodes.find(n => n.id === 'Element Plus'), nodes.find(n => n.id === 'Vite前端')];
+    relatedNodes.push(...targetNodes);
+  }
+
   // 限制返回的相关节点数量
   return relatedNodes.slice(0, 5);
 };
@@ -951,6 +1085,82 @@ const getRelatedNodes = (node) => {
 const selectNode = (node) => {
   selectedNode.value = node;
 };
+
+
+// 应用筛选
+const applyFilter = () => {
+  if (!filterTerm.value.trim()) {
+    resetFilter();
+    return;
+  }
+  
+  const term = filterTerm.value.trim().toLowerCase();
+  
+  // 查找匹配的节点
+  const matchedNode = allNodes.find(node => 
+    node.id.toLowerCase() === term || 
+    node.id.toLowerCase().includes(term)
+  );
+  
+  if (!matchedNode) {
+    alert('未找到匹配的节点');
+    return;
+  }
+  
+  // 找到匹配节点的所有子节点
+  const childNodeIds = new Set();
+  const nodesToShow = new Set();
+  
+  // 添加匹配的节点
+  nodesToShow.add(matchedNode.uniqueId);
+  currentFilterNode.value = matchedNode.id;
+  
+  // 递归查找所有子节点
+  const findChildNodes = (nodeId) => {
+    allLinks.forEach(link => {
+      if (link.source.uniqueId === nodeId || link.source === nodeId) {
+        const targetId = link.target.uniqueId || link.target;
+        if (!childNodeIds.has(targetId)) {
+          childNodeIds.add(targetId);
+          nodesToShow.add(targetId);
+          findChildNodes(targetId);
+        }
+      }
+    });
+  };
+  
+  findChildNodes(matchedNode.uniqueId);
+  
+  // 筛选节点和链接
+  nodes = allNodes.filter(node => nodesToShow.has(node.uniqueId));
+  links = allLinks.filter(link => 
+    nodesToShow.has(link.source.uniqueId || link.source) && 
+    nodesToShow.has(link.target.uniqueId || link.target)
+  );
+  
+  filteredNodeCount.value = nodes.length;
+  isFiltered.value = true;
+  
+  // 重新初始化图表
+  simulation.stop();
+  initGraph(true);
+};
+
+// 重置筛选
+const resetFilter = () => {
+  if (!isFiltered.value) return;
+  
+  nodes = [...allNodes];
+  links = [...allLinks];
+  isFiltered.value = false;
+  currentFilterNode.value = '';
+  filterTerm.value = '';
+  
+  // 重新初始化图表
+  simulation.stop();
+  initGraph();
+};
+
 
 // 重置缩放
 const resetZoom = () => {
@@ -1206,7 +1416,7 @@ onBeforeUnmount(() => {
 
 .controls {
   position: absolute;
-  top: 20px;
+  bottom: 20px;
   left: 20px;
   z-index: 10;
   background-color: rgba(255, 255, 255, 0.1);
@@ -1270,6 +1480,7 @@ onBeforeUnmount(() => {
 .legend-container {
   border-top: 1px solid var(--border-color);
   padding-top: 10px;
+  transition: all 1s ease-in-out;
 }
 
 .legend-header {
@@ -1309,6 +1520,18 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   overflow: hidden;
+
+}
+
+.embeded-graph-container {
+  background-color: #f8f9fa;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.mock-graph {
+  background-color: #f8f9fa;
+  height: 100%;
 }
 
 /* 侧边栏动画 */
@@ -1328,7 +1551,7 @@ onBeforeUnmount(() => {
   position: fixed;
   top: 0;
   right: 0;
-  width: 380px;
+  width: 500px;
   height: 100%;
   background-color: var(--background-color);
   box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
@@ -1538,5 +1761,85 @@ onBeforeUnmount(() => {
 .node {
   transition: r 0.3s ease, opacity 0.3s ease, stroke-width 0.3s ease, filter 0.3s ease;
   cursor: pointer;
+}
+
+
+
+.filter-panel {
+  background-color: white;
+  padding: 15px 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+}
+
+.filter-input-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.filter-input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: #4a6cf7;
+}
+
+.filter-btn {
+  background-color: #4a6cf7;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.filter-btn:hover {
+  background-color: #3a56d4;
+}
+
+.reset-btn {
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.reset-btn:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.reset-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.filter-info {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.filter-count {
+  background-color: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 </style>

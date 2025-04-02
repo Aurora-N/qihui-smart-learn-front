@@ -35,12 +35,6 @@ const props = defineProps({
       <p class="banner-subtitle">{{ props.subTitle }}</p>
       <slot />
     </div>
-
-    <!-- Medium decorative elements -->
-    <div class="decoration decoration-right">
-      <div class="paragraph-lines"></div>
-      <div class="bookmark"></div>
-    </div>
   </div>
 </template>
 
@@ -91,7 +85,6 @@ const props = defineProps({
   background-color: var(--layer-color-1);
   top: -30%;
   left: -10%;
-  z-index: 0;
 }
 
 .bg-layer-2 {
@@ -100,13 +93,11 @@ const props = defineProps({
   background-color: var(--layer-color-2);
   bottom: -20%;
   right: -20%;
-  z-index: 0;
 }
 
 /* Large decorative elements */
 .large-element {
   position: absolute;
-  z-index: 1;
 }
 
 .large-book-left {
@@ -163,59 +154,10 @@ const props = defineProps({
 /* Floating elements for additional depth */
 .floating-element {
   position: absolute;
-  z-index: 1;
   opacity: 0.7;
 }
 
-.floating-quote-left {
-  font-size: 120px;
-  font-family: serif;
-  color: var(--floating-color);
-  left: 15%;
-  top: 15%;
-  transform: rotate(-10deg);
-}
-
-.floating-quote-right {
-  font-size: 120px;
-  font-family: serif;
-  color: var(--floating-color);
-  right: 15%;
-  bottom: 15%;
-  transform: rotate(10deg);
-}
-
-.floating-line-1,
-.floating-line-2,
-.floating-line-3 {
-  height: 4px;
-  background-color: var(--floating-color);
-  border-radius: 2px;
-}
-
-.floating-line-1 {
-  width: 150px;
-  left: 10%;
-  bottom: 30%;
-  transform: rotate(-25deg);
-}
-
-.floating-line-2 {
-  width: 100px;
-  right: 20%;
-  top: 25%;
-  transform: rotate(15deg);
-}
-
-.floating-line-3 {
-  width: 180px;
-  left: 25%;
-  bottom: 20%;
-  transform: rotate(5deg);
-}
-
 .banner-content {
-  z-index: 3;
   max-width: 800px;
   width: 100%;
   position: relative;
@@ -250,7 +192,6 @@ const props = defineProps({
   align-items: center;
   opacity: 0.6;
   pointer-events: none;
-  z-index: 2;
 }
 
 .decoration-left {
@@ -304,114 +245,5 @@ const props = defineProps({
   box-shadow: 0 8px 0 var(--decoration-accent), 0 16px 0 var(--decoration-accent),
     0 24px 0 var(--decoration-accent), 0 32px 0 var(--decoration-accent),
     0 40px 0 var(--decoration-accent), 0 48px 0 var(--decoration-accent);
-}
-
-/* Right side decorations */
-.paragraph-lines {
-  width: 70px;
-  height: 90px;
-  position: relative;
-  transform: rotate(15deg);
-}
-
-.paragraph-lines::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 4px;
-  background-color: var(--decoration-color);
-  box-shadow: 0 12px 0 var(--decoration-color), 0 24px 0 var(--decoration-color),
-    0 36px 0 var(--decoration-color), 0 48px 0 var(--decoration-color),
-    0 60px 0 var(--decoration-color), 0 72px 0 var(--decoration-color);
-}
-
-.bookmark {
-  width: 30px;
-  height: 60px;
-  background-color: var(--decoration-accent);
-  border-radius: 3px 3px 15px 15px;
-  transform: rotate(-10deg);
-  margin-top: 20px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 992px) {
-
-  .large-book-left,
-  .large-page-right {
-    transform: scale(0.8) translateY(-50%) rotate(var(--rotation, 0deg));
-  }
-
-  .large-book-left {
-    --rotation: -15deg;
-    left: -80px;
-  }
-
-  .large-page-right {
-    --rotation: 15deg;
-    right: -70px;
-  }
-
-  .floating-quote-left,
-  .floating-quote-right {
-    font-size: 100px;
-  }
-}
-
-@media (max-width: 768px) {
-  .decoration {
-    width: 80px;
-    opacity: 0.4;
-  }
-
-  .book,
-  .page,
-  .paragraph-lines,
-  .bookmark {
-    transform: scale(0.7) rotate(var(--rotation, 0deg));
-  }
-
-  .large-book-left,
-  .large-page-right {
-    transform: scale(0.6) translateY(-50%) rotate(var(--rotation, 0deg));
-  }
-
-  .floating-element {
-    opacity: 0.4;
-  }
-
-  .floating-quote-left,
-  .floating-quote-right {
-    font-size: 80px;
-  }
-
-  .banner-content {
-    padding: 1.5rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .decoration {
-    opacity: 0.2;
-  }
-
-  .large-book-left,
-  .large-page-right {
-    transform: scale(0.5) translateY(-50%) rotate(var(--rotation, 0deg));
-  }
-
-  .floating-element {
-    opacity: 0.3;
-  }
-
-  .banner-content {
-    padding: 1rem;
-  }
-
-  .banner-title {
-    font-size: 1.75rem;
-  }
 }
 </style>

@@ -1,0 +1,51 @@
+[  {
+
+  "category": {
+    "id": "前端"
+  },
+  "part": {
+    "level": "基础",
+    "id": "前端主流框架"
+  },
+  "depart": null,
+  "course1": {
+    "level": "基础",
+    "id": "React",
+    "content": "用于构建用户界面的JavaScript库"
+  },
+  "course2": null
+},
+{
+
+  "category": {
+    "id": "前端"
+  },
+  "part": {
+    "level": "基础",
+    "id": "前端主流框架"
+  },
+  "depart": null,
+  "course1": {
+    "level": "基础",
+    "id": "Vue3",
+    "content": "一套构建用户界面的渐进式框架"
+  },
+  "course2": null
+},
+{
+
+  "category": {
+    "id": "前端"
+  },
+  "part": {
+    "level": "基础",
+    "id": "前端主流框架"
+  },
+  "depart": null,
+  "course1": {
+    "level": "基础",
+    "id": "Angular",
+    "content": "一款开源JavaScript库，由Google维护，用来协助单一页面应用程序运行"
+  },
+  "course2": null
+}]

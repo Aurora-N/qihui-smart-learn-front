@@ -1,98 +1,121 @@
 <template>
   <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-brand">
-        <div class="logo">知识图谱学习网站</div>
-        <p>知识图谱改变世界</p>
-      </div>
-
-      <div class="footer-columns">
-        <div v-for="(column, index) in columns" :key="index" class="footer-column">
-          <h3>{{ column.title }}</h3>
-          <ul>
-            <li v-for="(link, linkIndex) in column.links" :key="linkIndex">
-              <a :href="link.url">{{ link.text }}</a>
-            </li>
-          </ul>
-        </div>
+    <div class="container">
+      <h1 class="footer-title">知识图谱改变世界</h1>
+      <div class="footer-bottom">
+        <!-- <div class="social-links">
+          <NuxtLink v-for="social in socialLinks" :key="social.label" :to="social.href" class="social-link" :aria-label="social.label">
+            <component :is="social.icon" />
+          </NuxtLink>
+        </div> -->
+        <p class="copyright">
+          &copy; {{ new Date().getFullYear() }} 启慧智学项目组
+        </p>
       </div>
     </div>
   </footer>
 </template>
 
 <script setup>
-defineProps({
-  columns: {
-    type: Array,
-    required: true
-  }
-})
 </script>
 
 <style scoped>
-.light-mode .footer {
-  background: #f9f9fb;
-  padding: 48px 24px;
+.footer {
+  background-color: var(--color-background);
+  border-top: 1px solid var(--color-border);
+  padding: 2rem 0 3rem 0;
 }
 
-.dark-mode .footer {
-  background: #313131;
-  padding: 48px 24px;
-}
-
-.footer-content {
-  max-width: 1400px;
+.container {
+  max-width: 1280px;
   margin: 0 auto;
-  display: flex;
-  gap: 48px;
+  padding: 0 1rem;
 }
 
-.footer-brand {
-  flex-shrink: 0;
-  width: 260px;
-}
-
-.logo {
-  font-size: 24px;
+.footer-title {
+  font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 8px;
 }
 
-.footer-columns {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 32px;
+.footer-heading {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-color);
+  margin-bottom: 1rem;
 }
 
-.footer-column h3 {
-  font-size: 1rem;
-  margin-bottom: 16px;
-}
-
-.footer-column ul {
+.footer-links {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.footer-column li {
-  margin-bottom: 8px;
-}
-
-.light-mode .footer-column a {
-  color: #404040;
+.footer-link {
+  display: block;
+  font-size: 1rem;
+  color: var(--text-muted);
   text-decoration: none;
-  font-size: 14px;
+  padding: 0.5rem 0;
+  transition: color 0.2s;
 }
 
-.dark-mode .footer-column a {
-  color: #cdcdcd;
-  text-decoration: none;
-  font-size: 14px;
+.footer-link:hover {
+  color: var(--text-color);
 }
 
-.footer-column a:hover {
-  text-decoration: underline;
+.footer-bottom {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  /* border-top: 1px solid var(--border-color); */
+}
+
+.social-links {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.social-link {
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.social-link:hover {
+  color: var(--text-color);
+}
+
+.copyright {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+@media (min-width: 768px) {
+  .footer-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .social-links {
+    margin-bottom: 0;
+    order: 2;
+  }
+  
+  .copyright {
+    order: 1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 </style>
+

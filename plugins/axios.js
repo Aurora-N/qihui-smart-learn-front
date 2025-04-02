@@ -4,7 +4,7 @@ import { useUserStore } from '~/stores/userStore'
 
 export default defineNuxtPlugin((nuxtApp) => {
     const apiClient = axios.create({
-        baseURL: 'http://120.76.138.103:5050', // 服务器地址
+        baseURL: 'http://120.76.138.103:5050/', // 服务器地址
         timeout: 5000,
         headers: {
             'Content-Type': 'application/json',

@@ -4,12 +4,12 @@ const res = {
   "data": {
     "posts": {
       "postId": "90",
-      "title": "有什么值得一看的博客推荐？",
+      "title": "如何成为全栈高手",
       "author": {
         "id": "PGM_CJ_T-n8sYC3RtAhpx",
         "attributes": {
           "avatarUrl": "https://avatars.githubusercontent.com/u/35548919",
-          "userName": "崇家明",
+          "userName": "Uika",
           "email": "lmfmhh_oe812@sina.com"
         }
       },
@@ -23,46 +23,40 @@ const res = {
           "categoryName": "资源推荐"
         }
       ],
-      "createdAt": "2023-08-21 03:37:51",
+      "createdAt": "2025-02-21 03:37:51",
       "lastCommentedAt": "2025-02-19 18:02:15",
       "commentsCount": 3,
       "likesCount": 16,
-      "content": `# Markdown Editor
+      "content": `# 如何成为全栈高手：从入门到精通的系统性指南
 
-## Features
-- Real-time rendering
-- Code syntax highlighting
-- Easy to use
+![全栈开发概念图](https://ts1.tc.mm.bing.net/th/id/R-C.b98e1c67d222c8ff82eb8e8048b9e014?rik=FlVhN5d51r0O%2fA&riu=http%3a%2f%2fp0.ifengimg.com%2fpmop%2f2018%2f1108%2f087ED8FD28D779B2CE229A211B936279D71F5352_size119_w554_h369.png&ehk=czJeERxYtQ9zn62TVzk%2fiYlBxmdmxtOHFazX59aWnd0%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1)  
+*全栈开发者需掌握从前端到后端的完整技术栈*
 
-## Code Example
+在2023年StackOverflow开发者调查中，**全栈工程师**以55.2%的占比蝉联最受欢迎开发角色。这种既能画界面又能写API的全能选手，正在成为数字化转型浪潮中的核心人才。本文将揭示成为全栈高手的进阶密码。
 
-\`\`\`js
-function greet(name) {
-  return \`Hello, \${name}!\`;
-}
+---
 
-console.log(greet('World'));
+## 一、构建全栈技能树的三个维度
+
+### 1. 技术栈的黄金组合
+- **前端三件套**：HTML5/CSS3(掌握Flex/Grid布局) + ES2022+
+- **框架生态**：React/Vue/Angular任选其一深入，搭配TypeScript
+- **服务端核心**：Node.js(Python/Go备选) + RESTful API设计原则
+- **数据库双引擎**：关系型(MySQL/PostgreSQL) + NoSQL(MongoDB/Redis)
+- **DevOps基础**：Docker容器化 + CI/CD流水线配置
+
+### 2. 架构思维培养
+- 理解MVC/MVVM设计模式差异
+- 掌握微服务与单体架构的取舍之道
+- 学习领域驱动设计(DDD)基础概念
+- 构建可扩展的API网关设计
+
+### 3. 工具链掌控力
+\`\`\`bash
+# 现代全栈开发典型工具链
+VS Code → Git → Webpack → Jest → Postman → Kubernetes
 \`\`\`
 
-## Table Example
-
-| Name | Age | Occupation |
-|------|-----|------------|
-| John | 30  | Developer  |
-| Jane | 25  | Designer   |
-
-
-\`\`\`java
-// We will receive an error from the Java compiler, before we run the program.
-int a = 5;
-int b;
-if (a > 10) {
-    b = 2;
-} else {
-    // b = 4;
-}
-b *= 3;
-\`\`\`
 
 `,
       "comments": [
@@ -71,14 +65,14 @@ b *= 3;
           "author": {
             "id": "644e609b-9c71-430d-b6f1-73e0cb1f8d18",
             "attributes": {
-              "avatarUrl": "https://avatars.githubusercontent.com/u/58953899",
-              "userName": "fmnlj1.tml",
+              "avatarUrl": "/kita.png",
+              "userName": "Aurorallz",
               "email": "v9bmdm.k7f@163.com"
             }
           },
-          "content": "为了避免尴尬，楼主先来推荐几个`114514`",
-          "createdAt": "2024-03-13 23:31:13",
-          "likesCount": 3,
+          "content": "推荐一个很好的全栈学习网站，来自赫尔辛基大学：[Full Stack open](https://fullstackopen.com/en/)",
+          "createdAt": "2025-03-13 23:31:13",
+          "likesCount": 6,
           "repliedID": null
         },
         {
@@ -86,13 +80,13 @@ b *= 3;
           "author": {
             "id": "6ddbb6b0-93d2-4452-9008-589152dc405e",
             "attributes": {
-              "avatarUrl": "https://avatars.githubusercontent.com/u/90084971",
-              "userName": "i1cuji.ju1",
+              "avatarUrl": "/muzimi.jpg",
+              "userName": "muko",
               "email": "mawtue_too89@foxmail.com"
             }
           },
-          "content": "当然是左耳朵耗子大叔的博客啦",
-          "createdAt": "2025-02-10 18:16:49",
+          "content": "感觉还是得先打好计算机基础，基础不牢地动山摇😀",
+          "createdAt": "2025-03-14 18:16:49",
           "likesCount": 5,
           "repliedID": "3139334224466784"
         },
@@ -102,12 +96,12 @@ b *= 3;
             "id": "893fcab4-500a-41c4-922d-44ba3a6bc164",
             "attributes": {
               "avatarUrl": "https://avatars.githubusercontent.com/u/22179789",
-              "userName": "ixjlj1.glk",
+              "userName": "Ruster",
               "email": "k8qscp14@yeah.net"
             }
           },
-          "content": "做好这个决定以后，我就开始彻底躺平，把手里的几个项目草草收尾，赔了大几十万。等于这一年白忙活。好在还有一份工作收入。同时也拒掉了2个新的Offer。在疫情最困难的时候，还能拿到两个涨薪offer。我还是蛮佩服我自己的。但是为了不影响我的额外收入，加上现在工作不是很喜欢，也就一直犹豫不决。但是这次生病彻底让我下定了决定 ---- 算了。\n其实，经历这么多年，什么都看的很清楚，但是我的性格并不适合这个行业，我这个人最大的特点就是腰杆子硬，不喜欢向上管理，经常有人说我那么圆滑，肯定是老油条，而实际上，我整整18年的工作经历，只对领导说过一次违心的话，变相的夸了老板定制的开发模式，老板看着我笑了笑，也不知道他是不是听出来我这话是讽刺还是撒谎。\n而其余都是和老板对着干，只有2任老板是我比较钦佩的，也是配合最舒服的。而且共同特点都是百度出身，我特别喜欢百度系的老板。特别务实，认认真真做业务。不搞虚头巴脑的事情，更不在工作中弄虚作假。一个是滴滴的梁老板，另一个就是在途家时候的黄老板。\n",
-          "createdAt": "2025-02-19 18:02:15",
+          "content": "博主还没写完吗，期待继续更新！",
+          "createdAt": "2025-03-19 18:02:15",
           "likesCount": 1,
           "repliedID": null
         }
@@ -116,6 +110,8 @@ b *= 3;
   }
 }
 
+const userStore = useUserStore();
+const userInfo = ref({})
 const post = ref({})
 const comments = ref([])
 post.value = res.data.posts;
@@ -132,6 +128,33 @@ const scrollToEditor = () => {
 }
 
 const editorContent = ref('');
+
+// 父组件接收清空前的内容
+const handleBeforeSubmit = (content) => {
+  console.log('提交前的内容:', content);
+  console.log(userInfo.value.data);
+  comments.value.push(
+    {
+      "commentId": "刚才",
+      "author": {
+        "id": userInfo.value.id,
+        "attributes": {
+          "avatarUrl": userInfo.value.avatarUrl,
+          "userName": userInfo.value.userName,
+          "email": userInfo.value.email
+        }
+      },
+      "content": content.slice(3, -4),
+      "createdAt": "刚刚",
+      "likesCount": 0,
+      "repliedID": null
+    });
+  // 可以将内容保存或做进一步处理
+};
+
+onMounted(async ()=>{
+  userInfo.value = userStore.userInfo.data;
+})
 </script>
 
 <template>
@@ -152,7 +175,7 @@ const editorContent = ref('');
         </div>
         <div ref="editorRef" class="editor">
           <ClientOnly>
-            <TiptapEditor id="reply-editor" v-model="editorContent" />
+            <TiptapEditor id="reply-editor" v-model="editorContent" @beforeSubmit="handleBeforeSubmit" />
           </ClientOnly>
         </div>
       </article>
@@ -186,7 +209,7 @@ html {
 .container {
   min-height: 100vh;
   background-color: while;
-  margin-top: 55px;
+  padding-top: 55px;
 }
 
 .post-content {

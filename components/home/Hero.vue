@@ -16,13 +16,12 @@
       </div>
     </div>
 
+    <HomeFeatures/>
+
     <!-- Animated background elements -->
     <div class="hero-background">
       <div class="bg-circle bg-circle-1"></div>
       <div class="bg-circle bg-circle-2"></div>
-      <div class="bg-circle bg-circle-3"></div>
-      <div class="bg-circle bg-circle-4"></div>
-
     </div>
   </div>
 </template>
@@ -34,7 +33,7 @@
 <style scoped>
 .hero-section {
   position: relative;
-  padding: 8rem 0;
+  padding: 8rem 0 0 0;
   overflow: hidden;
   background-color: var(--background-color);
   margin-top: 50px;
@@ -260,7 +259,7 @@
 
 @media (min-width: 768px) {
   .hero-section {
-    padding: 10rem 0;
+    padding: 8rem 0 0 0;
   }
 
   .hero-title {

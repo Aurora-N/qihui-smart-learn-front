@@ -194,13 +194,13 @@ const selectedNav = ref('reply');
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 15px;
+  padding-top: 55px;
 }
 
 /* 头部区域样式 */
 .profile-header {
   background-color: #f3f4f6;
   padding: 30px 0;
-  margin-top: 55px;
 }
 
 .profile-header .container {
