@@ -14,7 +14,7 @@
           </div>
           <el-button :icon="Close" circle class="close-btn" @click="goBack" />
         </div>
-        <el-input v-model="account" placeholder="请输入用户名" size="large" class="input-bar" />
+        <el-input v-model="account" placeholder="请输入邮箱" size="large" class="input-bar" />
         <el-input v-model="password" placeholder="请输入密码" size="large" class="input-bar" show-password />
         <el-button type="primary" size="large" class="submit-btn" @click="login">
           登录
@@ -24,11 +24,11 @@
             注册
           </el-button>
         </div>
-        <p class="terms">
+        <!-- <p class="terms">
           要继续登录，请同意我们的
           <a href="#">服务政策</a> 和
           <a href="#">隐私政策</a>
-        </p>
+        </p> -->
       </el-card>
     </div>
   </div>
@@ -62,6 +62,10 @@ const login = async () => {
   ElMessage({ type: status, message: msg })
   router.replace({ path: '/' })
 }
+
+useSeoMeta({
+  title: '登录'
+})
 </script>
 
 <style scoped>

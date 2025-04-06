@@ -4,7 +4,6 @@ import { useForumApi } from '~/api/forum';
 const router = useRouter()
 const route = useRoute()
 
-// 移动端菜单状态
 const isMobileMenuOpen = ref(false)
 
 const toggleMobileMenu = () => {
@@ -15,7 +14,6 @@ const closeMobileMenu = () => {
   isMobileMenuOpen.value = false
 }
 
-// 高亮导航索引
 const selectedNav = computed(() => {
   const nav = route.path.split("/").pop();
   return nav !== 'forum' ? nav : 'all'

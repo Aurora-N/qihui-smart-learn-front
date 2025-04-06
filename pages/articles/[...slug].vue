@@ -1,18 +1,10 @@
 <script setup lang="ts">
-// 获取当前路由信息
 const route = useRoute();
 const router = useRouter();
 
-// 处理 slug 参数，确保其为字符串类型
 const slug = Array.isArray(route.params.slug) ? route.params.slug.join('/') : route.params.slug || '';
 
-// 加载状态
 const isLoading = ref(true);
-
-// 使用 useAsyncData 获取对应的 Markdown 文件内容
-// const { data: page, error } = await useAsyncData(`content-${slug}`, () => {
-//   return queryCollection('content').path(`/${slug}`).first();
-// });
 
 const { data: page, error } = await useAsyncData(`content-${slug}`, async () => {
   const articles = await queryCollection('content').all();
@@ -24,18 +16,15 @@ onMounted(() => {
   if (page.value) isLoading.value = false;
 });
 
-// 设置页面的 SEO 元信息
 useSeoMeta({
   title: page.value?.title,
   description: page.value?.description
 });
 
-// 定义页面的布局
 definePageMeta({
   layout: 'default'
 });
 
-// 计算选中的目录项
 const selectedItem = computed(() => {
   const firstId = page.value?.body.toc?.links?.[0]?.id;
   const fullPath = route.fullPath;
@@ -43,15 +32,12 @@ const selectedItem = computed(() => {
   return decodeURI(fullPath.substring(index)) || firstId;
 });
 
-// 处理目录项的选择
 const selectTocItem = (id: string) => {
   router.push(route.path + `#${id}`);
 };
 
-// 控制箭头的显示，使用对象存储每个目录项的状态
 const showArrow = reactive<{ [key: string]: boolean }>({});
 
-// 推荐阅读的文章列表
 const recommendPostsList = ref([
   { id: '1', title: 'mit-6.031', link: '/articles/hm', type: '理论' },
   { id: '2', title: '测试', link: '', type: '理论' },
@@ -61,9 +47,9 @@ const recommendPostsList = ref([
 
 
 <template>
-  <ContentSkeleton v-if="isLoading" />
+  <!-- <ContentSkeleton v-if="isLoading" /> -->
 
-  <div v-else class="main-container">
+  <div class="main-container">
     <div class="side">
       <Sidebar title="目录" height="20rem">
         <el-menu :default-active="selectedItem" class="posts-category-menu" @select="selectTocItem">
@@ -97,7 +83,7 @@ const recommendPostsList = ref([
   display: flex;
   justify-content: center;
   margin: 2rem 0;
-  padding-top: 80px;
+  padding-top: 60px;
 }
 
 .content {

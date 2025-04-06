@@ -125,7 +125,7 @@
                 </el-collapse>
               </el-collapse-item>
               <el-collapse-item title="学习路线推荐" name="roadmap">
-                <GraphRoadMap ref="graphEmbeded" :roadmap-data="recommendLearningPath.value" />
+                <GraphRoadMap ref="graphEmbeded" :roadmap-data="recommendLearningPath" />
               </el-collapse-item>
             </el-collapse>
           </div>
@@ -333,7 +333,6 @@ const restartQuiz = () => {
   score.value = 0;
 };
 
-// 生命周期钩子
 onMounted(() => {
   // 预留从API或文件加载数据接口
   questions.value = parseQuestions(localQuizData);

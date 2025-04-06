@@ -34,25 +34,6 @@
       </div>
 
       <div class="fullscreen-content">
-      <!-- 筛选控制面板 -->
-      <!-- <div class="filter-panel">
-      <div class="filter-input-container">
-        <input 
-          type="text" 
-          v-model="filterTerm" 
-          placeholder="输入节点名称进行筛选" 
-          class="filter-input"
-          @keyup.enter="applyFilter"
-        />
-        <button @click="applyFilter" class="filter-btn">筛选</button>
-        <button @click="resetFilter" class="reset-btn" :disabled="!isFiltered">重置</button>
-      </div>
-      <div v-if="isFiltered" class="filter-info">
-        <span>当前筛选: <strong>{{ currentFilterNode }}</strong></span>
-        <span class="filter-count">显示 {{ filteredNodeCount }} 个节点</span>
-      </div>
-    </div> -->
-
         <div class="controls">
           <button @click="resetZoom" class="control-btn">重置视图</button>
           <div class="checkbox-control">

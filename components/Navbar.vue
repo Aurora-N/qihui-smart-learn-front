@@ -49,22 +49,16 @@ const activeItem = ref('')
         <NuxtLink to="/learn" class="nav-button">
           <IconsLearn class="nav-icon" />学习方向
         </NuxtLink>
-        <Dropdown open-on="hover">
-          <template #trigger>
-            <NuxtLink to="/articles" class="nav-button">
-              <IconsArticle class="nav-icon" />文章
-            </NuxtLink>
-          </template>
-          <NuxtLink to="/articles/前端">前端</NuxtLink>
-          <NuxtLink to="/articles/后端">后端</NuxtLink>
-        </Dropdown>
+        <NuxtLink to="/articles" class="nav-button">
+          <IconsArticle class="nav-icon" />文章
+        </NuxtLink>
         <NuxtLink to="/chat" class="nav-button">
           <IconsChat class="nav-icon" />在线答疑
         </NuxtLink>
         <NuxtLink to="/forum" class="nav-button">
           <IconsForum class="nav-icon" />论坛
         </NuxtLink>
-        <NuxtLink to="/quiz" class="nav-button">
+        <NuxtLink to="/about" class="nav-button">
           <IconsAbout class="nav-icon" />关于
         </NuxtLink>
       </div>
@@ -74,7 +68,6 @@ const activeItem = ref('')
     <div class="nav-right">
       <SearchModal />
 
-      <!-- Desktop language and user area -->
       <div class="desktop-controls">
         <ThemeToggle class="nav-button" />
         <div class="user" v-if="userStore.userInfo.data">
@@ -100,14 +93,13 @@ const activeItem = ref('')
         </div>
       </div>
 
-      <!-- Mobile menu button -->
       <button class="mobile-menu-button" @click="toggleMobileMenu">
         <menu-icon class="icon-small" />
       </button>
     </div>
   </nav>
 
-  <!-- Mobile side menu -->
+  <!-- 移动端侧边栏 -->
   <div class="mobile-menu-overlay" :class="{ 'active': isMobileMenuOpen }" @click="toggleMobileMenu"></div>
   <div class="mobile-menu" :class="{ 'active': isMobileMenuOpen }">
     <div class="mobile-menu-header">
@@ -121,10 +113,6 @@ const activeItem = ref('')
       <div class="mobile-nav-links">
         <NuxtLink to="/learn" class="mobile-nav-button">学习方向</NuxtLink>
         <NuxtLink to="/articles" class="mobile-nav-button">文章</NuxtLink>
-        <div class="mobile-submenu">
-          <NuxtLink to="/articles/前端">前端</NuxtLink>
-          <NuxtLink to="/articles/后端">后端</NuxtLink>
-        </div>
         <NuxtLink to="/chat" class="mobile-nav-button">在线答疑</NuxtLink>
         <NuxtLink to="/forum" class="mobile-nav-button">论坛</NuxtLink>
         <NuxtLink to="/about" class="mobile-nav-button">关于</NuxtLink>

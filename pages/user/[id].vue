@@ -40,22 +40,7 @@ import {
   MoreFilled
 } from '@element-plus/icons-vue';
 
-const posts = ref([
-  {
-    topic: '大三未来选择求建议',
-    time: '5 天前',
-    content: '这事儿没有标准答案，看你心中有没有什么倾向，先别预设难度，手上的事折腾起来，做啥都有个过程。'
-  },
-  {
-    topic: '我的 2024 - 稳中求进、热爱生活',
-    time: '11 天前',
-    content: '蹭来的话在接触之前感觉要高冷一些，比如说一开始我也不知道他们开不开只撩拨电，充电桩 建得是最多的，真正了解下来其实都挺友好的，他们各方面都比较平衡，从买车到用车到维保方面都比较省心和舒适，符合我的预期。',
-    reference: {
-      author: 'zwrong',
-      content: '主要还是品牌营销层面的问题，特斯拉作为开拓者知名度摆在那，然后在核心部件也是比较过硬，加上带量拉满所以大众对其品牌的信任度会很高。'
-    }
-  }
-]);
+const posts = ref([]);
 
 onMounted(() => getUserProfile(userId))
 
@@ -135,6 +120,9 @@ const selectedNav = ref('reply');
 
         <!-- 右侧内容 -->
         <div class="main-content">
+          <div class="empty-post" v-if="posts.length === 0">
+            这里空空如也
+          </div>
           <div class="post-item" v-for="(post, index) in posts" :key="index">
             <div class="post-header">回复
               <span class="post-title">{{ post.topic }}</span>

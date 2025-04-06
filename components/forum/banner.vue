@@ -15,21 +15,17 @@ const props = defineProps({
 
 <template>
   <div class="banner" :style="{ '--hue': props.hue }">
-    <!-- Background layers -->
     <div class="bg-layer bg-layer-1"></div>
     <div class="bg-layer bg-layer-2"></div>
 
-    <!-- Large decorative elements -->
     <div class="large-element large-book-left"></div>
     <div class="large-element large-page-right"></div>
 
-    <!-- Medium decorative elements -->
     <div class="decoration decoration-left">
       <div class="book"></div>
       <div class="page"></div>
     </div>
 
-    <!-- Content -->
     <div class="banner-content" :style="{ 'max-width': props.contentWidth }">
       <h1 class="banner-title">{{ props.title }}</h1>
       <p class="banner-subtitle">{{ props.subTitle }}</p>

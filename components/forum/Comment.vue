@@ -31,7 +31,6 @@ onMounted(() => {
   authors.value = props.author
 })
 
-// Initialize MarkdownIt instance with markdown-it-async
 const md = MarkdownItAsync()
 
 md.use(
@@ -44,7 +43,6 @@ md.use(
   )
 )
 
-// Use `md.renderAsync` instead of `md.render`
 const renderedContent = await md.renderAsync(props.content)
 
 const codeColor = computed(() => useColorMode().preference === 'light' ? '#F8FAFC' : '#1E293B')

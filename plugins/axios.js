@@ -31,11 +31,34 @@ export default defineNuxtPlugin((nuxtApp) => {
         return response.data;
     }, (error) => {
         const userStore = useUserStore()
-        if (error.response?.status === 401) {
-            console.warn('登录失败，请重新登陆')
-            userStore.clearUserInfo()
-            $router.push('/login')
+        console.log(error.response?.data.msg)
+        switch (error.response?.status) {
+            case 400:
+                ElMessage({
+                    type: 'error', message: error.response.data.msg,
+                    plain: true,
+                })
+                userStore.clearUserInfo()
+                break;
+            case 401:
+                ElMessage({
+                    type: 'error', message: error.response.data.msg,
+                    plain: true,
+                })
+                userStore.clearUserInfo()
+                $router.push('/login')
+                break;
+            case 404:
+                ElMessage({
+                    type: 'error', message: error.response.data.msg,
+                    plain: true,
+                })
+                userStore.clearUserInfo()
+                break;
+            default:
+                break;
         }
+
         return Promise.reject(error)
     })
 

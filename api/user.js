@@ -15,12 +15,27 @@ export const useUserApi = () => {
             return response;
         },
 
+        signup: async (userData) => {
+            const { userName, email, password } = userData;
+            console.log("password: ", password)
+            const encryptedPassword = await encryptWithRSA(password);
+            const response = await nuxtApp.$axios.post('/login/signup', {
+                userName, email, password: encryptedPassword  // 发送加密后的密码
+            });
+            tokenCookie.value = response.token; // 登录成功后保存 token
+            return response;
+        },
+
         logout: () => {
             tokenCookie.value = null; // 退出时清除 token
         },
 
-        getKey: async () => nuxtApp.$axios.get("/login/publicKey"), // 获取公钥
-
+        getKey: async () => {
+            const response = await nuxtApp.$axios.get("/login/publicKey"); // 获取公钥
+            if (response.msg === "success") {
+                return response.key;
+            }
+        },
         getUserInfo: async (userId) => nuxtApp.$axios.get(`/user/profile/${userId}`), // 获取用户信息
 
         updateUserInfo: async (userData) => {

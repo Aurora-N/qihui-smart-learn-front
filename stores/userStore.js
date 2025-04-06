@@ -14,7 +14,15 @@ export const useUserStore = defineStore('user',
             userInfo.value = {
                 id: res.data.userId,
                 token: res.data.token,
-            }
+            };
+        }
+        // 注册新用户，如果用户成功注册，获取token以及userId
+        const userSignUp = async (userData) => {
+            const res = await userApi.signup(userData);
+            userInfo.value = {
+                id: res.data.userId,
+                token: res.data.token,
+            };
         }
         // 获取用户信息
         const getUserInfo = async () => {
@@ -29,6 +37,7 @@ export const useUserStore = defineStore('user',
         return {
             userInfo,
             userLogin,
+            userSignUp,
             getUserInfo,
             clearUserInfo
         }

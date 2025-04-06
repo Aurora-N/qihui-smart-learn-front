@@ -1,58 +1,87 @@
 <script setup>
-const postsCategoryList = ref([
+import articleLinkListsFrontend from '~/assets/article_links_front.json'
+import articleLinkListsBackend from '~/assets/article_links_back.json'
+const FrontendIcon = resolveComponent('IconsFrontend');
+const BackendIcon = resolveComponent('IconsBackend');
+
+const articlesList = ref([
   {
-    id: '0', // Number as ID
+    id: '前端',
     name: '前端',
-    icon: '',
-    posts: [{ id: '00', title: 'Bootstrap4教程 1', likesCount: 11 },
-    { id: '01', title: 'Bootstrap教程 2', likesCount: 12 },
-    { id: '02', title: 'Bootstrap教程 3', likesCount: 3 },
-    { id: '03', title: 'Bootstrap教程 4', likesCount: 4 }
-    ]
+    icon: FrontendIcon,
+    articles: articleLinkListsFrontend
   },
   {
-    id: '1', // Number as ID
+    id: '后端',
     name: '后端',
-    icon: '',
-    posts: [{ id: '00', title: '计算机思维导论', likesCount: 114 },
-    { id: '01', title: 'C语言基础语法', likesCount: 51 },
-    { id: '02', title: 'C语言高级特性', likesCount: 41 }
-    ]
-  },
-  {
-    id: '2', // Number as ID
-    name: '测试',
-    icon: '',
-    posts: [{ id: 'hm', title: 'Reading 2: Basic Java', likesCount: 19 },
-    { id: 'custom', title: '用户端', likesCount: 0 },
-    { id: 'needs', title: '界面设计需求一览', likesCount: 0 },
-    { id: 'nuxt3bili', title: 'Nuxt3 - 哔哩哔哩 - 项目实战', likesCount: 10 }
-    ]
+    icon: BackendIcon,
+    articles: articleLinkListsBackend
   },
 ])
 
-const currentPostCategory = ref(postsCategoryList.value[0])
+const articlesCategoryList = ref(['前端', '后端'])
+const currentCateIndex = ref(0)
 
-definePageMeta({
-  layout: 'articles-menu'
+/* 选中分类相应模块 */
+const selectCategory = (id) => {
+  currentCateIndex.value = articlesList.value.findIndex(item => item.id === id);
+}
+
+useSeoMeta({
+  title: () => `学习区文章——${articlesCategoryList.value[currentCateIndex.value]}系列教程`
 })
 </script>
 
 <template>
-  <!-- Forum posts -->
-  <div class="posts-list">
-    <NuxtLink :to="`/articles/${post.id}`" class="post-card" v-for="post in currentPostCategory.posts" :key="post.id">
-      <h3 class="post-title">{{ post.title }}</h3>
-      <div class="post-meta">
-        <IconsLike />
-        <span>{{ post.likesCount }}</span>
+  <div class="articles">
+    <!-- Welcome Banner -->
+    <ForumBanner title="学习区文章" sub-title="浏览学习资源文章">
+    </ForumBanner>
+
+    <!-- 内容区域 -->
+    <div class="article-content">
+      <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="articles-category">
+            <h3 style="margin-top: 0; margin-bottom: 1rem;">文章分类</h3>
+            <el-menu default-active="0" class="articles-category-menu" @select="selectCategory">
+              <el-menu-item v-for="item of articlesList" :index="item" :key="item" class="articles-category-item">
+                <el-icon>
+                  <component v-if="item.icon" :is="item.icon" />
+                  <document v-else />
+                </el-icon>
+                <span>{{ item.name }}</span>
+              </el-menu-item>
+            </el-menu>
+          </div>
+        </div>
+
+        <!-- Content Section -->
+        <main class="main-content">
+          <div class="content-header">
+            <h1 class="content-title">{{ articlesCategoryList[currentCateIndex] }}系列教程</h1>
+          </div>
+
+          <!-- articles -->
+          <div class="articles-list">
+            <NuxtLink :to="`/articles${article.link}`" class="article-card" v-for="article in articlesList[currentCateIndex].articles"
+              :key="article.link">
+              <h3 class="article-title">{{ article.title }}</h3>
+              <div class="article-meta">
+                <!-- <IconsLike />
+                <span>{{ article.likesCount }}</span> -->
+              </div>
+            </NuxtLink>
+          </div>
+        </main>
       </div>
-    </NuxtLink>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.posts {
+.articles {
   background-color: while;
   padding-top: 55px;
   width: 100%;
@@ -69,7 +98,7 @@ definePageMeta({
   text-decoration: none;
 }
 
-.post-content {
+.article-content {
   display: flex;
   justify-content: center;
   width: 100%;
@@ -89,25 +118,25 @@ definePageMeta({
   margin-right: 2rem;
 }
 
-.posts-category {
+.articles-category {
   margin-top: 0.5rem;
   padding: 1rem;
   border-radius: 6px;
   border: 1px solid rgb(231, 236, 243);
 }
 
-.posts-category-menu {
+.articles-category-menu {
   border: 0;
 }
 
-.posts-category-item {
+.articles-category-item {
   --el-menu-active-color: #2563eb;
   --el-menu-base-level-padding: 0;
   transition: all 0.3s ease-out;
   margin: 0;
 }
 
-.posts-category-item:hover {
+.articles-category-item:hover {
   color: #2563eb;
   background-color: rgb(248, 250, 252);
   --el-menu-base-level-padding: 10px;
@@ -152,15 +181,14 @@ definePageMeta({
   cursor: pointer;
 }
 
-/* 论坛主题 */
-.posts-list {
+.articles-list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
 }
 
-.post-card {
+.article-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -170,11 +198,11 @@ definePageMeta({
   color: #374151;
 }
 
-.post-card:hover {
+.article-card:hover {
   background-color: #f9fafb;
 }
 
-.post-left {
+.article-left {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -186,24 +214,24 @@ definePageMeta({
   border-radius: 50%;
 }
 
-.post-info {
+.article-info {
   display: flex;
   flex-direction: column;
 }
 
-.post-title {
+.article-title {
   font-weight: 500;
   margin: 0;
 }
 
-.post-meta {
+.article-meta {
   display: flex;
   align-items: center;
   font-size: 0.875rem;
   color: #6b7280;
 }
 
-.post-right {
+.article-right {
   display: flex;
   align-items: center;
 }

@@ -5,11 +5,9 @@ let cachedPublicKey = '';
 
 async function getPublicKey() {
     if (!cachedPublicKey) {
-        const { key } = await useUserApi().getKey();
-        cachedPublicKey = key || '';
-        console.log(key);
+        const key = await useUserApi().getKey();
+        cachedPublicKey = key ? key : '';
     }
-    console.log(cachedPublicKey);
     return cachedPublicKey;
 }
 

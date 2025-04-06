@@ -86,9 +86,10 @@ async function submitForm() {
     if (valid) {
       isLoading.value = true
       form.password = await encryptWithRSA(form.password);
-      console.log(form)
+      const { confirmPassword, ...rest } = form;
+      console.log(rest)
       // 调用API保存用户信息
-      const res = await useUserApi().updateUserInfo(form)
+      const res = await useUserApi().updateUserInfo(rest)
       if (res.status !== 'success') {
         console.log('res:', res)
         await getUserInfo()
