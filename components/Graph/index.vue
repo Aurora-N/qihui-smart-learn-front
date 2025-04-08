@@ -25,23 +25,19 @@
       <div class="fullscreen-header">
         <h2>{{ props.title }}知识图谱</h2>
         <button class="close-btn" @click="toggleFullscreen">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+          <IconsClose />
         </button>
       </div>
 
       <div class="fullscreen-content">
         <div class="controls">
-          <button @click="resetZoom" class="control-btn">重置视图</button>
+          <button @click="resetFilter" class="control-btn">重置视图</button>
           <div class="checkbox-control">
             <input type="checkbox" id="showLabels" v-model="showLinkLabels">
             <label for="showLabels">显示关系标签</label>
           </div>
           <div class="search-control">
-            <input type="text" v-model="searchTerm" @input="handleSearchInput" placeholder="搜索节点" class="search-input">
+            <input type="text" v-model="filterTerm" @input="handleSearchInput" placeholder="搜索节点" class="search-input">
           </div>
 
           <div class="legend-container">
@@ -94,11 +90,7 @@
             <div class="sidebar-header">
               <h3>{{ selectedNode.id }}</h3>
               <button @click="selectedNode = null" class="close-sidebar-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
+                <IconsClose />
               </button>
             </div>
 
@@ -200,7 +192,7 @@
               </div>
 
               <!-- 相关知识图谱 -->
-              <div class="sidebar-section">
+              <div class="sidebar-section" v-if="selectedNode.id === 'Vue3'">
                 <div class="sidebar-section-header">
                   <IconsGraph style="width:20px; height: 20px;" />
                   <h4>相关知识图谱</h4>
@@ -259,13 +251,10 @@ const graphData = computed(() => {
   else return fullData;
 })
 
-// 状态变量
 const isFullscreen = ref(false);
 const showLegend = ref(true);
 const showLinkLabels = ref(false);
-const searchTerm = ref('');
 const selectedNode = ref(null);
-const matchedNodes = ref([]);
 const searchTimeout = ref(null);
 const isSearching = ref(false);
 
@@ -544,7 +533,6 @@ const initGraph = (isFiltering = false) => {
   }
 };
 
-
 // 缩放以适应所有可见节点
 const zoomToFit = () => {
   if (!svg || !g || nodes.length === 0) return;
@@ -601,7 +589,6 @@ const zoomToFit = () => {
     );
 };
 
-
 // 高亮单个节点及其标签
 const highlightNode = (node) => {
   if (!svg) return;
@@ -626,9 +613,6 @@ const highlightNode = (node) => {
 // 重置高亮效果
 const resetHighlight = () => {
   if (!svg) return;
-
-  // 如果正在搜索，不重置高亮
-  if (searchTerm.value) return;
 
   // 恢复所有节点的边框宽度和移除滤镜
   svg.selectAll('.node')
@@ -655,194 +639,11 @@ const handleSearchInput = () => {
     clearTimeout(searchTimeout.value);
   }
 
-  // 执行搜索
-  handleSearch();
-
-  // 设置新的定时器，在用户停止输入500ms后执行定位
+  // 设置新的定时器，在用户停止输入500ms后执行筛选
   searchTimeout.value = setTimeout(() => {
     isSearching.value = false;
-    if (matchedNodes.value.length > 0) {
-      focusOnSearchResults();
-    }
+    applyFilter();
   }, 500);
-};
-
-// 搜索和高亮函数
-const handleSearch = () => {
-  if (!svg) return;
-
-  const term = searchTerm.value.toLowerCase();
-
-  // 重置所有节点、链接和标签的透明度
-  svg.selectAll('circle, line, text, #arrow')
-    .attr('opacity', 1);
-  svg.selectAll('path').attr('stroke-opacity', 0.6);
-  svg.selectAll('#arrow').attr('fill', '#999');
-
-  if (term) {
-    // 找到匹配的节点
-    matchedNodes.value = nodes.filter(node => node.id.toLowerCase().includes(term));
-
-    // 如果有匹配的节点，降低其他元素的透明度
-    if (matchedNodes.value.length > 0) {
-      // 降低所有元素的透明度
-      svg.selectAll('line, text')
-        .attr('opacity', 0);
-      svg.selectAll('#arrow').attr('opacity', 0);
-      svg.selectAll('path').attr('stroke-opacity', 0);
-      svg.selectAll('circle').attr('opacity', 0.1);
-
-      // 高亮匹配的节点及其相关节点
-      matchedNodes.value.forEach(node => {
-        highlightNodeAndRelated(node);
-      });
-    } else {
-      matchedNodes.value = [];
-    }
-  } else {
-    matchedNodes.value = [];
-  }
-};
-
-// 缩放到搜索结果
-const focusOnSearchResults = () => {
-  if (!svg || !zoom || matchedNodes.value.length === 0) return;
-
-  // 计算匹配节点的边界框
-  const bounds = {
-    minX: Infinity,
-    minY: Infinity,
-    maxX: -Infinity,
-    maxY: -Infinity
-  };
-
-  matchedNodes.value.forEach(node => {
-    bounds.minX = Math.min(bounds.minX, node.x);
-    bounds.minY = Math.min(bounds.minY, node.y);
-    bounds.maxX = Math.max(bounds.maxX, node.x);
-    bounds.maxY = Math.max(bounds.maxY, node.y);
-  });
-
-  // 添加一些边距
-  const padding = 50;
-  bounds.minX -= padding;
-  bounds.minY -= padding;
-  bounds.maxX += padding;
-  bounds.maxY += padding;
-
-  // 计算边界框的中心和尺寸
-  const width = graphContainer.value.clientWidth;
-  const height = graphContainer.value.clientHeight;
-  const boundWidth = bounds.maxX - bounds.minX;
-  const boundHeight = bounds.maxY - bounds.minY;
-  const centerX = bounds.minX + boundWidth / 2;
-  const centerY = bounds.minY + boundHeight / 2;
-
-  // 计算适当的缩放比例
-  const scale = Math.min(
-    width / boundWidth,
-    height / boundHeight,
-    3 // 最大缩放限制
-  ) * 0.9; // 稍微缩小一点，留出边距
-
-  // 应用缩放和平移
-  svg.transition()
-    .duration(750)
-    .call(
-      zoom.transform,
-      d3.zoomIdentity
-        .translate(width / 2, height / 2)
-        .scale(scale)
-        .translate(-centerX, -centerY)
-    );
-};
-
-// 高亮节点及其相关节点
-const highlightNodeAndRelated = (node) => {
-  // 用于存储已处理的节点ID，避免重复处理
-  const processedNodes = new Set();
-
-  // 递归高亮节点及其子节点
-  const highlightRecursive = (currentNode, depth = 0, maxDepth = 3) => {
-    if (depth > maxDepth || processedNodes.has(currentNode.uniqueId)) return;
-    processedNodes.add(currentNode.uniqueId);
-
-    // 高亮当前节点
-    svg.selectAll('circle')
-      .filter(d => d.uniqueId === currentNode.uniqueId)
-      .attr('opacity', 1);
-
-    // 高亮节点标签
-    svg.selectAll('text.node-label')
-      .filter(d => d.uniqueId === currentNode.uniqueId)
-      .attr('opacity', 1);
-
-    // 高亮子节点和连接
-    links.forEach(link => {
-      if (link.source.uniqueId === currentNode.uniqueId) {
-        // 高亮连接
-        svg.selectAll('path')
-          .filter(d => d.source.uniqueId === currentNode.uniqueId && d.target.uniqueId === link.target.uniqueId)
-          .attr('opacity', 1);
-
-        // 高亮连接标签
-        svg.selectAll('text')
-          .filter(d => d === link)
-          .attr('opacity', 1);
-
-        // 递归处理子节点
-        const childNode = nodes.find(n => n.uniqueId === link.target.uniqueId);
-        if (childNode) {
-          highlightRecursive(childNode, depth + 1, maxDepth);
-        }
-      }
-    });
-  };
-
-  // 高亮当前节点
-  svg.selectAll('circle')
-    .filter(d => d.uniqueId === node.uniqueId)
-    .attr('opacity', 1);
-
-  // 高亮节点标签
-  svg.selectAll('text.node-label')
-    .filter(d => d.uniqueId === node.uniqueId)
-    .attr('opacity', 1);
-
-  // 高亮子节点和连接（递归）
-  highlightRecursive(node);
-
-  // 高亮直接指向当前节点的父节点和连接（非递归）
-  links.forEach(link => {
-    if (link.target.uniqueId === node.uniqueId) {
-      // 高亮连接
-      svg.selectAll('path')
-        .filter(function(d) {
-          return d.target && d.target.uniqueId === node.uniqueId && d.source.uniqueId === link.source.uniqueId;
-        })
-        .attr('stroke-opacity', 0.6);
-
-      // 不可直接写，需要套一个回调函数
-      // svg.selectAll('path')
-      //   .filter(d => d.target.uniqueId === node.uniqueId && d.source.uniqueId === link.source.uniqueId)
-      //   .attr('stroke-opacity', 0.6);
-
-      // 高亮连接标签
-      svg.selectAll('text')
-        .filter(d => d === link)
-        .attr('opacity', 1);
-
-      // 高亮父节点
-      svg.selectAll('circle')
-        .filter(d => d.uniqueId === link.source.uniqueId)
-        .attr('opacity', 1);
-
-      // 高亮父节点标签
-      svg.selectAll('text.node-label')
-        .filter(d => d.uniqueId === link.source.uniqueId)
-        .attr('opacity', 1);
-    }
-  });
 };
 
 // 获取图相关信息
@@ -850,6 +651,7 @@ const getNodeRadius = useGraphAttribute().getNodeRadius;
 const getNodeColor = useGraphAttribute().getNodeColor;
 const getLevelClass = useGraphAttribute().getLevelClass;
 const getNodeResources = useGraphAttribute().getNodeResources;
+
 const getRelatedNodes = (node) => {
   const relatedNodes = [];
 
@@ -867,12 +669,6 @@ const getRelatedNodes = (node) => {
       }
     }
   });
-
-  // 暂时mock数据
-  if (node.id === 'Vue3') {
-    const targetNodes = [nodes.find(n => n.id === '前端基础核心'), nodes.find(n => n.id === 'Pinia'), nodes.find(n => n.id === 'Nuxt.js'), nodes.find(n => n.id === 'Element Plus'), nodes.find(n => n.id === 'Vite前端')];
-    relatedNodes.push(...targetNodes);
-  }
 
   // 限制返回的相关节点数量
   return relatedNodes.slice(0, 5);
@@ -899,7 +695,7 @@ const applyFilter = () => {
   );
   
   if (!matchedNode) {
-    alert('未找到匹配的节点');
+    ElMessage({type: 'warning', message: '未找到匹配的节点', plain: true});
     return;
   }
   
@@ -957,29 +753,11 @@ const resetFilter = () => {
   initGraph();
 };
 
-
-// 重置缩放
-const resetZoom = () => {
-  svg.transition().duration(750).call(
-    zoom.transform,
-    d3.zoomIdentity,
-    d3.zoomTransform(svg.node()).invert([
-      graphContainer.value.clientWidth / 2,
-      graphContainer.value.clientHeight / 2
-    ])
-  );
-};
-
 // 监听 showLinkLabels 的变化
 watch(showLinkLabels, (newValue) => {
   if (linkLabels) {
     linkLabels.attr('opacity', newValue ? 1 : 0);
   }
-});
-
-// 监听搜索词变化
-watch(searchTerm, () => {
-  handleSearchInput();
 });
 
 // 组件挂载后初始化小窗口图表

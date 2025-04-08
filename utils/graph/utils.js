@@ -181,7 +181,7 @@ export const useGraphAttribute = () => {
         { title: '深度解析文章', url: '#' }
       );
       resources.videos.push(
-        { title: '进阶视频教程', embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
+        { title: '进阶视频教程', embedUrl: '' }
       );
     } else if (node.level === '深入' || node.level === '高级') {
       resources.articles.push(
@@ -190,7 +190,7 @@ export const useGraphAttribute = () => {
         { title: '前沿研究动态', url: '#' }
       );
       resources.videos.push(
-        { title: '专家讲解视频', embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
+        { title: '专家讲解视频', embedUrl: '' }
       );
     }
 

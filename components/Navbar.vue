@@ -15,6 +15,11 @@ const toggleMobileMenu = () => {
   }
 }
 
+const routerTo = (path) => {
+  if (isMobileMenuOpen.value) toggleMobileMenu();
+  router.push(path);
+}
+
 const logout = () => {
   userStore.clearUserInfo()
   router.replace({ path: '/' })
@@ -39,7 +44,6 @@ const activeItem = ref('')
       alt="OurLogo" />
       启慧智学
     </div>
-
 
     <div class="nav-left">
       <div v-if="!props.title" class="nav-links">
@@ -66,10 +70,9 @@ const activeItem = ref('')
     </div>
 
     <div class="nav-right">
-      <SearchModal />
-
+      <SearchModal class="nav-button" />
+      <ThemeToggle class="nav-button" />
       <div class="desktop-controls">
-        <ThemeToggle class="nav-button" />
         <div class="user" v-if="userStore.userInfo.data">
           <el-dropdown class="dropdown">
             <NuxtLink :to="`/user/${userStore.userInfo.data.userId}`" class="avatar-link">
@@ -111,14 +114,23 @@ const activeItem = ref('')
 
     <div class="mobile-menu-content">
       <div class="mobile-nav-links">
-        <NuxtLink to="/learn" class="mobile-nav-button">学习方向</NuxtLink>
-        <NuxtLink to="/articles" class="mobile-nav-button">文章</NuxtLink>
-        <NuxtLink to="/chat" class="mobile-nav-button">在线答疑</NuxtLink>
-        <NuxtLink to="/forum" class="mobile-nav-button">论坛</NuxtLink>
-        <NuxtLink to="/about" class="mobile-nav-button">关于</NuxtLink>
-        <div class="mobile-submenu">
-          <a href="#">About</a>
-          <a href="#">Contact</a>
+        <div @click="routerTo('/')" class="mobile-nav-button">
+          <IconsHome class="nav-icon" />首页
+        </div>
+        <div @click="routerTo('/learn')" class="mobile-nav-button">
+          <IconsLearn class="nav-icon" />学习方向
+        </div>
+        <div @click="routerTo('/articles')" class="mobile-nav-button">
+          <IconsArticle class="nav-icon" />文章
+        </div>
+        <div @click="routerTo('/chat')" class="mobile-nav-button">
+          <IconsChat class="nav-icon" />在线答疑
+        </div>
+        <div @click="routerTo('/forum')" class="mobile-nav-button">
+          <IconsForum class="nav-icon" />论坛
+        </div>
+        <div @click="routerTo('/about')" class="mobile-nav-button">
+          <IconsAbout class="nav-icon" />关于
         </div>
       </div>
 
@@ -131,15 +143,15 @@ const activeItem = ref('')
         <div class="mobile-section-title">用户</div>
         <template v-if="userStore.userInfo.data">
           <div class="mobile-user-info">
-            <NuxtLink :to="`/user/${userStore.userInfo.data.userId}`" class="mobile-user-profile">
+            <div @click="routerTo(`/user/${userStore.userInfo.data.userId}`)" class="mobile-user-profile">
               <el-avatar :size="50" :src="userStore.userInfo.data.avatar" class="mobile-avatar"></el-avatar>
               <div class="mobile-user-details">
                 <div class="mobile-username">{{ userStore.userInfo.data.userName }}</div>
                 <div class="mobile-user-description">{{ userStore.userInfo.data.selfDescription }}</div>
               </div>
-            </NuxtLink>
+            </div>
             <div class="mobile-auth-buttons">
-              <button class="mobile-settings-button" @click="$router.push('/user/settings/profile')">
+              <button class="mobile-settings-button" @click="routerTo('/user/settings/profile')">
                 <IconsSettings />
                 <span>设置</span>
               </button>
@@ -153,8 +165,8 @@ const activeItem = ref('')
         </template>
         <template v-else>
           <div class="mobile-auth-buttons">
-            <NuxtLink to="/login" class="mobile-login-button">登录</NuxtLink>
-            <NuxtLink to="/signup" class="mobile-signup-button">注册</NuxtLink>
+            <div @click="routerTo('/login')" class="mobile-login-button">登录</div>
+            <div @click="routerTo('/signup')" class="mobile-signup-button">注册</div>
           </div>
         </template>
       </div>
@@ -252,9 +264,13 @@ const activeItem = ref('')
   border-radius: 0.375rem;
 }
 
-.nav-button .nav-icon {
+.nav-button .nav-icon, .mobile-nav-button .nav-icon {
   height: 1.1rem;
   width: 1.1rem;
+}
+
+.mobile-nav-button .nav-icon {
+  margin-right: 0.5rem;
 }
 
 .user {
@@ -320,6 +336,7 @@ const activeItem = ref('')
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.3s ease, visibility 0.3s ease;
+  overflow: auto;
 }
 
 .mobile-menu-overlay.active {
@@ -370,7 +387,8 @@ const activeItem = ref('')
 }
 
 .mobile-nav-button {
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 0.75rem 0;
   font-size: 1rem;
   color: var(--color-text);

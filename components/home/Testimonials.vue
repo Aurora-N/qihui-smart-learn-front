@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <!-- Background elements -->
+    
     <div class="testimonials-background">
       <div class="bg-circle bg-circle-1"></div>
       <div class="bg-circle bg-circle-2"></div>

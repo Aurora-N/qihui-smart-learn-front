@@ -1,55 +1,32 @@
 <template>
   <div class="search-container">
-    <!-- Desktop search trigger button -->
-    <!-- <button class="search-trigger desktop-search" @click="openSearch">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
-        <circle cx="11" cy="11" r="8"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
-      <span>搜索</span>
-    </button> -->
-
-    <!-- Mobile search icon button -->
     <button class="mobile-search-button" @click="openSearch" aria-label="Search">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
-        <circle cx="11" cy="11" r="8"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
+      <IconsSearch class="search-icon" />
     </button>
 
-    <!-- Teleport the modal to the body -->
+    
     <Teleport to="body">
-      <!-- Search modal -->
+      
       <div class="search-modal" :class="{ 'active': isSearchOpen }">
-        <!-- Overlay background (clickable to close) -->
+        
         <div class="search-overlay" @click="closeSearch"></div>
 
-        <!-- Search content -->
+        
         <div class="search-content">
           <div class="search-header">
             <h2>搜索</h2>
             <button class="close-button" @click="closeSearch">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
+              <IconsClose />
             </button>
           </div>
           <div class="search-input-container">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              class="search-input-icon">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
+            <IconsSearch class="search-input-icon" />
+
             <input type="text" class="search-input" placeholder="输入关键词搜索..." v-model="searchQuery" ref="searchInputRef"
               @keyup.esc="closeSearch" @keydown="handleKeyDown" />
           </div>
 
-          <!-- Search results -->
+          
           <div class="search-results" v-if="searchResults.length > 0">
             <div class="results-header">
               <h3>搜索结果 ({{ searchResults.length }})</h3>
@@ -66,7 +43,7 @@
             </div>
           </div>
 
-          <!-- No results message -->
+          
           <div class="no-results" v-else-if="hasSearched && searchQuery.trim()">
             <p>没有找到与 "{{ searchQuery }}" 相关的内容</p>
           </div>
@@ -92,9 +69,9 @@ const hasSearched = ref(false);
 // Open search modal
 const openSearch = () => {
   isSearchOpen.value = true;
-  document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+  document.body.style.overflow = 'hidden';
 
-  // Focus the input after the modal is open
+ 
   nextTick(() => {
     searchInputRef.value?.focus();
   });
@@ -103,16 +80,16 @@ const openSearch = () => {
 // Close search modal
 const closeSearch = () => {
   isSearchOpen.value = false;
-  document.body.style.overflow = ''; // Restore scrolling
+  document.body.style.overflow = '';
 
-  // Emit search event with the current query before clearing it
+ 
   if (searchQuery.value.trim()) {
     emit('search', searchQuery.value);
   }
 
-  searchQuery.value = ''; // Clear search query when closing
-  searchResults.value = []; // Clear search results
-  hasSearched.value = false; // Reset search state
+  searchQuery.value = '';
+  searchResults.value = [];
+  hasSearched.value = false;
 };
 
 // Listen for escape key to close modal
@@ -156,7 +133,7 @@ const handleSearch = async (target) => {
     await initSearchSections();
   }
 
-  // Additional check in case initSearchSections failed to populate searchSections
+ 
   if (!searchSections.value) {
     searchResults.value = [];
     hasSearched.value = true;
@@ -197,51 +174,6 @@ const truncateContent = (content, maxLength) => {
 const navigateToResult = (result) => {
   if (!result) return;
 
-  console.log(result);
-
-  // 尝试从不同字段获取路径
-  let pathField = '';
-
-  // 1. 首先尝试使用 _path 或 stem 字段
-  if (result._path) {
-    pathField = result._path;
-  } else if (result.stem) {
-    pathField = result.stem;
-  }
-  // 2. 如果没有上述字段，但有 id 字段，尝试从 id 提取路径
-  else if (result.id) {
-    // 移除开头的斜杠
-    pathField = result.id.replace(/^\/+/, '');
-  }
-  // 3. 如果没有上述字段，但有 title 字段，尝试通过 title 查找对应的文章
-  else if (result.title && searchSections.value && searchSections.value.length > 0) {
-    // 通过标题查找匹配的文章
-    const matchingArticle = searchSections.value.find(item =>
-      item.title && item.title.trim() === result.title.trim()
-    );
-
-    if (matchingArticle) {
-      // 从匹配的文章中获取路径字段
-      if (matchingArticle._path) {
-        pathField = matchingArticle._path;
-      } else if (matchingArticle.stem) {
-        pathField = matchingArticle.stem;
-      }
-    }
-  }
-
-  console.log('使用的路径字段:', pathField);
-
-  // 如果没有可用的路径字段，则无法导航
-  if (!pathField) {
-    console.error('无法导航：没有找到有效的路径字段');
-    return;
-  }
-
-  // 构建导航路径并导航
-  const path = `/articles/${pathField}`;
-  console.log('导航到:', path);
-  router.push(path);
   closeSearch();
 };
 
@@ -289,21 +221,15 @@ onMounted(async () => {
 
 /* Mobile search button */
 .mobile-search-button {
-  /* display: none; */
+  padding: 0;
   background: none;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
   cursor: pointer;
   color: var(--color-text);
-  border-radius: 6px;
   transition: all 0.3s ease;
-}
-
-.mobile-search-button:hover {
-  background-color: var(--color-background-hover);
 }
 
 .search-icon {

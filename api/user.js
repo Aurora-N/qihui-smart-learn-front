@@ -48,7 +48,7 @@ export const useUserApi = () => {
                     formData.append(key, value);
                 }
             })
-            console.log(formData);
+            console.log('inupdateUserInfo:', formData);
             formData.forEach((value, key) => {
                 console.log(key, value);
             });

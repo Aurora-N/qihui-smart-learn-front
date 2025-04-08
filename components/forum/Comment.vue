@@ -1,7 +1,7 @@
 <script setup>
 import { fromAsyncCodeToHtml } from '@shikijs/markdown-it/async'
 import MarkdownItAsync from 'markdown-it-async'
-import { codeToHtml } from 'shiki' // Or your custom shorthand bundle
+import { codeToHtml } from 'shiki'
 import '~/assets/css/post.css'
 
 const props = defineProps({

@@ -1,4 +1,4 @@
-<!-- 用户个人页面 -->
+
 <script setup>
 import { useUserApi } from '~/api/user'
 
@@ -94,27 +94,27 @@ const selectedNav = ref('reply');
             <el-icon>
               <ChatDotRound />
             </el-icon>
-            <span>回复</span>
+            <span>我的回复</span>
             <span class="count">{{ userInfo.counts.reply }}</span>
           </div>
           <div class="nav-item" :class="{ active: selectedNav === 'posts' }" @click="selectedNav = 'posts'">
             <el-icon>
               <Menu />
             </el-icon>
-            <span>主题</span>
+            <span>我发布的帖子</span>
             <span class="count">{{ userInfo.counts.topics }}</span>
           </div>
           <div class="nav-item" :class="{ active: selectedNav === 'likes' }" @click="selectedNav = 'likes'">
             <el-icon>
               <Star />
             </el-icon>
-            <span>赞</span>
+            <span>我收藏的帖子</span>
           </div>
-          <div class="nav-item" :class="{ active: selectedNav === 'mentioned' }" @click="selectedNav = 'mentioned'">
+          <div class="nav-item" :class="{ active: selectedNav === 'roadmap' }" @click="selectedNav = 'roadmap'">
             <el-icon>
-              <User />
+              <DataAnalysis />
             </el-icon>
-            <span>被提及</span>
+            <span>我的学习路线</span>
           </div>
         </Sidebar>
 

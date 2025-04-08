@@ -85,7 +85,7 @@ provide("bannerConfig", bannerConfig)
                   <el-icon>
                     <Star />
                   </el-icon>
-                  <span>我的关注</span>
+                  <span>我的收藏</span>
                 </div>
                 <div class="nav-item" :class="{ active: selectedNav === 'tags' }"
                   @click="switchToNav('tags'); closeMobileMenu()">
@@ -125,7 +125,7 @@ provide("bannerConfig", bannerConfig)
                 <el-icon>
                   <Star />
                 </el-icon>
-                <span>我的关注</span>
+                <span>我的收藏</span>
               </div>
               <div class="nav-item" :class="{ active: selectedNav === 'tags' }" @click="switchToNav('tags')">
                 <el-icon>

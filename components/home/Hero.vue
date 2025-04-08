@@ -18,7 +18,7 @@
 
     <HomeFeatures/>
 
-    <!-- Animated background elements -->
+    
     <div class="hero-background">
       <div class="bg-circle bg-circle-1"></div>
       <div class="bg-circle bg-circle-2"></div>
@@ -64,8 +64,20 @@
 .hero-title-primary {
   display: block;
   margin-bottom: 0.5rem;
-  color: var(--primary-color);
+  /* color: var(--primary-color); */
   animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.light-mode .hero-title-primary {
+  background: linear-gradient(-30deg, #0851bf, #3cfb92);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark-mode .hero-title-primary {
+  background: linear-gradient(-30deg, #3160e6, #3cf992);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .hero-title-secondary {

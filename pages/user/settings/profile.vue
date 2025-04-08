@@ -23,6 +23,7 @@ const getUserInfo = async () => {
     form.confirmPassword = ''
     avatarUrl.value = userStore.userInfo.data.avatar
   } else {
+    ElMessage({type: 'warning', message: '用户未登录', plain: true})
     router.replace({ path: '/login' })
   }
 }
@@ -39,7 +40,8 @@ const form = reactive({
 
 // 表单验证规则
 const rules = {
-  userName: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  userName: [{ required: true, message: '用户名不可为空', trigger: 'blur' }],
+  email: [{ required: true, message: '登录邮箱不可为空', trigger: 'blur' }],
   password: [{ validator: validatePassword, trigger: 'blur' }],
   confirmPassword: [{ validator: validateConfirmPassword, trigger: 'blur' }]
 }
@@ -85,13 +87,12 @@ async function submitForm() {
   formRef.value.validate(async (valid) => {
     if (valid) {
       isLoading.value = true
-      form.password = await encryptWithRSA(form.password);
+      if (form.password) form.password = await encryptWithRSA(form.password);
       const { confirmPassword, ...rest } = form;
-      console.log(rest)
+      console.log('beforeSendReq:', rest)
       // 调用API保存用户信息
       const res = await useUserApi().updateUserInfo(rest)
-      if (res.status !== 'success') {
-        console.log('res:', res)
+      if (res.status === 'success') {
         await getUserInfo()
         isLoading.value = false
         ElMessage.success(res.message)
