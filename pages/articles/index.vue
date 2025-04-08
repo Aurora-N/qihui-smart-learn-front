@@ -19,16 +19,17 @@ const articlesList = ref([
   },
 ])
 
-const articlesCategoryList = ref(['前端', '后端'])
 const currentCateIndex = ref(0)
 
 /* 选中分类相应模块 */
 const selectCategory = (id) => {
+  console.log('id:', id)
   currentCateIndex.value = articlesList.value.findIndex(item => item.id === id);
+  console.log(currentCateIndex.value)
 }
 
 useSeoMeta({
-  title: () => `学习区文章——${articlesCategoryList.value[currentCateIndex.value]}系列教程`
+  title: () => `学习区文章——${articlesList.value[currentCateIndex.value].id}系列教程`
 })
 </script>
 
@@ -46,7 +47,7 @@ useSeoMeta({
           <div class="articles-category">
             <h3 style="margin-top: 0; margin-bottom: 1rem;">文章分类</h3>
             <el-menu default-active="0" class="articles-category-menu" @select="selectCategory">
-              <el-menu-item v-for="item of articlesList" :index="item" :key="item" class="articles-category-item">
+              <el-menu-item v-for="item of articlesList" :index="item.id" :key="item.id" class="articles-category-item">
                 <el-icon>
                   <component v-if="item.icon" :is="item.icon" />
                   <document v-else />
@@ -60,7 +61,7 @@ useSeoMeta({
         <!-- Content Section -->
         <main class="main-content">
           <div class="content-header">
-            <h1 class="content-title">{{ articlesCategoryList[currentCateIndex] }}系列教程</h1>
+            <h1 class="content-title">{{ articlesList[currentCateIndex].id }}系列教程</h1>
           </div>
 
           <!-- articles -->
@@ -78,6 +79,7 @@ useSeoMeta({
       </div>
     </div>
   </div>
+  <Footer />
 </template>
 
 <style scoped>

@@ -40,7 +40,7 @@ const activeItem = ref('')
       启慧智学
     </div>
 
-      
+
     <div class="nav-left">
       <div v-if="!props.title" class="nav-links">
         <NuxtLink to="/" class="nav-button">
@@ -510,8 +510,13 @@ const activeItem = ref('')
   gap: 1rem;
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
+@media (max-width: 1050px) {
+  .nav-links .nav-button .nav-icon {
+    display: none;
+  }
+}
+
+@media (max-width: 850px) {
   .nav-links {
     display: none;
   }

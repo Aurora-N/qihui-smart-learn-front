@@ -222,6 +222,7 @@ import { ref, onMounted, watch, nextTick } from 'vue';
 import * as d3 from 'd3';
 import { transformData } from '~/utils/transformData'
 import { useWindowSize } from '@vueuse/core';
+import { createSvg, createSimulation, createLink, createNode, createLabel, createLinkLabel, creatArrow, useGraphAttribute } from '~/utils/graph/utils';
 
 // Props
 const props = defineProps({
@@ -249,6 +250,7 @@ import frontData from '~/assets/data_front_end.json'
 import backData from '~/assets/data_back_end.json'
 import vueData from '~/assets/data_vue.json'
 import { IconsGraph } from '#components';
+
 
 const graphData = computed(() => {
   if (props.title === '前端') return frontData;
@@ -285,7 +287,7 @@ const miniGraphContainer = ref(null);
 const graphContainer = ref(null);
 
 // D3相关变量
-let simulation = null;
+const simulation = ref(null);
 let svg = null;
 let g = null;
 let zoom = null;
@@ -329,41 +331,16 @@ const initMiniGraph = () => {
   d3.select(miniGraphContainer.value).selectAll('*').remove();
 
   // 创建SVG
-  const miniSvg = d3.select(miniGraphContainer.value)
-    .append('svg')
-    .attr("width", width)
-    .attr("height", height)
-    .attr('viewBox', [0, 0, width, height])
-    .attr('style', 'max-width: 100%; height: auto;');
-
-  const miniG = miniSvg.append('g');
+  const miniG = createSvg(miniGraphContainer, width, height).append('g');
 
   // 创建链接
-  miniG.append('g')
-    .selectAll('path')
-    .data(links)
-    .enter().append('path')
-    .attr('stroke', '#999')
-    .attr('stroke-opacity', 0.6)
-    .attr('stroke-width', d => Math.sqrt(d.value) * 0.5)  // 缩小线宽
-    .attr('fill', 'none');
+  createLink(miniG, links, d => Math.sqrt(d.value) * 0.4);
 
   // 创建节点
-  miniG.append('g')
-    .selectAll('circle')
-    .data(nodes)
-    .enter().append('circle')
-    .attr('r', d => getNodeRadius(d) * 0.5) // 缩小节点半径
-    .attr('fill', d => getNodeColor(d))
-    .attr('stroke', '#fff')
-    .attr('stroke-width', 1);
+  createNode(miniG, nodes, d => getNodeRadius(d) * 0.5, 1)
 
   // 创建力导向模拟
-  const miniSimulation = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(links).id(d => d.uniqueId).distance(50 / 8))
-    .force('charge', d3.forceManyBody().strength(-150 / 8))
-    .force('center', d3.forceCenter(width / 2, height / 2))
-    .force('collision', d3.forceCollide().radius(d => getNodeRadius(d) * 0.5 + 2));
+  const miniSimulation = createSimulation(nodes, links, 50 / 8, -150 / 8, {x: width / 2, y: height / 2 }, d => getNodeRadius(d) * 0.5 + 2);
 
   // 更新函数
   miniSimulation.on('tick', () => {
@@ -382,8 +359,6 @@ const initMiniGraph = () => {
   // 运行模拟一段时间后停止
   setTimeout(() => miniSimulation.stop(), 2000);
 };
-
-
 
 // 初始化全屏图表
 const initGraph = (isFiltering = false) => {
@@ -405,12 +380,7 @@ const initGraph = (isFiltering = false) => {
   d3.select(graphContainer.value).selectAll('*').remove();
 
   // 创建SVG
-  svg = d3.select(graphContainer.value)
-    .append('svg')
-    .attr('width', '100%')
-    .attr('height', '100%')
-    .attr('viewBox', [0, 0, width, height])
-    .attr('style', 'max-width: 100%; height: auto;');
+  svg = createSvg(graphContainer, width, height, true);
 
   // 添加发光滤镜
   const defs = svg.append('defs');
@@ -445,98 +415,48 @@ const initGraph = (isFiltering = false) => {
   g = svg.append('g');
 
   // 添加箭头标记
-  svg.append('defs').selectAll('marker')
-    .data(['arrow'])
-    .enter().append('marker')
-    .attr('id', d => d)
-    .attr('viewBox', '0 -5 10 10')
-    .attr('refX', 25)
-    .attr('refY', 0)
-    .attr('markerWidth', 6)
-    .attr('markerHeight', 6)
-    .attr('orient', 'auto')
-    .append('path')
-    .attr('fill', '#999')
-    .attr('d', 'M0,-5L10,0L0,5');
+  creatArrow(svg);
 
-  // 创建弯曲的链接
-  const link = g.append('g')
-    .selectAll('path')
-    .data(links)
-    .enter().append('path')
-    .attr('stroke', '#999')
-    .attr('stroke-opacity', 0.6)
-    .attr('stroke-width', d => Math.sqrt(d.value))
-    .attr('fill', 'none')
-    .attr('marker-end', 'url(#arrow)');
+  // 创建曲线连接
+  const link = createLink(g, links, d => Math.sqrt(d.value), true);
 
   // 创建链接标签
-  linkLabels = g.append('g')
-    .selectAll('text')
-    .data(links)
-    .enter().append('text')
-    .attr('font-size', '8px')
-    .attr('text-anchor', 'middle')
-    .text(d => d.relationship)
-    .attr('fill', '#666')
-    .attr('dy', -5)
-    .attr('opacity', 0); // 标签一开始不展示
+  linkLabels = createLinkLabel(g, links, false);
 
   // 计算图的中心点
   const centerX = width / 2;
   const centerY = height / 2;
 
   // 创建节点
-  const node = g.append('g')
-    .selectAll('circle')
-    .data(nodes)
-    .enter().append('circle')
-    .attr('r', d => getNodeRadius(d))
-    .attr('fill', d => getNodeColor(d))
-    .attr('stroke', '#fff')
-    .attr('stroke-width', 1.5)
-    .attr('class', 'node')
-    .on('click', (event, d) => {
-      selectedNode.value = d;
-      event.stopPropagation();
-    })
-    .on('mouseover', (event, d) => {
-      // 鼠标悬停时突出显示节点及其标签
-      highlightNode(d);
-    })
-    .on('mouseout', () => {
-      // 鼠标移出时恢复正常显示
-      resetHighlight();
-    })
-    .call(d3.drag()
-      .on('start', dragstarted)
-      .on('drag', dragged)
-      .on('end', dragended));
+  const node = createNode(g, nodes, d => getNodeRadius(d), 1.5);
+  // 添加悬停效果
+  node.attr('class', 'node')
+      .on('click', (event, d) => {
+        selectedNode.value = d;
+        event.stopPropagation();
+      })
+      .on('mouseover', (event, d) => {
+        highlightNode(d);
+      })
+      .on('mouseout', () => {
+        resetHighlight();
+      })
+      .call(d3.drag()
+        .on('start', dragstarted)
+        .on('drag', dragged)
+        .on('end', dragended));
 
-  // 添加节点标签，根据节点位置调整标签位置
-  const label = g.append('g')
-    .selectAll('text')
-    .data(nodes)
-    .enter().append('text')
-    .attr('font-size', '10px')
-    .attr('pointer-events', 'none')
-    .text(d => d.id)
-    .attr('fill', useColorMode().value === 'light' ? '#333' : '#fff')
-    .attr('class', 'node-label');
+  // 添加节点标签
+  const label = createLabel(g, nodes, useColorMode().value === 'light' ? '#333' : '#fff');
 
-  // 创建力导向模拟
-  simulation = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(links).id(d => d.uniqueId).distance(150))
-    .force('charge', d3.forceManyBody().strength(-600))
-    .force('center', d3.forceCenter(width / 2, height / 2))
-    .force('collision', d3.forceCollide().radius(d => getNodeRadius(d) + 10));
-
+  simulation.value = createSimulation(nodes, links, 150, -600, {x: width / 2, y: height / 2}, d => getNodeRadius(d) + 10)
+  
   // 更新函数
-  simulation.on('tick', () => {
+  simulation.value.on('tick', () => {
     link.attr('d', d => {
       const dx = d.target.x - d.source.x;
       const dy = d.target.y - d.source.y;
-      const dr = Math.sqrt(dx * dx + dy * dy) * 1.5; // 控制弧度的系数，可以调整
+      const dr = Math.sqrt(dx * dx + dy * dy) * 1.5; // 控制弧度的系数
       return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
     });
 
@@ -553,13 +473,11 @@ const initGraph = (isFiltering = false) => {
       const dx = d.x - centerX;
       const dy = d.y - centerY;
 
-      // 使用平滑的角度计算，避免突变
       const angle = Math.atan2(dy, dx);
 
       // 根据角度确定标签位置
       let textAnchor, xOffset, yOffset;
 
-      // 使用平滑的象限划分，避免边界处的突变
       if (angle > -Math.PI / 4 && angle < Math.PI / 4) {
         // 右侧
         textAnchor = 'start';
@@ -582,10 +500,9 @@ const initGraph = (isFiltering = false) => {
         yOffset = 4;
       }
 
-      // 应用计算的位置，使用D3的过渡效果
       labelElement
         .transition()
-        .duration(50) // 短暂的过渡时间，避免延迟感
+        .duration(50)
         .attr('x', d.x + xOffset)
         .attr('y', d.y + yOffset)
         .attr('text-anchor', textAnchor);
@@ -603,18 +520,18 @@ const initGraph = (isFiltering = false) => {
 
   // 拖拽函数
   function dragstarted(event) {
-    if (!event.active) simulation.alphaTarget(0.3).restart();
+    if (!event.active) simulation.value.alphaTarget(0.3).restart();
     event.subject.fx = event.subject.x;
     event.subject.fy = event.subject.y;
   }
 
-  function dragged(event) {
+  function dragged(event){
     event.subject.fx = event.x;
     event.subject.fy = event.y;
   }
 
   function dragended(event) {
-    if (!event.active) simulation.alphaTarget(0);
+    if (!event.active) simulation.value.alphaTarget(0);
     event.subject.fx = null;
     event.subject.fy = null;
   }
@@ -928,112 +845,11 @@ const highlightNodeAndRelated = (node) => {
   });
 };
 
-// 根据节点类型获取半径
-const getNodeRadius = (node) => {
-  switch (node.type) {
-    case 'all': return 20;
-    case 'category': return 15;
-    case 'part': return 12;
-    case 'depart': return 10;
-    default: return 8; // course1 和 course2
-  }
-};
-
-// 根据难度级别获取颜色
-const getNodeColor = (node) => {
-  // 对于没有难度级别的节点（如根节点和分类节点），保持原有颜色
-  if (!node.level) {
-    switch (node.type) {
-      case 'all': return '#ff7675'; // 红色
-      case 'category': return '#74b9ff'; // 蓝色
-      default: return '#a8a8a8'; // 灰色（默认）
-    }
-  }
-
-  // 根据难度级别设置颜色
-  switch (node.level) {
-    case '入门': return '#55efc4'; // 绿色
-    case '基础': return '#ffeaa7'; // 黄色
-    case '进阶': return '#fd79a8'; // 粉色
-    case '深入': return '#a29bfe'; // 紫色
-    case '高级': return '#e17055'; // 橙色
-    default: return '#a8a8a8'; // 灰色（默认）
-  }
-};
-
-// 获取难度级别的CSS类名
-const getLevelClass = (level) => {
-  switch (level) {
-    case '入门': return 'beginner';
-    case '基础': return 'basic';
-    case '进阶': return 'intermediate';
-    case '深入': return 'advanced';
-    case '高级': return 'expert';
-    default: return 'default';
-  }
-};
-
-// 获取节点相关资源（模拟数据，实际应用中可以从API获取）
-const getNodeResources = (node) => {
-  // 这里可以根据节点ID或其他属性获取相关资源
-  // 这里使用模拟数据
-  const resources = {
-    articles: [],
-    videos: []
-  };
-
-  // 根据节点类型和难度添加不同的资源
-  if (node.type === 'all') {
-    resources.articles.push(
-      { title: '知识图谱概述', url: '#' },
-      { title: '学习路径指南', url: '#' }
-    );
-  } else if (node.level === '入门') {
-    resources.articles.push(
-      { title: '入门教程：' + node.id, url: '#' },
-      { title: '快速上手指南', url: '#' }
-    );
-    resources.videos.push(
-      { title: '入门视频教程', embedUrl: '' }
-    );
-  } else if (node.level === '基础') {
-    resources.articles.push(
-      { title: '基础知识：' + node.id + '简介', url: '/articles/前端/前端主流框架/Vue3/1.简介' },
-      { title: '官方文档：' + 'Vue.js - 渐进式 JavaScript 框架', url: 'https://cn.vuejs.org/' }
-    );
-  } else if (node.level === '进阶') {
-    resources.articles.push(
-      { title: '进阶技巧：' + node.id, url: '#' },
-      { title: '深度解析文章', url: '#' }
-    );
-    resources.videos.push(
-      { title: '进阶视频教程', embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
-    );
-  } else if (node.level === '深入' || node.level === '高级') {
-    resources.articles.push(
-      { title: '高级指南：' + node.id, url: '#' },
-      { title: '专家经验分享', url: '#' },
-      { title: '前沿研究动态', url: '#' }
-    );
-    resources.videos.push(
-      { title: '专家讲解视频', embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
-    );
-  }
-
-  if (node.id === 'Vue3') {
-    resources.articles.push(
-      { title: '实践：' + 'Vue SFC Playground', url: 'https://play.vuejs.org/' },
-    );
-    resources.videos.push(
-      { title: 'Vue3基础入门到实战项目教程——黑马程序员', embedUrl: '//player.bilibili.com/player.html?aid=870472773&bvid=BV1HV4y1a7n4&cid=1596651004&page=1&danmaku=0&autoplay=0' }
-    );
-  }
-
-  return resources;
-};
-
-
-// 获取相关节点
+// 获取图相关信息
+const getNodeRadius = useGraphAttribute().getNodeRadius;
+const getNodeColor = useGraphAttribute().getNodeColor;
+const getLevelClass = useGraphAttribute().getLevelClass;
+const getNodeResources = useGraphAttribute().getNodeResources;
 const getRelatedNodes = (node) => {
   const relatedNodes = [];
 
@@ -1066,7 +882,6 @@ const getRelatedNodes = (node) => {
 const selectNode = (node) => {
   selectedNode.value = node;
 };
-
 
 // 应用筛选
 const applyFilter = () => {
@@ -1123,7 +938,7 @@ const applyFilter = () => {
   isFiltered.value = true;
   
   // 重新初始化图表
-  simulation.stop();
+  simulation.value.stop();
   initGraph(true);
 };
 
@@ -1138,7 +953,7 @@ const resetFilter = () => {
   filterTerm.value = '';
   
   // 重新初始化图表
-  simulation.stop();
+  simulation.value.stop();
   initGraph();
 };
 
@@ -1181,646 +996,5 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.knowledge-graph-viewer {
-  font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
-}
-
-/* 小窗口样式 */
-.mini-viewer {
-  position: relative;
-  width: 300px;
-  height: 200px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.mini-viewer:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-}
-
-.mini-graph-container {
-  width: 100%;
-  height: 100%;
-  background-color: var(--background-color);
-}
-
-.mini-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 15px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-  color: white;
-  display: flex;
-  flex-direction: column;
-}
-
-.mini-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.mini-description {
-  font-size: 12px;
-  opacity: 0.8;
-}
-
-.mini-icon {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  padding: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* 旧的样式 */
-.knowledge-graph-container {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-.light-mode .knowledge-graph-container {
-  --primary-color: #2563eb;
-  --primary-color-hover: #1d4ed8;
-  --background-color: #f8f9fa;
-  --card-background: #ffffff;
-  --text-color: #1f2937;
-  --border-color: var(--color-border);
-  --shadow-color: rgba(0, 0, 0, 0.1);
-  --sidebar-header: #f9fafb;
-  --sidebar-header-title: #333;
-  --sidebar-hover: #edf2fd;
-  --close-btn-color: #666;
-}
-
-.dark-mode .knowledge-graph-container {
-  --primary-color: #2563eb;
-  --primary-color-hover: #1d4ed8;
-  --background-color: #2d2d2d;
-  --card-background: #1b1b1b;
-  --text-color: #ffffff;
-  --border-color: var(--color-border);
-  --shadow-color: rgba(0, 0, 0, 0.517);
-  --sidebar-header: rgb(69, 69, 69);
-  --sidebar-header-title: #fbfbfb;
-  --sidebar-hover: #314361;
-  --close-btn-color: #eee;
-}
-
-.knowledge-graph-card {
-  background-color: var(--card-background);
-  border-radius: 12px;
-  box-shadow: 0 4px 20px var(--shadow-color);
-  min-width: 320px;
-  height: 240px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
-
-.knowledge-graph-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-}
-
-.card-content {
-  padding: 16px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.knowledge-graph-card-embeded {
-  height: 100%;
-  display: flex;
-  width: 100%;
-  height: 200px;
-}
-
-.card-content h3 {
-  margin: 0 0 12px 0;
-  color: var(--text-color);
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.mini-graph {
-  flex: 1;
-  background-color: var(--background-color);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.expand-hint {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 0 0 0;
-  font-size: 14px;
-  color: var(--primary-color);
-}
-
-
-
-/* 全屏模式样式 */
-.fullscreen-viewer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--background-color);
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-.fullscreen-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  background-color: var(--card-background);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.fullscreen-header h2 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--sidebar-header-title);
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--close-btn-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  border-radius: 50%;
-  transition: background-color 0.2s ease;
-}
-
-.close-btn:hover {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.fullscreen-content {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-}
-
-.controls {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  z-index: 10;
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 15px;
-  border-radius: 12px;
-  max-width: 250px;
-  backdrop-filter: blur(64px);
-  -webkit-backdrop-filter: blur(64px);
-  border: 1px solid var(--border-color);
-}
-
-.control-btn {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  margin-bottom: 15px;
-  width: 100%;
-  transition: background-color 0.2s ease;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-}
-
-.control-btn:hover {
-  background-color: var(--primary-color-hover);
-}
-
-.checkbox-control {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.checkbox-control input[type="checkbox"] {
-  margin-right: 10px;
-}
-
-.search-control {
-  margin-bottom: 15px;
-  display: flex;
-  gap: 8px;
-}
-
-.search-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 14px;
-  transition: border-color 0.2s ease;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #4a6cf7;
-}
-
-.legend-container {
-  border-top: 1px solid var(--border-color);
-  padding-top: 10px;
-  transition: all 1s ease-in-out;
-}
-
-.legend-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  padding: 5px 0;
-  font-weight: 500;
-}
-
-.rotate-icon {
-  transform: rotate(180deg);
-}
-
-.legend {
-  margin-top: 10px;
-  transition: max-height 0.3s ease;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  margin-bottom: 8px;
-}
-
-.legend-color {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.graph-container {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-
-}
-
-.embeded-graph-container {
-  background-color: #f8f9fa;
-  width: 100%;
-  border-radius: 8px;
-}
-
-.mock-graph {
-  background-color: #f8f9fa;
-  height: 100%;
-}
-
-/* 侧边栏动画 */
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  transform: translateX(100%);
-  opacity: 0;
-}
-
-/* 新的侧边栏样式 */
-.sidebar-details {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 500px;
-  height: 100%;
-  background-color: var(--background-color);
-  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border-left: 1px solid var(--border-color);
-}
-
-.sidebar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid var(--border-color);
-  background-color: var(--sidebar-header);
-}
-
-.sidebar-header h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--sidebar-header-title);
-}
-
-.close-sidebar-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--close-btn-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  border-radius: 50%;
-  transition: background-color 0.2s ease;
-}
-
-.close-sidebar-btn:hover {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.sidebar-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-}
-
-.sidebar-section {
-  margin-bottom: 24px;
-  background-color: var(--card-background);
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-}
-
-.sidebar-section-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 15px;
-  background-color: var(--sidebar-header);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.sidebar-section-header h4 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--sidebar-header-title);
-}
-
-.sidebar-section-content {
-  padding: 15px;
-}
-
-.info-item {
-  margin-bottom: 10px;
-}
-
-.info-label {
-  font-weight: 500;
-  margin-right: 8px;
-}
-
-.info-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.level-beginner {
-  background-color: #55efc4;
-  color: #2d3436;
-}
-
-.level-basic {
-  background-color: #ffeaa7;
-  color: #2d3436;
-}
-
-.level-intermediate {
-  background-color: #fd79a8;
-  color: white;
-}
-
-.level-advanced {
-  background-color: #a29bfe;
-  color: white;
-}
-
-.level-expert {
-  background-color: #e17055;
-  color: white;
-}
-
-.resource-links {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.resource-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px;
-  border-radius: 8px;
-  background-color: var(--background-color);
-  color: var(--primary-color);
-  text-decoration: none;
-  transition: background-color 0.2s ease;
-}
-
-.resource-link:hover {
-  background-color: var(--sidebar-hover);
-}
-
-.video-container {
-  margin-bottom: 15px;
-}
-
-.video-container h5 {
-  margin: 0 0 10px 0;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.video-embed {
-  position: relative;
-  padding-bottom: 56.25%;
-  /* 16:9 比例 */
-  height: 0;
-  overflow: hidden;
-  border-radius: 8px;
-}
-
-.video-embed iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-.related-nodes {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.related-node {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px;
-  border-radius: 8px;
-  background-color: var(--background-color);
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.related-node:hover {
-  background-color: var(--sidebar-hover);
-}
-
-.node-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-/* 节点标签样式 */
-.node-label {
-  font-size: 10px;
-  fill: var(--text-color);
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease, fill 0.3s ease, font-weight 0.3s ease, font-size 0.3s ease;
-}
-
-/* 节点样式 */
-.node {
-  transition: r 0.3s ease, opacity 0.3s ease, stroke-width 0.3s ease, filter 0.3s ease;
-  cursor: pointer;
-}
-
-
-
-.filter-panel {
-  background-color: white;
-  padding: 15px 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  z-index: 10;
-}
-
-.filter-input-container {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.filter-input {
-  flex: 1;
-  padding: 10px 15px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: border-color 0.2s ease;
-}
-
-.filter-input:focus {
-  outline: none;
-  border-color: #4a6cf7;
-}
-
-.filter-btn {
-  background-color: #4a6cf7;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.filter-btn:hover {
-  background-color: #3a56d4;
-}
-
-.reset-btn {
-  background-color: #f0f0f0;
-  color: #333;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.reset-btn:hover:not(:disabled) {
-  background-color: #e0e0e0;
-}
-
-.reset-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.filter-info {
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-  color: #666;
-}
-
-.filter-count {
-  background-color: #f0f0f0;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-}
+@import url(~/assets/css/knowledge_graph.css);
 </style>

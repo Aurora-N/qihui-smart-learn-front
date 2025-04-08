@@ -2,7 +2,8 @@
   <div id="features" class="features-section">
     <div class="container">
       <div class="features">
-        <div v-for="(feature, index) in features" :key="feature.name" class="feature-container" @click="$router.push(`${feature.path}`)">
+        <div v-for="(feature, index) in features" :key="feature.name" class="feature-container"
+          @click="$router.replace(`${feature.path}`)">
           <div class="feature-item">
             <div class="feature-icon">
               <component :is="feature.icon" />
@@ -73,17 +74,18 @@ const features = [
 }
 
 .features {
-  width:80vw;
+  width: 80vw;
   display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
-  justify-content: space-between;
   border: 1px solid var(--color-border);
   padding: 1.5rem;
   border-radius: 10px;
 }
 
 .feature-container {
-  width: 100%;
+  flex: 1 1 22%;
+  /* 每个容器占宽度的22%，四等分 */
   padding: 1rem;
   border-radius: 8px;
 }
@@ -196,13 +198,31 @@ const features = [
   }
 }
 
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
+  .feature-container {
+    flex: 1 1 48%;
+    /* 每个容器占宽度的48%，二等分 */
+  }
+}
+
+@media (max-width: 768px) {
   .features-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
   .features-title {
     font-size: 2.5rem;
+  }
+
+  .feature-container {
+    flex: 1 1 98%;
+    /* 每个容器占宽度的98%，一等分 */
+  }
+}
+
+@media (max-width: 640px) {
+  .features {
+    width: 90vw;
   }
 }
 </style>

@@ -74,6 +74,8 @@ const recommendPostsList = ref([
       <Recommend title="推荐阅读" :lists="recommendPostsList" style="margin-top: 1rem;" />
     </div>
   </div>
+
+  <Footer />
 </template>
 
 <style scope>

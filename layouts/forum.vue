@@ -152,6 +152,7 @@ provide("bannerConfig", bannerConfig)
       </div>
     </div>
   </NuxtLayout>
+  <Footer />
 </template>
 
 <style scoped>

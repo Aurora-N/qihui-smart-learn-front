@@ -67,6 +67,7 @@
     "@pinia/nuxt": "^0.10.1",
     "@playwright/test": "^1.51.1",
     "@shikijs/markdown-it": "^3.1.0",
+    "@types/d3": "^7.4.3",
     "@vue/test-utils": "^2.4.6",
     "@vueuse/nuxt": "^12.7.0",
     "eslint-config-prettier": "^10.0.2",

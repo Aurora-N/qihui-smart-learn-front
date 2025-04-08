@@ -14,7 +14,7 @@ useSeoMeta({
       <HomeTestimonials />
       <HomeCTA />
     </main>
-    <HomeFooter />
+    <Footer />
   </div>
 </template>
 

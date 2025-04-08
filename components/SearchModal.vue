@@ -46,7 +46,29 @@
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
             <input type="text" class="search-input" placeholder="输入关键词搜索..." v-model="searchQuery" ref="searchInputRef"
-              @keyup.esc="closeSearch" />
+              @keyup.esc="closeSearch" @keydown="handleKeyDown" />
+          </div>
+
+          <!-- Search results -->
+          <div class="search-results" v-if="searchResults.length > 0">
+            <div class="results-header">
+              <h3>搜索结果 ({{ searchResults.length }})</h3>
+            </div>
+            <div class="results-list">
+              <div v-for="(result, index) in searchResults" :key="index" class="result-item"
+                @click="navigateToResult(result)">
+                <div class="result-title">{{ result.title || '未命名文章' }}</div>
+                <div class="result-path">{{ formatPath(getPathField(result)) }}</div>
+                <div class="result-excerpt" v-if="result.content">
+                  {{ truncateContent(result.content, 150) }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- No results message -->
+          <div class="no-results" v-else-if="hasSearched && searchQuery.trim()">
+            <p>没有找到与 "{{ searchQuery }}" 相关的内容</p>
           </div>
         </div>
       </div>
@@ -55,13 +77,17 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick, defineEmits } from 'vue';
+import { ref, watch, nextTick, defineEmits, onMounted, onUpdated } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const emit = defineEmits(['search']);
 
 const isSearchOpen = ref(false);
 const searchQuery = ref('');
 const searchInputRef = ref(null);
+const searchResults = ref([]);
+const hasSearched = ref(false);
 
 // Open search modal
 const openSearch = () => {
@@ -85,22 +111,155 @@ const closeSearch = () => {
   }
 
   searchQuery.value = ''; // Clear search query when closing
+  searchResults.value = []; // Clear search results
+  hasSearched.value = false; // Reset search state
 };
 
 // Listen for escape key to close modal
 watch(isSearchOpen, (newValue) => {
   if (newValue) {
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleEscapeKey);
   } else {
-    window.removeEventListener('keydown', handleKeyDown);
+    window.removeEventListener('keydown', handleEscapeKey);
   }
 });
 
-const handleKeyDown = (e) => {
+// Handle escape key press
+const handleEscapeKey = (e) => {
   if (e.key === 'Escape') {
     closeSearch();
   }
 };
+
+// 可搜索的片段
+const searchSections = ref([]);
+
+// 初始化可搜索的片段
+const initSearchSections = async () => {
+  const { data: sections } = await useAsyncData('search-sections', () => {
+    return queryCollectionSearchSections('content', {
+      ignoredTags: ['code']
+    })
+  })
+  searchSections.value = sections.value;
+};
+
+// 处理搜索
+const handleSearch = async (target) => {
+  if (!target || !target.trim()) {
+    searchResults.value = [];
+    hasSearched.value = true;
+    return;
+  }
+
+  if (!searchSections.value || searchSections.value.length === 0) {
+    await initSearchSections();
+  }
+
+  // Additional check in case initSearchSections failed to populate searchSections
+  if (!searchSections.value) {
+    searchResults.value = [];
+    hasSearched.value = true;
+    return;
+  }
+
+  const query = target.trim().toLowerCase();
+  const results = searchSections.value.filter((item) => {
+    return (
+      (item.content && item.content.toLowerCase().includes(query)) ||
+      (item.title && item.title.toLowerCase().includes(query))
+    );
+  });
+
+  searchResults.value = results;
+  hasSearched.value = true;
+};
+
+// 格式化路径显示
+const formatPath = (stem) => {
+  if (!stem) return '';
+  return stem.split('/').join(' > ');
+};
+
+// 获取路径字段（兼容 _path 和 stem）
+const getPathField = (result) => {
+  return result._path || result.stem || '';
+};
+
+// 截断内容
+const truncateContent = (content, maxLength) => {
+  if (!content) return '';
+  if (content.length <= maxLength) return content;
+  return content.substring(0, maxLength) + '...';
+};
+
+// 导航到搜索结果
+const navigateToResult = (result) => {
+  if (!result) return;
+
+  console.log(result);
+
+  // 尝试从不同字段获取路径
+  let pathField = '';
+
+  // 1. 首先尝试使用 _path 或 stem 字段
+  if (result._path) {
+    pathField = result._path;
+  } else if (result.stem) {
+    pathField = result.stem;
+  }
+  // 2. 如果没有上述字段，但有 id 字段，尝试从 id 提取路径
+  else if (result.id) {
+    // 移除开头的斜杠
+    pathField = result.id.replace(/^\/+/, '');
+  }
+  // 3. 如果没有上述字段，但有 title 字段，尝试通过 title 查找对应的文章
+  else if (result.title && searchSections.value && searchSections.value.length > 0) {
+    // 通过标题查找匹配的文章
+    const matchingArticle = searchSections.value.find(item =>
+      item.title && item.title.trim() === result.title.trim()
+    );
+
+    if (matchingArticle) {
+      // 从匹配的文章中获取路径字段
+      if (matchingArticle._path) {
+        pathField = matchingArticle._path;
+      } else if (matchingArticle.stem) {
+        pathField = matchingArticle.stem;
+      }
+    }
+  }
+
+  console.log('使用的路径字段:', pathField);
+
+  // 如果没有可用的路径字段，则无法导航
+  if (!pathField) {
+    console.error('无法导航：没有找到有效的路径字段');
+    return;
+  }
+
+  // 构建导航路径并导航
+  const path = `/articles/${pathField}`;
+  console.log('导航到:', path);
+  router.push(path);
+  closeSearch();
+};
+
+const debounceTimer = ref(null);
+
+// 处理输入框键盘事件
+const handleKeyDown = (e) => {
+  // 清除前一个定时器
+  clearTimeout(debounceTimer.value);
+  // 设置新的定时器
+  debounceTimer.value = setTimeout(async () => {
+    await handleSearch(searchQuery.value);
+  }, 500); // 500 毫秒后触发搜索
+};
+
+onMounted(async () => {
+  await initSearchSections();
+});
 </script>
 
 <style scoped>
@@ -201,6 +360,7 @@ const handleKeyDown = (e) => {
   overflow: hidden;
   z-index: 10000;
   /* Ensure it's above the overlay */
+
 }
 
 .search-modal.active .search-content {
@@ -269,6 +429,71 @@ const handleKeyDown = (e) => {
   border-color: #4a90e2;
   box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
   color: var(--color-text);
+}
+
+/* Search results */
+.search-results {
+  padding: 0 20px 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.results-header {
+  margin-bottom: 10px;
+}
+
+.results-header h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.result-item {
+  padding: 15px;
+  border-radius: 8px;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.result-item:hover {
+  background-color: var(--color-background-hover);
+  border-color: #4a90e2;
+}
+
+.result-title {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: var(--color-text);
+}
+
+.result-path {
+  font-size: 12px;
+  color: var(--color-text-2);
+  margin-bottom: 8px;
+}
+
+.result-excerpt {
+  font-size: 14px;
+  color: var(--color-text-2);
+  line-height: 1.5;
+}
+
+/* No results message */
+.no-results {
+  padding: 20px;
+  text-align: center;
+  color: var(--color-text-2);
 }
 
 /* Responsive adjustments */

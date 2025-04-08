@@ -198,7 +198,7 @@ onMounted(async ()=>{
       </div>
     </div>
   </div>
-
+  <Footer />
 </template>
 
 <style scoped>
