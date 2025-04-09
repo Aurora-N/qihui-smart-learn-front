@@ -20,6 +20,11 @@ export default defineNuxtConfig({
     '@nuxt/test-utils/module'
   ],
 
+  piniaPluginPersistedstate: {
+    storage: 'localStorage',
+    debug: true,
+  },
+
   // shiki: {
   //   theme: 'material-theme-lighter',
   // },

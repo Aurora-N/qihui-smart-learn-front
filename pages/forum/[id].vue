@@ -65,7 +65,7 @@ VS Code → Git → Webpack → Jest → Postman → Kubernetes
           "author": {
             "id": "644e609b-9c71-430d-b6f1-73e0cb1f8d18",
             "attributes": {
-              "avatarUrl": "/kita.png",
+              "avatarUrl": "",
               "userName": "Aurorallz",
               "email": "v9bmdm.k7f@163.com"
             }
@@ -80,7 +80,7 @@ VS Code → Git → Webpack → Jest → Postman → Kubernetes
           "author": {
             "id": "6ddbb6b0-93d2-4452-9008-589152dc405e",
             "attributes": {
-              "avatarUrl": "/muzimi.jpg",
+              "avatarUrl": "",
               "userName": "muko",
               "email": "mawtue_too89@foxmail.com"
             }
@@ -119,7 +119,13 @@ comments.value = res.data.posts.comments
 
 const editorRef = ref(null);
 
-const scrollToEditor = () => {
+const router = useRouter();
+
+const scrollToReplyEditor = () => {
+  if (Object.keys(userStore.userInfo).length === 0) {
+    ElMessage({type: 'warning', message: '请先登录', plain: true});
+    router.push('/login');
+  }
   editorRef.value?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   const editorElement = editorRef.value?.querySelector('#reply-editor .ProseMirror');
   if (editorElement) {
@@ -135,7 +141,7 @@ const handleBeforeSubmit = (content) => {
   console.log(userInfo.value.data);
   comments.value.push(
     {
-      "commentId": "刚才",
+      "commentId": "",
       "author": {
         "id": userInfo.value.id,
         "attributes": {
@@ -185,7 +191,7 @@ onMounted(async ()=>{
         <aside class="sidebar">
           <!-- position: sticky的外面还需包裹一层div才能生效 -->
           <div>
-            <el-button type="primary" size="large" class="reply-btn" @click="scrollToEditor">
+            <el-button type="primary" size="large" class="reply-btn" @click="scrollToReplyEditor">
               回复
             </el-button>
           </div>
