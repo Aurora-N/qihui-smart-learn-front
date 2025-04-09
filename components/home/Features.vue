@@ -198,7 +198,7 @@ const features = [
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .feature-container {
     flex: 1 1 48%;
     /* 每个容器占宽度的48%，二等分 */

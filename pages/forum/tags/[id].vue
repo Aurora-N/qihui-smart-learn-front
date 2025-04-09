@@ -15,7 +15,7 @@ const gettagDetail = async () => {
         title: '关于大一寒假',
         author: '0x0001',
         replyTime: '2 天前',
-        avatar: '/soyo.png',
+        avatar: '',
         tags: [
           { text: '综合板块', type: 'main' },
           { text: '学习讨论', type: 'learn' },
@@ -28,7 +28,7 @@ const gettagDetail = async () => {
         title: 'Rust学习伙伴',
         author: '0x0001',
         replyTime: '3 天前',
-        avatar: '/anno.gif',
+        avatar: '',
         tags: [
           { text: '综合板块', type: 'main' },
           { text: 'Rust', type: 'basic' }

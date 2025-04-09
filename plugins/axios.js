@@ -5,7 +5,7 @@ import { useUserStore } from '~/stores/userStore'
 export default defineNuxtPlugin((nuxtApp) => {
     const apiClient = axios.create({
         baseURL: 'http://120.76.138.103:5050/', // 服务器地址
-        timeout: 5000,
+        timeout: 20000,
     })
 
     // 请求拦截器：自动添加 Token
@@ -51,6 +51,18 @@ export default defineNuxtPlugin((nuxtApp) => {
                     plain: true,
                 })
                 userStore.clearUserInfo()
+                break;
+            case 500:
+                ElMessage({
+                    type: 'error', message: '服务器内部错误：' + error.message,
+                    plain: true,
+                })
+                break;
+            case 502:
+                ElMessage({
+                    type: 'error', message: error.message,
+                    plain: true,
+                })
                 break;
             default:
                 break;

@@ -16,7 +16,7 @@
           <div class="search-header">
             <h2>搜索</h2>
             <button class="close-button" @click="closeSearch">
-              <IconsClose />
+              <IconsClose style="width: 1.5rem;" />
             </button>
           </div>
           <div class="search-input-container">

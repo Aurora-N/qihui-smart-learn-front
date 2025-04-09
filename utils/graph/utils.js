@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { useGraphDataStore } from '~/stores/graphDataStore';
 
 // 创建SVG
 export const createSvg = (graphContainer, width, height, isFull = false) => {
@@ -148,60 +149,34 @@ export const useGraphAttribute = () => {
   };
 
   // 获取节点相关资源
-  const getNodeResources = (node) => {
-    // 这里可以根据节点ID或其他属性获取相关资源
-    // 这里使用模拟数据
-    const resources = {
+  const getNodeResources = async (node) => {
+    const resources = reactive({
       articles: [],
       videos: []
-    };
+    });
 
-    // 根据节点类型和难度添加不同的资源
-    if (node.type === 'all') {
-      resources.articles.push(
-        { title: '知识图谱概述', url: '#' },
-        { title: '学习路径指南', url: '#' }
-      );
-    } else if (node.level === '入门') {
-      resources.articles.push(
-        { title: '入门教程：' + node.id, url: '#' },
-        { title: '快速上手指南', url: '#' }
-      );
-      resources.videos.push(
-        { title: '入门视频教程', embedUrl: '' }
-      );
-    } else if (node.level === '基础') {
-      resources.articles.push(
-        { title: '基础知识：' + node.id + '简介', url: '/articles/前端/前端主流框架/Vue3/1.简介' },
-        { title: '官方文档：' + 'Vue.js - 渐进式 JavaScript 框架', url: 'https://cn.vuejs.org/' }
-      );
-    } else if (node.level === '进阶') {
-      resources.articles.push(
-        { title: '进阶技巧：' + node.id, url: '#' },
-        { title: '深度解析文章', url: '#' }
-      );
-      resources.videos.push(
-        { title: '进阶视频教程', embedUrl: '' }
-      );
-    } else if (node.level === '深入' || node.level === '高级') {
-      resources.articles.push(
-        { title: '高级指南：' + node.id, url: '#' },
-        { title: '专家经验分享', url: '#' },
-        { title: '前沿研究动态', url: '#' }
-      );
-      resources.videos.push(
-        { title: '专家讲解视频', embedUrl: '' }
-      );
-    }
+    const graphDataStore = useGraphDataStore();
 
-    if (node.id === 'Vue3') {
-      resources.articles.push(
-        { title: '实践：' + 'Vue SFC Playground', url: 'https://play.vuejs.org/' },
-      );
-      resources.videos.push(
-        { title: 'Vue3基础入门到实战项目教程——黑马程序员', embedUrl: '//player.bilibili.com/player.html?aid=870472773&bvid=BV1HV4y1a7n4&cid=1596651004&page=1&danmaku=0&autoplay=0' }
-      );
-    }
+    const response = await graphDataStore.getResources(node.id);
+
+    // 处理返回格式
+    response.article.map(article => { 
+      const url = article.article.split('/').slice(2).join('/');
+      article.url = url;
+    });
+
+    response.article.sort((a, b) => a.name.localeCompare(b.name));
+
+    response.video.map(video => { 
+      // 处理bilibili视频成为内嵌格式
+      if (video.url.indexOf("www.bilibili.com") !== -1) {
+        const embedUrl = `//player.bilibili.com/player.html?bvid=${video.url.split('/').at(-2)}&page=1&danmaku=0&autoplay=0`
+        video.url = embedUrl;
+      }
+    });
+
+    resources.articles.push(...response.article);
+    resources.videos.push(...response.video);
 
     return resources;
   };

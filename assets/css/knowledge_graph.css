@@ -436,9 +436,8 @@
   margin-bottom: 15px;
 }
 
-.video-container h5 {
+.video-container h4 {
   margin: 0 0 10px 0;
-  font-size: 14px;
   font-weight: 500;
 }
 
@@ -579,4 +578,44 @@
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 12px;
+}
+
+
+/* 资源加载骨架 */
+.skeleton-icon-small,
+.skeleton-text {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-icon-small {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.skeleton-text {
+  width: 160px;
+  height: 16px;
+  margin-left: 8px;
+}
+
+.skeleton-link {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: var(--color-background-hover);
+}
+
+/* Animation */
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

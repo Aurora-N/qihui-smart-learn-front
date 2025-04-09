@@ -9,6 +9,6 @@ export const useGraphApi = () => {
         getGraph: (params) => nuxtApp.$axios.get('/forum/KnowledgeGraph/category', { params }),
 
         // 获取知识图谱结点背后的资源
-        getNodeResources: (nodeType, nodeId) => nuxtApp.$axios.get(`/forum/KnowledgeGraph/category/?type=${nodeType}&id=${nodeId}`)
+        getNodeResources: (nodeType, nodeId) => nuxtApp.$axios.get(`/learn/KnowledgeGraph/Resources?type=${nodeType}&id=${nodeId}`)
     };
 };

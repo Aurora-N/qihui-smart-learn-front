@@ -9,7 +9,7 @@ const props = defineProps({
   author: {
     type: Object, required: true, default: () => ({
       attributes: {
-        avatarUrl: '/soyo.png',
+        avatarUrl: '',
         userName: ''
       }
     })
@@ -22,7 +22,7 @@ const props = defineProps({
 
 const authors = ref({
   attributes: {
-    avatarUrl: '/soyo.png',
+    avatarUrl: '',
     userName: ''
   }
 })

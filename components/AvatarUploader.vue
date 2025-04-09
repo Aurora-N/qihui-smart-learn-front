@@ -63,7 +63,6 @@ const handleFileChange = (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
-  // Preview the image
   const reader = new FileReader();
   reader.onload = (e) => {
     previewUrl.value = e.target.result;
@@ -76,15 +75,8 @@ const uploadAvatar = async (file) => {
   try {
     uploading.value = true;
 
-    // Simulate upload delay
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    // In a real application, you would upload the file to your server here
-    // const formData = new FormData();
-    // formData.append('avatar', file);
-    // const response = await fetch('/api/upload', { method: 'POST', body: formData });
-
-    // For demo purposes, we'll just emit the file
     emit('update:avatar', file);
     emit('upload-success', { file, url: previewUrl.value });
 

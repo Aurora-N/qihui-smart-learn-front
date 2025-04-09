@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <div class="quiz-container">
-      <el-card class="quiz-card">
+      <BannerQuiz>
+
+        <el-card class="quiz-card">
         <template #header>
           <div class="quiz-header">
             <h1>前端开发测试题</h1>
@@ -140,6 +142,8 @@
         </el-button>
         </div>
       </el-card>
+      </BannerQuiz>
+
     </div>
   </div>
 </template>
@@ -172,7 +176,6 @@ const parseQuestions = (markdownText) => {
   let currentQuestion = null;
 
   for (const line of lines) {
-    // 新题目开始
     const questionMatch = line.match(/^\d+\.\s+\[([^\]]+)\]\s+(.*)/);
     if (questionMatch) {
       if (currentQuestion) {
@@ -188,7 +191,6 @@ const parseQuestions = (markdownText) => {
       continue;
     }
 
-    // 选项
     const optionMatch = line.match(/^([A-D])\)\s+(.*)/);
     if (optionMatch && currentQuestion) {
       currentQuestion.options.push({
@@ -198,14 +200,12 @@ const parseQuestions = (markdownText) => {
       continue;
     }
 
-    // 答案
     const answerMatch = line.match(/^✅答案：(.+)/);
     if (answerMatch && currentQuestion) {
       currentQuestion.answer = answerMatch[1];
       continue;
     }
 
-    // 解析
     const explanationMatch = line.match(/^📝解析：(.+)/);
     if (explanationMatch && currentQuestion) {
       currentQuestion.explanation = explanationMatch[1];
@@ -278,7 +278,6 @@ const goToNextQuestion = () => {
       currentQuestionIndex.value++;
       selectedAnswer.value = userAnswers.value[currentQuestionIndex.value] || '';
     } else {
-      // 到达最后一题，进入预览模式
       reviewMode.value = true;
     }
   }
@@ -334,20 +333,18 @@ const restartQuiz = () => {
 };
 
 onMounted(() => {
-  // 预留从API或文件加载数据接口
   questions.value = parseQuestions(localQuizData);
 });
 </script>
 
 <style scoped>
 .container {
-  padding-top: 80px;
+  padding-top: 55px;
 }
 
 .quiz-container {
-  max-width: 1000px;
+  /* max-width: 1000px; */
   margin: 0 auto;
-  padding: 20px;
   font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 

@@ -28,5 +28,6 @@ definePageMeta({
 <style scoped>
 .container {
   height: 100vh;
+  overflow: hidden;
 }
 </style>

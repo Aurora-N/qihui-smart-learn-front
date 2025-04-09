@@ -31,7 +31,7 @@ const topics = ref([
     title: '寻找Rust学习伙伴',
     author: 'soyo',
     replyTime: '3 天前',
-    avatar: '/soyo.png',
+    avatar: '',
     tags: [
       { text: '综合板块', type: 'main' },
       { text: 'Rust', type: 'basic' }
@@ -55,7 +55,7 @@ const topics = ref([
     title: '如何拥抱AI',
     author: '阿农',
     replyTime: '7 天前',
-    avatar: '/anno.gif',
+    avatar: '',
     tags: [
       { text: '学习讨论', type: 'learn' },
       { text: '综合板块', type: 'main' }
