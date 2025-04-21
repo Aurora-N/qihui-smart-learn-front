@@ -12,6 +12,11 @@ const { data: page, error } = await useAsyncData(`content-${slug}`, async () => 
   return result;
 });
 
+const showMenu = computed(()=> {
+  const links = page.value?.body.toc?.links;
+  return links && links.length > 0;
+});
+
 onMounted(() => {
   if (page.value) isLoading.value = false;
 });
@@ -50,7 +55,7 @@ const recommendPostsList = ref([
   <!-- <ContentSkeleton v-if="isLoading" /> -->
 
   <div class="main-container">
-    <div class="side" v-if="page?.body.toc?.links?.length > 0">
+    <div class="side" v-if="showMenu">
       <Sidebar title="目录" height="20rem">
         <el-menu :default-active="selectedItem" class="posts-category-menu" @select="selectTocItem">
           <el-menu-item v-for="item of page?.body.toc?.links" :key="item.id" :index="item.id"

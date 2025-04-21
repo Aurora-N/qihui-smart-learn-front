@@ -31,23 +31,24 @@
 
       <div class="fullscreen-content">
         <div class="controls">
-          <button @click="resetFilter" class="control-btn">重置视图</button>
-          <div class="checkbox-control">
-            <input type="checkbox" id="showLabels" v-model="showLinkLabels">
-            <label for="showLabels">显示关系标签</label>
-          </div>
-          <div class="search-control">
-            <input type="text" v-model="filterTerm" @input="handleSearchInput" placeholder="搜索节点" class="search-input">
+          <div class="controls-container">
+            <button @click="resetFilter" class="control-btn" title="重置知识图谱视图">重置</button>
+            <div class="checkbox-control">
+              <input type="checkbox" id="showLabels" v-model="showLinkLabels">
+              <label for="showLabels">关系</label>
+            </div>
+            <div class="search-control">
+              <input type="text" v-model="filterTerm" @input="handleSearchInput" placeholder="搜索节点" class="search-input">
+            </div>
+            <div class="mobile-legend-btn" title="图例" @click="showLegend = !showLegend">
+              <IconsArrowUp :class="{ 'rotate-icon': showLegend }" />
+            </div>
           </div>
 
           <div class="legend-container">
             <div class="legend-header" @click="toggleLegend">
               <span>图例</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                :class="{ 'rotate-icon': !showLegend }">
-                <polyline points="18 15 12 9 6 15"></polyline>
-              </svg>
+              <IconsArrowUp :class="{ 'rotate-icon': showLegend }" />
             </div>
             <div class="legend" v-show="showLegend">
               <div class="legend-item">
@@ -276,7 +277,7 @@ import vueData from '~/assets/data_vue.json'
 import { IconsGraph } from '#components';
 
 
-const graphData = computed(() => {
+const graphDataSource = computed(() => {
   if (props.title === '前端') return frontData;
   else if (props.title === '后端') return backData;
   else if (props.title === 'Vue3') return vueData;
@@ -352,6 +353,7 @@ const toggleFullscreen = async () => {
   if (isFullscreen.value) {
     initGraph();
   } else {
+    simulation.value.stop();
     initMiniGraph();
   }
 };
@@ -361,13 +363,13 @@ const toggleLegend = () => {
   showLegend.value = !showLegend.value;
 };
 
+// 图谱数据
+const graphData = transformData(graphDataSource.value, props.maxDepth);
+
 // 初始化小图, 大图的等比例缩小版本
 const initMiniGraph = () => {
   if (!miniGraphContainer.value) return;
-
-  const data = transformData(graphData.value, props.maxDepth);
-  nodes = data.nodes;
-  links = data.links;
+  const {nodes, links} = graphData;
 
   const width = miniGraphContainer.value.clientWidth;
   const height = miniGraphContainer.value.clientHeight;
@@ -385,7 +387,7 @@ const initMiniGraph = () => {
   createNode(miniG, nodes, d => getNodeRadius(d) * 0.5, 1)
 
   // 创建力导向模拟
-  const miniSimulation = createSimulation(nodes, links, 50 / 2, -150 / 8, {x: width / 2, y: height / 2 }, false);
+  const miniSimulation = createSimulation(nodes, links, 25, -150 / 8, {x: width / 2, y: height / 2 }, false);
 
   // 更新函数
   miniSimulation.on('tick', () => {
@@ -402,7 +404,7 @@ const initMiniGraph = () => {
   });
 
   // 运行模拟一段时间后停止
-  setTimeout(() => miniSimulation.stop(), 2000);
+  setTimeout(() => miniSimulation.stop(), 1500);
 };
 
 // 初始化全屏图表
@@ -410,7 +412,7 @@ const initGraph = (isFiltering = false) => {
   if (!graphContainer.value) return;
 
   if (!isFiltering) {
-    const data = transformData(graphData.value, props.maxDepth);
+    const data = graphData;
     nodes = data.nodes;
     links = data.links;
       // 保存原始数据的副本
@@ -449,7 +451,7 @@ const initGraph = (isFiltering = false) => {
 
   // 添加缩放功能
   zoom = d3.zoom()
-    .scaleExtent([0.1, 4])
+    .scaleExtent([0.5, 2])
     .on('zoom', (event) => {
       g.attr('transform', event.transform);
     });

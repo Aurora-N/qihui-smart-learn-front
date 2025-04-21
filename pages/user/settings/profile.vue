@@ -119,12 +119,12 @@ async function submitForm() {
             </el-icon>
             <span>个人资料</span>
           </div>
-          <div class="nav-item" :class="{ active: selectedNav === 'posts' }" @click="selectedNav = 'posts'">
+          <!-- <div class="nav-item" :class="{ active: selectedNav === 'posts' }" @click="selectedNav = 'posts'">
             <el-icon>
               <ChatDotRound />
             </el-icon>
             <span>发布帖子</span>
-          </div>
+          </div> -->
           <div class="nav-item" :class="{ active: selectedNav === 'style' }" @click="selectedNav = 'style'">
             <el-icon>
               <Operation />

@@ -21,9 +21,6 @@ export const createSimulation = (nodes, links, linkDistance, strength, center = 
 
   if (isFull) {
     simulation.force('collision', d3.forceCollide().radius(forceCollideRadius));
-  } else {
-    simulation.alphaDecay(0.05)
-    .velocityDecay(0.4); // 提高衰减速度
   }
     
   return simulation;

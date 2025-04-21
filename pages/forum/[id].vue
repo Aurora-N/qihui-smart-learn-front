@@ -163,6 +163,10 @@ const handleBeforeSubmit = (content) => {
 onMounted(async ()=>{
   userInfo.value = userStore.userInfo.data;
 })
+
+useSeoMeta({
+  title: `${post.value.title} —— 启慧论坛`
+})
 </script>
 
 <template>
