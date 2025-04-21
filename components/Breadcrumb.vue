@@ -18,9 +18,6 @@ const props = defineProps({
     })
   }
 })
-
-onMounted
-  (() => console.log(props.parents))
 </script>
 
 <template>

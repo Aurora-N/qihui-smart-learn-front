@@ -228,7 +228,6 @@ const initGraph = () => {
   if (!initializedGrpah.value && pathData.value) {
     const { nodes, links } = processData();
     renderGraph(nodes, links);
-    console.log('init!!!');
     initializedGrpah.value = true;
   }
 }

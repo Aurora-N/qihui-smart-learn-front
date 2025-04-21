@@ -136,7 +136,6 @@ const scrollToReplyEditor = () => {
 
 // 父组件接收清空前的内容
 const handleBeforeSubmit = (content) => {
-  console.log('提交前的内容:', content);
   if (!userInfo.value) {
     ElMessage({type:'warning', message:'用户未登录,请先登录!', plain:true});
     router.push('/login');

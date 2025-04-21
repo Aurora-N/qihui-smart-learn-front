@@ -204,6 +204,15 @@
                   </div>
                 </div>
               </div>
+              <!-- 获取资源失败提示窗口 -->
+              <div v-else-if="inResourcesError">
+
+                <div class="sidebar-section-error">
+                  <IconsDataError class="error-icons" />
+                <div class="error-tips">请求资源失败，请重试！</div>
+                <button @click="fetchSelectedNodeData(selectedNode)" class="control-btn"><IconsRefresh />重新获取数据</button>
+                </div>
+              </div>
               <div v-else>
                 <div class="sidebar-section">
                   <div class="sidebar-section-header">
@@ -286,6 +295,8 @@ const isFiltered = ref(false);
 const currentFilterNode = ref('');
 const filteredNodeCount = ref(0);
 
+// 获取资源失败状态
+const inResourcesError = ref(false);
 
 // 监听窗口大小
 const { width: windowWidth, height: windowHeight } = useWindowSize();
@@ -314,11 +325,20 @@ let allLinks = []; // 存储所有链接的原始副本
 // 选中结点的资源
 const selectedNodeResources = ref({});
 
+const fetchSelectedNodeData = async (selectedNode) => {
+  try {
+    inResourcesError.value = false;
+    selectedNodeResources.value = {}; // 先清空之前的旧的数据
+    selectedNodeResources.value = await getNodeResources(selectedNode);
+  } catch(error) {
+    inResourcesError.value = true;
+  }
+}
+
 watch(selectedNode, async (newVal, oldVal) => {
   if (newVal !== oldVal) {
-    // 当 selectedNode 发生变化时，调用 getNodeResources
-    selectedNodeResources.value = {}; // 先清空之前的旧的数据
-    selectedNodeResources.value = await getNodeResources(newVal);
+    // 当 selectedNode 发生变化时，获取资源
+    await fetchSelectedNodeData(newVal);
   }
 });
 

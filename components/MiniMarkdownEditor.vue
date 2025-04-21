@@ -27,10 +27,9 @@ const textarea = ref(null);
 
 // 调整textarea高度
 const adjustHeight = () => {
-  console.log(textarea.value)
   textarea.value.style.height = 'auto';  // 先重置为自动高度
   textarea.value.style.height = `${textarea.value.scrollHeight}px`; // 设置为内容的高度
-  console.log(textarea.value.style.height.slice(0, -2));
+
   if (textarea.value.style.height.slice(0, -2) > 300) {
     textarea.value.style.overflow = 'auto';
   } else {

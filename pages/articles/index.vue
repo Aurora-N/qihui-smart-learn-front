@@ -23,9 +23,7 @@ const currentCateIndex = ref(0)
 
 /* 选中分类相应模块 */
 const selectCategory = (id) => {
-  console.log('id:', id)
   currentCateIndex.value = articlesList.value.findIndex(item => item.id === id);
-  console.log(currentCateIndex.value)
 }
 
 useSeoMeta({

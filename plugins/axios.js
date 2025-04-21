@@ -15,7 +15,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         // 拼接token数据
         const token = userStore.userInfo.token
         if (token) {
-            console.log('token login')
             config.headers.Authorization = `${token}`
         }
         return config

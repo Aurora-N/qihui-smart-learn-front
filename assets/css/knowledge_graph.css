@@ -174,14 +174,22 @@
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  margin-bottom: 15px;
   width: 100%;
   transition: background-color 0.2s ease;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
 }
 
 .control-btn:hover {
   background-color: var(--primary-color-hover);
+}
+
+.controls .control-btn {
+  margin-bottom: 15px;
 }
 
 .checkbox-control {
@@ -620,4 +628,23 @@
   100% {
     background-position: -200% 0;
   }
+}
+
+/* 错误提示 */
+.error-icons {
+  color: var(--color-text-2);
+}
+
+.error-tips {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.sidebar-section-error {
+  margin-bottom: 24px;
+  background-color: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  padding: 1.5rem;
 }

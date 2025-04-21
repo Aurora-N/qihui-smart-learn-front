@@ -13,7 +13,6 @@ async function getPublicKey() {
 
 export async function encryptWithRSA(text) {
     const publicKey = await getPublicKey();
-    console.log(publicKey);
     if (!publicKey) throw new Error('公钥获取失败');
     const encryptor = new JSEncrypt();
     encryptor.setPublicKey(`${publicKey}`);

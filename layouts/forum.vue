@@ -20,7 +20,6 @@ const selectedNav = computed(() => {
 });
 
 const switchToNav = (item) => {
-  console.log(item)
   selectedNav.value = item
   if (item !== 'all')
     router.push(`/forum/${item}`)

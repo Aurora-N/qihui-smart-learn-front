@@ -163,26 +163,32 @@ export const useGraphAttribute = () => {
 
     const graphDataStore = useGraphDataStore();
 
-    const response = await graphDataStore.getResources(node.id);
+    try {
+      const response = await graphDataStore.getResources(node.id);
 
-    // 处理返回格式
-    response.article.map(article => { 
-      const url = article.article.split('/').slice(2).join('/');
-      article.url = url;
-    });
-
-    response.article.sort((a, b) => a.name.localeCompare(b.name));
-
-    response.video.map(video => { 
-      // 处理bilibili视频成为内嵌格式
-      if (video.url.indexOf("www.bilibili.com") !== -1) {
-        const embedUrl = `//player.bilibili.com/player.html?bvid=${video.url.split('/').at(-2)}&page=1&danmaku=0&autoplay=0`
-        video.url = embedUrl;
-      }
-    });
-
-    resources.articles.push(...response.article);
-    resources.videos.push(...response.video);
+      // 处理返回的 article 数据
+      response.article.map(article => { 
+        const url = article.article.split('/').slice(2).join('/');
+        article.url = url;
+      });
+      // 按名称排序 article
+      response.article.sort((a, b) => a.name.localeCompare(b.name));
+      // 处理 video 数据
+      response.video.map(video => { 
+        // 处理bilibili视频成为内嵌格式
+        if (video.url.indexOf("www.bilibili.com") !== -1) {
+          const embedUrl = `//player.bilibili.com/player.html?bvid=${video.url.split('/').at(-2)}&page=1&danmaku=0&autoplay=0`
+          video.url = embedUrl;
+        }
+      });
+      // 将处理后的数据加入资源列表
+      resources.articles.push(...response.article);
+      resources.videos.push(...response.video);
+    } catch (error) {
+      resources.articles = [];
+      resources.videos = [];
+      throw new Error("请求资源失败！");
+    }
 
     return resources;
   };

@@ -299,7 +299,6 @@ const editAnswer = (index) => {
 const getUserLearningPath = async () => {
   const res = await useQuizApi().getLearningPath(userAnswersList.value);
   recommendLearningPath.value = res;
-  console.log(recommendLearningPath.value);
 }
 
 const submitQuiz = async () => {

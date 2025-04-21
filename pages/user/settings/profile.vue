@@ -76,7 +76,6 @@ function validateConfirmPassword(rule, value, callback) {
 
 // 处理头像上传
 const handleAvatarUpload = (file) => {
-  console.log(file)
   form.avatar = file
 }
 
@@ -89,7 +88,6 @@ async function submitForm() {
       isLoading.value = true
       if (form.password) form.password = await encryptWithRSA(form.password);
       const { confirmPassword, ...rest } = form;
-      console.log('beforeSendReq:', rest)
       // 调用API保存用户信息
       const res = await useUserApi().updateUserInfo(rest)
       if (res.status === 'success') {
