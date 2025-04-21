@@ -58,12 +58,12 @@ const features = [
 .features-section {
   position: relative;
   padding: 6rem 0;
-  background-color: var(--background-color);
+  background: linear-gradient(var(--background-color), var(--secondary-color));
   overflow: hidden;
 }
 
 .container {
-  max-width: 1600px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 1rem;
   position: relative;
@@ -71,6 +71,7 @@ const features = [
   display: flex;
   justify-content: center;
   align-content: center;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
 .features {
@@ -88,22 +89,18 @@ const features = [
   /* 每个容器占宽度的22%，四等分 */
   padding: 1rem;
   border-radius: 8px;
+  transition: all 0.2s;
 }
 
 .feature-container:hover {
   padding: 1rem;
-  background-color: var(--color-background-hover);
+  background-color: var(--accent-hover);
+  cursor: pointer;
 }
 
 .feature-item {
   position: relative;
 }
-
-/* .feature-item:hover {
-  background-color: var(--color-background-hover);
-  border-radius: 6px;
-  outline: 10px solid var(--color-background-hover);
-} */
 
 .feature-icon {
   position: absolute;
@@ -143,58 +140,15 @@ const features = [
   pointer-events: none;
 }
 
-.bg-circle {
-  position: absolute;
-  border-radius: 50%;
-}
-
-.bg-circle-1 {
-  top: -25%;
-  right: -25%;
-  width: 50%;
-  height: 50%;
-  background-color: rgba(var(--primary-rgb), 0.1);
-  animation: rotate 15s linear infinite, scale 15s ease-in-out infinite;
-}
-
-.bg-circle-2 {
-  bottom: -25%;
-  left: -25%;
-  width: 50%;
-  height: 50%;
-  background-color: rgba(var(--secondary-rgb), 0.1);
-  animation: rotate-reverse 20s linear infinite, scale 20s ease-in-out infinite;
-}
-
-@keyframes rotate {
+@keyframes fadeInUp {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(1.25rem);
   }
 
   to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes rotate-reverse {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(-360deg);
-  }
-}
-
-@keyframes scale {
-
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.1);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

@@ -84,31 +84,31 @@
     font-size: 0.75rem;
   }
   
-  .tag.basic {
+  .tag {
     background-color: #f3f4f6;
     color: #374151;
   }
   
-  .tag.main {
+  .tag.tag1 {
     --hue: 235;
     background-color: oklch(.95 .025 var(--hue));
     color: oklch(.55 .12 var(--hue));
   }
   
-  .tag.water {
+  .tag.tag4 {
     --hue: 210;
     background-color: oklch(.95 .025 var(--hue));
     color: oklch(.55 .12 var(--hue));
   }
   
-  .tag.learn {
+  .tag.tag2 {
     --hue: 160;
     background-color: oklch(.95 .025 var(--hue));
     color: oklch(.55 .12 var(--hue));
   }
   
-  .tag.upgrade {
-    --hue: 40;
+  .tag.tag3 {
+    --hue: 60;
     background-color: oklch(.95 .025 var(--hue));
     color: oklch(.55 .12 var(--hue));
   }

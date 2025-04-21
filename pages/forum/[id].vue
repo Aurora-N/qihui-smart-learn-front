@@ -100,7 +100,7 @@ VS Code → Git → Webpack → Jest → Postman → Kubernetes
               "email": "k8qscp14@yeah.net"
             }
           },
-          "content": "博主还没写完吗，期待继续更新！",
+          "content": `111111`,
           "createdAt": "2025-03-19 18:02:15",
           "likesCount": 1,
           "repliedID": null
@@ -125,6 +125,7 @@ const scrollToReplyEditor = () => {
   if (Object.keys(userStore.userInfo).length === 0) {
     ElMessage({type: 'warning', message: '请先登录', plain: true});
     router.push('/login');
+    return;
   }
   editorRef.value?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   const editorElement = editorRef.value?.querySelector('#reply-editor .ProseMirror');
@@ -133,12 +134,14 @@ const scrollToReplyEditor = () => {
   }
 }
 
-const editorContent = ref('');
-
 // 父组件接收清空前的内容
 const handleBeforeSubmit = (content) => {
   console.log('提交前的内容:', content);
-  console.log(userInfo.value.data);
+  if (!userInfo.value) {
+    ElMessage({type:'warning', message:'用户未登录,请先登录!', plain:true});
+    router.push('/login');
+    return;
+  }
   comments.value.push(
     {
       "commentId": "",
@@ -150,12 +153,12 @@ const handleBeforeSubmit = (content) => {
           "email": userInfo.value.email
         }
       },
-      "content": content.slice(3, -4),
+      "content": content,
       "createdAt": "刚刚",
       "likesCount": 0,
       "repliedID": null
     });
-  // 可以将内容保存或做进一步处理
+  // TODO.接上评论API
 };
 
 onMounted(async ()=>{
@@ -180,9 +183,7 @@ onMounted(async ()=>{
           <hr>
         </div>
         <div ref="editorRef" class="editor">
-          <ClientOnly>
-            <TiptapEditor id="reply-editor" v-model="editorContent" @beforeSubmit="handleBeforeSubmit" />
-          </ClientOnly>
+          <MiniMarkdownEditor id="reply-editor" @beforeSubmit="handleBeforeSubmit" />
         </div>
       </article>
 

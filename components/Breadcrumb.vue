@@ -27,9 +27,10 @@ onMounted
   <div class="breadcrumb">
     <el-breadcrumb :separator-icon="ArrowRight">
       <el-breadcrumb-item :to="{ path: props.root.link }">{{ props.root.title }}</el-breadcrumb-item>
-      <el-breadcrumb-item v-for="(parent, index) in props.parents"
-        :to="`/articles/${props.parents.slice(0, index + 1).join('/')}`">{{ parent
-        }}</el-breadcrumb-item>
+      <el-breadcrumb-item v-for="(parent, index) in props.parents">
+        <!-- :to="`/articles/${props.parents.slice(0, index + 1).join('/')}`" -->
+        {{ parent }}
+      </el-breadcrumb-item>
       <el-breadcrumb-item>{{ props.currentTitle }}</el-breadcrumb-item>
     </el-breadcrumb>
   </div>

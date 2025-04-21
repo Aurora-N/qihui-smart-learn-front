@@ -25,7 +25,7 @@
   --marker-light: rgb(210, 215, 221);
   --marker-dark: rgb(241, 245, 249);
 
-  --main-color: #0060DF;
+  --main-color: #0068df;
   /* #2563eb */
   --main-color-hover-darker: #0250BB;
   --main-color-hover-lighter: #1576ff;
@@ -70,7 +70,7 @@
   --color-background-soft: var(--black-soft);
   --color-background-mute: var(--black-mute);
   --color-background-blur: var(--black-blur);
-  --color-background-hover: #6262626e;
+  --color-background-hover: #6262627b;
   --color-background-nav-hover: rgb(30, 41, 59);
   --color-background-quote: rgb(30, 41, 59);
   --color-background-layer: #242424;
@@ -86,7 +86,6 @@
   --color-meta-text: #adb5c3;
 
   --color-devider: var(--divider-dark-2);
-  --color-marker: var(--marker-dark);
 }
 
 /* Apply colors based on selected theme */

@@ -1,6 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: '启慧智学——基于多模态知识图谱的Web开发学习平台', // default fallback title
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/logo_light.png' },
+      ]
+    }
+  },
+
   alias:{
     assets: "/<rootDir>/assets",
   },
@@ -49,6 +58,12 @@ export default defineNuxtConfig({
           depth: 2, // include h3 headings
           searchDepth: 2
         },
+      },
+      pathMeta: {
+        slugifyOptions: {
+          // 保留路径中的汉字（非ascii字符）
+          remove: /[$*+~()'"!\-=#?:@]/g,
+        }
       },
     },
   },

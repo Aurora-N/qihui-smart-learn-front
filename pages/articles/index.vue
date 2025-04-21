@@ -82,9 +82,24 @@ useSeoMeta({
   <Footer />
 </template>
 
+<style>
+.el-menu {
+  background-color: var(--color-background);
+}
+
+.el-menu-item {
+  color: var(--color-text);
+}
+
+.el-menu-item::hover {
+  color: #2563eb;
+  background-color: var(--color-background-nav-hover);
+}
+</style>
+
 <style scoped>
 .articles {
-  background-color: while;
+  background-color: var(--color-background-layer);
   padding-top: 55px;
   width: 100%;
 }
@@ -96,7 +111,7 @@ useSeoMeta({
 }
 
 .banner-links a {
-  color: #2563eb;
+  color: var(--main-color-hover-lighter);
   text-decoration: none;
 }
 
@@ -121,10 +136,11 @@ useSeoMeta({
 }
 
 .articles-category {
+  background-color: var(--color-background);
   margin-top: 0.5rem;
   padding: 1rem;
   border-radius: 6px;
-  border: 1px solid rgb(231, 236, 243);
+  border: 1px solid var(--color-devider);
 }
 
 .articles-category-menu {
@@ -140,7 +156,7 @@ useSeoMeta({
 
 .articles-category-item:hover {
   color: #2563eb;
-  background-color: rgb(248, 250, 252);
+  background-color: var(--color-background-nav-hover);
   --el-menu-base-level-padding: 10px;
   border-radius: 6px;
 }
@@ -158,29 +174,8 @@ useSeoMeta({
 .content-title {
   font-size: 1.875rem;
   font-weight: bold;
-  color: #374151;
+  color: var(--color-text);
   margin: 0 0 0.5rem 0.5rem;
-}
-
-.publish-button {
-  padding: 0.5rem 1rem;
-  background-color: #2563eb;
-  width: 100%;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.sort-button {
-  padding: 0.5rem 1rem;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
 }
 
 .articles-list {
@@ -197,11 +192,11 @@ useSeoMeta({
   padding: 1rem;
   border-radius: 6px;
   text-decoration: none;
-  color: #374151;
+  color: var(--color-text);
 }
 
 .article-card:hover {
-  background-color: #f9fafb;
+  background-color: var(--color-background-hover);
 }
 
 .article-left {
@@ -242,21 +237,6 @@ useSeoMeta({
   padding: 0.25rem 0.5rem;
   border-radius: 0.375rem;
   font-size: 0.75rem;
-}
-
-.tag.secondary {
-  background-color: #f3f4f6;
-  color: #374151;
-}
-
-.tag.success {
-  background-color: #10b981;
-  color: white;
-}
-
-.tag.purple {
-  background-color: #8b5cf6;
-  color: white;
 }
 
 .reply-count {

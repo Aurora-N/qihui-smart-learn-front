@@ -365,7 +365,7 @@ const initMiniGraph = () => {
   createNode(miniG, nodes, d => getNodeRadius(d) * 0.5, 1)
 
   // 创建力导向模拟
-  const miniSimulation = createSimulation(nodes, links, 50 / 8, -150 / 8, {x: width / 2, y: height / 2 }, d => getNodeRadius(d) * 0.5 + 2);
+  const miniSimulation = createSimulation(nodes, links, 50 / 2, -150 / 8, {x: width / 2, y: height / 2 }, false);
 
   // 更新函数
   miniSimulation.on('tick', () => {

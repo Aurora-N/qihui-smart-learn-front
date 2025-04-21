@@ -13,12 +13,18 @@ export const createSvg = (graphContainer, width, height, isFull = false) => {
 }
 
 // 创建力导向模拟
-export const createSimulation = (nodes, links, linkDistance, strength, center = { x: 0, y: 0 }, forceCollideRadius) => {
+export const createSimulation = (nodes, links, linkDistance, strength, center = { x: 0, y: 0 }, isFull = false, forceCollideRadius) => {
   const simulation = d3.forceSimulation(nodes)
     .force('link', d3.forceLink(links).id(d => d.uniqueId).distance(linkDistance))
     .force('charge', d3.forceManyBody().strength(strength))
-    .force('center', d3.forceCenter(center.x, center.y))
-    .force('collision', d3.forceCollide().radius(forceCollideRadius));
+    .force('center', d3.forceCenter(center.x, center.y));
+
+  if (isFull) {
+    simulation.force('collision', d3.forceCollide().radius(forceCollideRadius));
+  } else {
+    simulation.alphaDecay(0.05)
+    .velocityDecay(0.4); // 提高衰减速度
+  }
     
   return simulation;
 }

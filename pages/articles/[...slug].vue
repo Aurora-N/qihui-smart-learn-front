@@ -50,7 +50,7 @@ const recommendPostsList = ref([
   <!-- <ContentSkeleton v-if="isLoading" /> -->
 
   <div class="main-container">
-    <div class="side">
+    <div class="side" v-if="page?.body.toc?.links?.length > 0">
       <Sidebar title="目录" height="20rem">
         <el-menu :default-active="selectedItem" class="posts-category-menu" @select="selectTocItem">
           <el-menu-item v-for="item of page?.body.toc?.links" :key="item.id" :index="item.id"
@@ -113,7 +113,7 @@ const recommendPostsList = ref([
 
 .posts-category-item:hover {
   color: #2563eb;
-  background-color: rgb(248, 250, 252);
+  background-color: var(--color-background-nav-hover);
   --el-menu-base-level-padding: 10px;
   border-radius: 6px;
 }

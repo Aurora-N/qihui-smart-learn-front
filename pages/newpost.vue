@@ -9,7 +9,8 @@ definePageMeta({
 <template>
   <div class="container">
     <ClientOnly>
-      <Editor v-model="content" />
+      <!-- <Editor v-model="content" /> -->
+       <MarkdownEditor />
     </ClientOnly>
   </div>
 </template>

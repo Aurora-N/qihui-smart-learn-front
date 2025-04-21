@@ -20,6 +20,11 @@ h3 {
 
 p {
   margin: 1em 0;
+  color: var(--color-text)
+}
+
+strong {
+  font-weight: bold;
 }
 
 ul,

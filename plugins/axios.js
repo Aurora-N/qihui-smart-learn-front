@@ -23,12 +23,21 @@ export default defineNuxtPlugin((nuxtApp) => {
         return Promise.reject(error)
     })
 
-    // 响应拦截器：处理 401 未授权
+    // 响应拦截器
     apiClient.interceptors.response.use((response) => {
         return response.data;
     }, (error) => {
         const userStore = useUserStore()
-        console.log(error.response?.data.msg)
+        
+        if (error.code === 'ECONNABORTED') {
+            ElMessage({
+                type: 'error',
+                message: '请求超时，请稍后重试',
+                plain: true,
+            })
+            return Promise.reject(error)
+        }
+
         switch (error.response?.status) {
             case 400:
                 ElMessage({

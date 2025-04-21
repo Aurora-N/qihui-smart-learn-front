@@ -4,29 +4,23 @@
       <IconsSearch class="search-icon" />
     </button>
 
-    
     <Teleport to="body">
-      
       <div class="search-modal" :class="{ 'active': isSearchOpen }">
-        
         <div class="search-overlay" @click="closeSearch"></div>
-
-        
         <div class="search-content">
           <div class="search-header">
             <h2>搜索</h2>
             <button class="close-button" @click="closeSearch">
-              <IconsClose style="width: 1.5rem;" />
+              <IconsClose style="width: 1.5rem; height: 1.5rem;" />
             </button>
           </div>
+
           <div class="search-input-container">
             <IconsSearch class="search-input-icon" />
-
             <input type="text" class="search-input" placeholder="输入关键词搜索..." v-model="searchQuery" ref="searchInputRef"
               @keyup.esc="closeSearch" @keydown="handleKeyDown" />
           </div>
 
-          
           <div class="search-results" v-if="searchResults.length > 0">
             <div class="results-header">
               <h3>搜索结果 ({{ searchResults.length }})</h3>
@@ -35,7 +29,6 @@
               <div v-for="(result, index) in searchResults" :key="index" class="result-item"
                 @click="navigateToResult(result)">
                 <div class="result-title">{{ result.title || '未命名文章' }}</div>
-                <div class="result-path">{{ formatPath(getPathField(result)) }}</div>
                 <div class="result-excerpt" v-if="result.content">
                   {{ truncateContent(result.content, 150) }}
                 </div>
@@ -43,7 +36,6 @@
             </div>
           </div>
 
-          
           <div class="no-results" v-else-if="hasSearched && searchQuery.trim()">
             <p>没有找到与 "{{ searchQuery }}" 相关的内容</p>
           </div>
@@ -54,9 +46,6 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick, defineEmits, onMounted, onUpdated } from 'vue';
-import { useRouter } from 'vue-router';
-
 const router = useRouter();
 const emit = defineEmits(['search']);
 
@@ -66,23 +55,19 @@ const searchInputRef = ref(null);
 const searchResults = ref([]);
 const hasSearched = ref(false);
 
-// Open search modal
 const openSearch = () => {
   isSearchOpen.value = true;
   document.body.style.overflow = 'hidden';
 
- 
   nextTick(() => {
     searchInputRef.value?.focus();
   });
 };
 
-// Close search modal
 const closeSearch = () => {
   isSearchOpen.value = false;
   document.body.style.overflow = '';
 
- 
   if (searchQuery.value.trim()) {
     emit('search', searchQuery.value);
   }
@@ -92,7 +77,7 @@ const closeSearch = () => {
   hasSearched.value = false;
 };
 
-// Listen for escape key to close modal
+// 如果按下esc键，关闭
 watch(isSearchOpen, (newValue) => {
   if (newValue) {
     window.addEventListener('keydown', handleEscapeKey);
@@ -101,7 +86,6 @@ watch(isSearchOpen, (newValue) => {
   }
 });
 
-// Handle escape key press
 const handleEscapeKey = (e) => {
   if (e.key === 'Escape') {
     closeSearch();
@@ -115,7 +99,7 @@ const searchSections = ref([]);
 const initSearchSections = async () => {
   const { data: sections } = await useAsyncData('search-sections', () => {
     return queryCollectionSearchSections('content', {
-      ignoredTags: ['code']
+      ignoredTags: ['code'],
     })
   })
   searchSections.value = sections.value;
@@ -133,7 +117,6 @@ const handleSearch = async (target) => {
     await initSearchSections();
   }
 
- 
   if (!searchSections.value) {
     searchResults.value = [];
     hasSearched.value = true;
@@ -143,24 +126,14 @@ const handleSearch = async (target) => {
   const query = target.trim().toLowerCase();
   const results = searchSections.value.filter((item) => {
     return (
-      (item.content && item.content.toLowerCase().includes(query)) ||
-      (item.title && item.title.toLowerCase().includes(query))
+      item.level === 1 &&
+      (item.content && item.content.toLowerCase().includes(query) ||
+        item.title && item.title.toLowerCase().includes(query))
     );
   });
 
   searchResults.value = results;
   hasSearched.value = true;
-};
-
-// 格式化路径显示
-const formatPath = (stem) => {
-  if (!stem) return '';
-  return stem.split('/').join(' > ');
-};
-
-// 获取路径字段（兼容 _path 和 stem）
-const getPathField = (result) => {
-  return result._path || result.stem || '';
 };
 
 // 截断内容
@@ -170,10 +143,21 @@ const truncateContent = (content, maxLength) => {
   return content.substring(0, maxLength) + '...';
 };
 
-// 导航到搜索结果
-const navigateToResult = (result) => {
+// 导航到搜索结果页面
+const navigateToResult = async (result) => {
   if (!result) return;
-
+  const targetTitle = result.title;
+  const { data: foundItemByTitle, error: errorSpecific } = await useAsyncData(
+    `content-by-title-${targetTitle}`,
+    () => queryCollection('content')
+      .where('title', '=', targetTitle)
+      .first()
+  );
+  if (errorSpecific.value) {
+    ElMessage({ type: 'error', message: errorSpecific.value, plain: true });
+    return;
+  }
+  router.push(`/articles/${foundItemByTitle.value.stem}`);
   closeSearch();
 };
 
@@ -200,26 +184,6 @@ onMounted(async () => {
   transition: all 0.3s ease-in-out;
 }
 
-/* Desktop search trigger button */
-.search-trigger {
-  display: flex;
-  align-items: center;
-  width: 16rem;
-  gap: 8px;
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: var(--color-text);
-}
-
-.search-trigger:hover {
-  background-color: var(--color-background-hover);
-}
-
-/* Mobile search button */
 .mobile-search-button {
   padding: 0;
   background: none;
@@ -268,11 +232,9 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  /* backdrop-filter: blur(4px); */
   cursor: pointer;
 }
 
-/* Search content */
 .search-content {
   position: relative;
   width: 90%;
@@ -285,15 +247,12 @@ onMounted(async () => {
   transition: transform 0.3s ease;
   overflow: hidden;
   z-index: 10000;
-  /* Ensure it's above the overlay */
-
 }
 
 .search-modal.active .search-content {
   transform: translateY(0);
 }
 
-/* Search header */
 .search-header {
   display: flex;
   justify-content: space-between;
@@ -392,7 +351,6 @@ onMounted(async () => {
 }
 
 .result-item:hover {
-  background-color: var(--color-background-hover);
   border-color: #4a90e2;
 }
 
@@ -422,7 +380,6 @@ onMounted(async () => {
   color: var(--color-text-2);
 }
 
-/* Responsive adjustments */
 @media (max-width: 1024px) {
   .desktop-search {
     display: none;

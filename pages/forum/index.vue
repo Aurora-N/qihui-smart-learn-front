@@ -1,5 +1,6 @@
 <script setup>
 import { ChevronDown as ChevronDownIcon } from 'lucide-vue-next'
+import { useForumApi } from '~/api/forum'
 
 const dropdowns = ref({
   study: false,
@@ -12,58 +13,7 @@ const toggleDropdown = (name) => {
   dropdowns.value[name] = !dropdowns.value[name]
 }
 
-const topics = ref([
-  {
-    id: 1,
-    title: '如何成为全栈高手',
-    author: 'Uika',
-    replyTime: '2 天前',
-    avatar: 'https://avatars.githubusercontent.com/u/35548919',
-    tags: [
-      { text: '综合板块', type: 'main' },
-      { text: '学习讨论', type: 'learn' },
-      { text: '升学就业', type: 'upgrade' }
-    ],
-    replyCount: 3
-  },
-  {
-    id: 2,
-    title: '寻找Rust学习伙伴',
-    author: 'soyo',
-    replyTime: '3 天前',
-    avatar: '',
-    tags: [
-      { text: '综合板块', type: 'main' },
-      { text: 'Rust', type: 'basic' }
-    ],
-    replyCount: 2
-  },
-  {
-    id: 3,
-    title: '我的 2024 - 稳中求进、热爱生活',
-    author: '0x0001',
-    replyTime: '7 天前',
-    avatar: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-22%20163813-glxOOqHLKGGQRNcY2ioERBWbWGADnq.png',
-    tags: [
-      { text: '综合板块', type: 'main' },
-      { text: '水吧', type: 'water' }
-    ],
-    replyCount: 1
-  },
-  {
-    id: 4,
-    title: '如何拥抱AI',
-    author: '阿农',
-    replyTime: '7 天前',
-    avatar: '',
-    tags: [
-      { text: '学习讨论', type: 'learn' },
-      { text: '综合板块', type: 'main' }
-    ],
-    replyCount: 1
-  },
-
-])
+const topics = ref([])
 
 definePageMeta({
   layout: 'forum'
@@ -71,12 +21,22 @@ definePageMeta({
 
 const bannerConfig = inject('bannerConfig');
 
-onMounted(() => {
+const getPostsList = async (method = 0, start = 0, limit = 20) => {
+  const res = await useForumApi().getPostsList(method, start, limit);
+  console.log(res);
+  if (res.status === 'success') {
+    topics.value = res.data.posts;
+  }
+}
+
+onMounted(async () => {
   bannerConfig.value = {
     title: '欢迎来到本论坛',
     subTitle: '知识图谱成就世界',
     hueColor: '250'
   }
+
+  await getPostsList(0, 0, 20);
 })
 </script>
 
@@ -98,25 +58,25 @@ onMounted(() => {
 
     <!-- Forum Topics -->
     <div class="topics-list">
-      <NuxtLink :to="`/forum/${topic.id}`" class="topic-card" v-for="topic in topics" :key="topic.id">
+      <NuxtLink :to="`/forum/${topic.postId}`" class="topic-card" v-for="topic in topics" :key="topic.postId">
         <div class="topic-left">
-          <img :src="topic.avatar" class="avatar" :alt="topic.author">
+          <img :src="topic.author.attributes.avatarUrl" class="avatar" :alt="topic.author.attributes.userName + '的头像'">
           <div class="topic-info">
             <h3 class="topic-title">{{ topic.title }}</h3>
             <div class="topic-meta">
               <TopRight style="width: 1em; height: 1em; margin-right: 8px;" />
-              <span> {{ topic.author }} </span>
-              <span> 回复于 {{ topic.replyTime }}</span>
+              <span> {{ topic.lastCommentedUser.userName }} </span>
+              <span> 回复于 {{ topic.lastCommentedAt }}</span>
             </div>
           </div>
         </div>
         <div class="topic-right">
-          <span v-for="tag in topic.tags" :key="tag.text" class="tag" :class="tag.type">
-            {{ tag.text }}
+          <span v-for="tag in topic.tags" :key="tag.tagId" class="tag" :class="'tag' + tag.tagId">
+            {{ tag.tagName }}
           </span>
           <div class="reply-count">
             <ChatSquare style="width: 1em; height: 1em; margin-right: 8px;" />
-            <span>{{ topic.replyCount }}</span>
+            <span>{{ topic.commentsCount }}</span>
           </div>
         </div>
       </NuxtLink>
