@@ -28,8 +28,8 @@ const switchToNav = (item) => {
 }
 
 const bannerConfig = ref({
-  title: '欢迎来到本论坛',
-  subTitle: '知识图谱成就世界',
+  title: '启慧论坛',
+  subTitle: '来一场思想上的碰撞',
   hueColor: '260'
 })
 

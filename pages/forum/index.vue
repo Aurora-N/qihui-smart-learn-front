@@ -30,8 +30,8 @@ const getPostsList = async (method = 0, start = 0, limit = 20) => {
 
 onMounted(async () => {
   bannerConfig.value = {
-    title: '欢迎来到本论坛',
-    subTitle: '知识图谱成就世界',
+    title: '启慧论坛',
+    subTitle: '来一场思想上的碰撞',
     hueColor: '250'
   }
 

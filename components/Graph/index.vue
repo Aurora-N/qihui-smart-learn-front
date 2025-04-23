@@ -14,8 +14,8 @@
     <!-- 内嵌小窗口模式 -->
     <div class="knowledge-graph-card-embeded" @click="toggleFullscreen" v-else-if="!isFullscreen && isEmbedded">
       <div class="embeded-graph-container">
-        <div ref="graphContainer" class="graph-container">
-          <img src="/vue3_graphs_mock.png" width="220px" class="mock-graph">
+        <div ref="embededGraphContainer" class="graph-container">
+          <!-- <img src="/vue3_graphs_mock.png" width="220px" class="mock-graph"> -->
         </div>
       </div>
     </div>
@@ -87,155 +87,7 @@
 
         <!-- 右侧滑入侧边栏 -->
         <transition name="slide">
-          <div v-if="selectedNode" class="sidebar-details">
-            <div class="sidebar-header">
-              <h3>{{ selectedNode.id }}</h3>
-              <button @click="selectedNode = null" class="close-sidebar-btn">
-                <IconsClose />
-              </button>
-            </div>
-
-            <div class="sidebar-content">
-              <!-- 基本信息 -->
-              <div class="sidebar-section">
-                <div class="sidebar-section-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                  </svg>
-                  <h4>基本信息</h4>
-                </div>
-                <div class="sidebar-section-content">
-                  <div v-if="selectedNode.level" class="info-item">
-                    <span class="info-label">难度:</span>
-                    <span class="info-badge" :class="'level-' + getLevelClass(selectedNode.level)">
-                      {{ selectedNode.level }}
-                    </span>
-                  </div>
-                  <div v-if="selectedNode.content" class="info-item">
-                    <p>{{ selectedNode.content }}</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 资源加载完毕后才显示 -->
-              <div v-if="Object.keys(selectedNodeResources).length !== 0">
-                <!-- 相关资源 -->
-                <div class="sidebar-section">
-                  <div class="sidebar-section-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                    </svg>
-                    <h4>相关资源</h4>
-                  </div>
-                  <div class="sidebar-section-content">
-                    <!-- 这里可以根据节点数据动态生成资源链接 -->
-                    <div class="resource-links">
-                      <a v-if="selectedNodeResources.articles.length > 0"
-                        v-for="article in selectedNodeResources.articles" :key="article.name"
-                        :href="`articles/${article.url}`" target="_blank" class="resource-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                          <polyline points="15 3 21 3 21 9"></polyline>
-                          <line x1="10" y1="14" x2="21" y2="3"></line>
-                        </svg>
-                        <span>{{ article.name }}</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 视频教程 -->
-                <div class="sidebar-section" v-if="selectedNodeResources.videos.length > 0">
-                  <div class="sidebar-section-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polygon points="23 7 16 12 23 17 23 7"></polygon>
-                      <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-                    </svg>
-                    <h4>视频教程</h4>
-                  </div>
-                  <div class="sidebar-section-content">
-                    <div class="video-container" v-for="video in selectedNodeResources.videos"
-                      :key="video.name">
-                      <h4>{{ video.name }}</h4>
-                      <div class="video-embed">
-                        <iframe :src="video.url" frameborder="0"
-                          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" loading="lazy"
-                          allowfullscreen></iframe>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 相关节点 -->
-                <div class="sidebar-section">
-                  <div class="sidebar-section-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="12" y1="5" x2="12" y2="19"></line>
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    <h4>相关节点</h4>
-                  </div>
-                  <div class="sidebar-section-content">
-                    <div class="related-nodes">
-                      <div v-for="node in getRelatedNodes(selectedNode)" :key="node.id" class="related-node"
-                        @click="selectNode(node)">
-                        <div class="node-indicator" :style="{ backgroundColor: getNodeColor(node) }"></div>
-                        <span>{{ node.id }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 相关知识图谱 -->
-                <div class="sidebar-section" v-if="selectedNode.id === 'Vue3'">
-                  <div class="sidebar-section-header">
-                    <IconsGraph style="width:20px; height: 20px;" />
-                    <h4>相关知识图谱</h4>
-                  </div>
-                  <div class="sidebar-section-content">
-                    <Graph isEmbedded="true" :graph-id="selectedNode.id" :title="selectedNode.id" />
-                  </div>
-                </div>
-              </div>
-              <!-- 获取资源失败提示窗口 -->
-              <div v-else-if="inResourcesError">
-
-                <div class="sidebar-section-error">
-                  <IconsDataError class="error-icons" />
-                <div class="error-tips">请求资源失败，请重试！</div>
-                <button @click="fetchSelectedNodeData(selectedNode)" class="control-btn"><IconsRefresh />重新获取数据</button>
-                </div>
-              </div>
-              <div v-else>
-                <div class="sidebar-section">
-                  <div class="sidebar-section-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                    </svg>
-                    <h4>相关资源加载中</h4>
-                  </div>
-                  <div class="sidebar-section-content">
-                    <div class="resource-links">
-                      <div class="skeleton-link" v-for="i in 3" :key="i">
-                        <div class="skeleton-icon-small"></div>
-                        <div class="skeleton-text"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <GraphSidebar ref="sidebarRef" :nodes="nodes" :links="links"/>
         </transition>
       </div>
     </div>
@@ -248,6 +100,7 @@ import * as d3 from 'd3';
 import { transformData } from '~/utils/transformData'
 import { useWindowSize } from '@vueuse/core';
 import { createSvg, createSimulation, createLink, createNode, createLabel, createLinkLabel, creatArrow, useGraphAttribute } from '~/utils/graph/utils';
+import { useIntersectionObserver } from '@vueuse/core'
 
 // Props
 const props = defineProps({
@@ -274,8 +127,6 @@ import fullData from '~/assets/data.json';
 import frontData from '~/assets/data_front_end.json'
 import backData from '~/assets/data_back_end.json'
 import vueData from '~/assets/data_vue.json'
-import { IconsGraph } from '#components';
-
 
 const graphDataSource = computed(() => {
   if (props.title === '前端') return frontData;
@@ -296,9 +147,6 @@ const isFiltered = ref(false);
 const currentFilterNode = ref('');
 const filteredNodeCount = ref(0);
 
-// 获取资源失败状态
-const inResourcesError = ref(false);
-
 // 监听窗口大小
 const { width: windowWidth, height: windowHeight } = useWindowSize();
 
@@ -310,6 +158,7 @@ watch([windowWidth, windowHeight], ([windowWidth, windowHeight]) => {
 // DOM引用
 const miniGraphContainer = ref(null);
 const graphContainer = ref(null);
+const embededGraphContainer = ref(null);
 
 // D3相关变量
 const simulation = ref(null);
@@ -323,31 +172,11 @@ let links = [];
 let allNodes = []; // 存储所有节点的原始副本
 let allLinks = []; // 存储所有链接的原始副本
 
-// 选中结点的资源
-const selectedNodeResources = ref({});
-
-const fetchSelectedNodeData = async (selectedNode) => {
-  try {
-    inResourcesError.value = false;
-    selectedNodeResources.value = {}; // 先清空之前的旧的数据
-    selectedNodeResources.value = await getNodeResources(selectedNode);
-  } catch(error) {
-    inResourcesError.value = true;
-  }
-}
-
-watch(selectedNode, async (newVal, oldVal) => {
-  if (newVal !== oldVal) {
-    // 当 selectedNode 发生变化时，获取资源
-    await fetchSelectedNodeData(newVal);
-  }
-});
-
 
 // 切换全屏/小窗口模式
 const toggleFullscreen = async () => {
   isFullscreen.value = !isFullscreen.value;
-
+  embededGraphInitialized.value = false;
   // 等待DOM更新后初始化图表
   await nextTick();
   if (isFullscreen.value) {
@@ -406,6 +235,84 @@ const initMiniGraph = () => {
   // 运行模拟一段时间后停止
   setTimeout(() => miniSimulation.stop(), 1500);
 };
+
+const embededGraphData = ref({});
+
+// 初始化被选中结点的子图
+const initEmbeddedGrpah = () => {
+  if (!embededGraphContainer.value) return;
+  const {nodes, links} = embededGraphData.value;
+
+  const width = embededGraphContainer.value.clientWidth;
+  const height = embededGraphContainer.value.clientHeight;
+
+  // 清除之前的图表
+  d3.select(embededGraphContainer.value).selectAll('*').remove();
+
+  // 创建SVG
+  const miniSvg = createSvg(embededGraphContainer, width, height);
+
+  // 添加缩放功能
+  const zoom = d3.zoom()
+    .scaleExtent([0.5, 2])
+    .on('zoom', (event) => {
+      miniG.attr('transform', event.transform);
+    });
+
+  miniSvg.call(zoom);
+
+  // 创建一个包含所有元素的组
+  const miniG = miniSvg.append('g');
+
+  // 添加箭头标记
+  creatArrow(miniSvg);
+
+  // 创建链接
+  createLink(miniG, links, d => Math.sqrt(d.value), true);
+
+  // 创建节点
+  createNode(miniG, nodes, d => getNodeRadius(d), 1);
+
+  // 创建结点标签
+  const label = createLabel(miniG, nodes, useColorMode().value === 'light' ? '#333' : '#fff');
+
+  // 创建力导向模拟
+  const miniSimulation = createSimulation(nodes, links, 100, -600, {x: width / 2, y: height / 2}, d => getNodeRadius(d));
+
+  // 更新函数
+  miniSimulation.on('tick', () => {
+    miniG.selectAll('circle')
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y);
+
+    miniG.selectAll('path').attr('d', d => {
+      const dx = d.target.x - d.source.x;
+      const dy = d.target.y - d.source.y;
+      const dr = Math.sqrt(dx * dx + dy * dy) * 2; // 控制弧度的系数
+      return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
+    });
+
+    label
+      .attr('x', d => d.x - 10)
+      .attr('y', d => d.y - 20);
+  });
+}
+
+const embededGraphInitialized = ref(false)
+
+useIntersectionObserver(
+  embededGraphContainer, // 需要观察的目标元素
+  ([{ isIntersecting: intersect }]) => {
+    if (intersect && embededGraphInitialized.value === false) {
+      embededGraphData.value = transformData(vueData, props.maxDepth); // 获取数据
+      initEmbeddedGrpah();
+      embededGraphInitialized.value = true;
+    }
+  },
+  { threshold: 0.5 }
+)
+
+const sidebarRef = ref(null);
 
 // 初始化全屏图表
 const initGraph = (isFiltering = false) => {
@@ -480,6 +387,7 @@ const initGraph = (isFiltering = false) => {
   node.attr('class', 'node')
       .on('click', (event, d) => {
         selectedNode.value = d;
+        sidebarRef.value.openSidebar(selectedNode.value);
         event.stopPropagation();
       })
       .on('mouseover', (event, d) => {
@@ -563,6 +471,7 @@ const initGraph = (isFiltering = false) => {
   // 点击空白处关闭详情面板
   svg.on('click', () => {
     selectedNode.value = null;
+    sidebarRef.value.closeSidebar();
   });
 
   // 拖拽函数
@@ -706,36 +615,6 @@ const handleSearchInput = () => {
 
 // 获取图相关信息
 const getNodeRadius = useGraphAttribute().getNodeRadius;
-const getNodeColor = useGraphAttribute().getNodeColor;
-const getLevelClass = useGraphAttribute().getLevelClass;
-const getNodeResources = useGraphAttribute().getNodeResources;
-
-const getRelatedNodes = (node) => {
-  const relatedNodes = [];
-
-  // 查找直接相连的节点
-  links.forEach(link => {
-    if (link.source.uniqueId === node.uniqueId) {
-      const targetNode = nodes.find(n => n.uniqueId === link.target.uniqueId);
-      if (targetNode && !relatedNodes.some(n => n.uniqueId === targetNode.uniqueId)) {
-        relatedNodes.push(targetNode);
-      }
-    } else if (link.target.uniqueId === node.uniqueId) {
-      const sourceNode = nodes.find(n => n.uniqueId === link.source.uniqueId);
-      if (sourceNode && !relatedNodes.some(n => n.uniqueId === sourceNode.uniqueId)) {
-        relatedNodes.push(sourceNode);
-      }
-    }
-  });
-
-  // 限制返回的相关节点数量
-  return relatedNodes.slice(0, 5);
-};
-
-// 选择节点
-const selectNode = (node) => {
-  selectedNode.value = node;
-};
 
 // 应用筛选
 const applyFilter = () => {
@@ -820,7 +699,7 @@ watch(showLinkLabels, (newValue) => {
 
 // 组件挂载后初始化小窗口图表
 onMounted(() => {
-  initMiniGraph();
+  if(!props.isEmbedded) initMiniGraph();
 });
 
 // 组件卸载前清除定时器

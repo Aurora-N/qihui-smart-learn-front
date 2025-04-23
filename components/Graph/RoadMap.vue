@@ -1,6 +1,11 @@
 <template>
   <div class="learning-path-container">
     <div class="graph-container" ref="graphContainer"></div>
+
+    <!-- 右侧滑入侧边栏 -->
+    <transition name="slide">
+      <GraphSidebar ref="sidebarRef" :nodes="nodes" :links="links"/>
+    </transition>
   </div>
 </template>
 
@@ -14,6 +19,13 @@ const props = defineProps({
 })
 
 const pathData = ref([]);
+
+const selectedNode = ref({});
+
+const sidebarRef = ref(null);
+
+let nodes = [];
+let links = [];
 
 const processData = () => {
   const nodesMap = new Map();
@@ -135,7 +147,13 @@ const renderGraph = (nodes, links) => {
     .attr("points", "0,-4 8,0 0,4")
     .style("fill", "#aaa");
 
-  node.on("mouseover", function(event, d) {
+  node
+  .on('click', (event, d) => {
+        selectedNode.value = d;
+        sidebarRef.value.openSidebar(selectedNode.value);
+        event.stopPropagation();
+      })
+  .on("mouseover", function(event, d) {
     const nodeColor = d.color;
     d3.select(this).select("circle")
       .transition()
@@ -226,7 +244,9 @@ const initializedGrpah = ref(false);
 const initGraph = () => {
   pathData.value = props.roadmapData;
   if (!initializedGrpah.value && pathData.value) {
-    const { nodes, links } = processData();
+    const data = processData();
+    nodes = data.nodes;
+    links = data.links;
     renderGraph(nodes, links);
     initializedGrpah.value = true;
   }
