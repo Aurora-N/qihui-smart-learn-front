@@ -1,6 +1,5 @@
 <script setup>
-import articleLinkListsFrontend from '~/assets/article_links_front.json'
-import articleLinkListsBackend from '~/assets/article_links_back.json'
+import articleLinkLists from '~/assets/article_links.json'
 const FrontendIcon = resolveComponent('IconsFrontend');
 const BackendIcon = resolveComponent('IconsBackend');
 
@@ -9,13 +8,13 @@ const articlesList = ref([
     id: '前端',
     name: '前端',
     icon: FrontendIcon,
-    articles: articleLinkListsFrontend
+    articles: articleLinkLists[0].links[1].links
   },
   {
     id: '后端',
     name: '后端',
     icon: BackendIcon,
-    articles: articleLinkListsBackend
+    articles: articleLinkLists[0].links[0].links
   },
 ])
 
@@ -34,7 +33,7 @@ useSeoMeta({
 <template>
   <div class="articles">
     <!-- Welcome Banner -->
-    <ForumBanner title="学习区文章" sub-title="浏览学习资源文章">
+    <ForumBanner :title="`${articlesList[currentCateIndex].id}系列教程`" sub-title="浏览学习资源文章">
     </ForumBanner>
 
     <!-- 内容区域 -->
@@ -58,21 +57,8 @@ useSeoMeta({
 
         <!-- Content Section -->
         <main class="main-content">
-          <div class="content-header">
-            <h1 class="content-title">{{ articlesList[currentCateIndex].id }}系列教程</h1>
-          </div>
-
-          <!-- articles -->
-          <div class="articles-list">
-            <NuxtLink :to="`/articles${article.link}`" class="article-card" v-for="article in articlesList[currentCateIndex].articles"
-              :key="article.link">
-              <h3 class="article-title">{{ article.title }}</h3>
-              <div class="article-meta">
-                <!-- <IconsLike />
-                <span>{{ article.likesCount }}</span> -->
-              </div>
-            </NuxtLink>
-          </div>
+          <!-- articles --> 
+          <ArticleList :article-list="articlesList[currentCateIndex].articles" />
         </main>
       </div>
     </div>
@@ -130,7 +116,7 @@ useSeoMeta({
 
 .sidebar {
   width: 15rem;
-  margin-right: 2rem;
+  margin-right: 3rem;
 }
 
 .articles-category {
@@ -173,79 +159,5 @@ useSeoMeta({
   font-size: 1.875rem;
   font-weight: bold;
   color: var(--color-text);
-  margin: 0 0 0.5rem 0.5rem;
-}
-
-.articles-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-}
-
-.article-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  border-radius: 6px;
-  text-decoration: none;
-  color: var(--color-text);
-}
-
-.article-card:hover {
-  background-color: var(--color-background-hover);
-}
-
-.article-left {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.avatar {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-}
-
-.article-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.article-title {
-  font-weight: 500;
-  margin: 0;
-}
-
-.article-meta {
-  display: flex;
-  align-items: center;
-  font-size: 0.875rem;
-  color: #6b7280;
-}
-
-.article-right {
-  display: flex;
-  align-items: center;
-}
-
-.tag {
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
-  font-size: 0.75rem;
-}
-
-.reply-count {
-  margin-left: 0.5rem;
-  display: flex;
-  align-items: center;
-  color: #6b7280;
-}
-
-.icon-small {
-  width: 1rem;
-  height: 1rem;
 }
 </style>
