@@ -17,13 +17,13 @@ const post = ref({
       }
   },
 })
+
 const comments = ref([])
 
 const initialized = ref(false);
 
 const initPostContent = async () => {
   const res = await useForumApi().getPostContent(route.params.id);
-  console.log(res);
   post.value = res.data.posts;
   comments.value = res.data.posts.comments;
   initialized.value = true;
@@ -45,29 +45,16 @@ const scrollToReplyEditor = () => {
 }
 
 // 父组件接收清空前的内容
-const handleBeforeSubmit = (content) => {
+const handleBeforeSubmit = async (content) => {
   if (!userInfo.value) {
     ElMessage({type:'warning', message:'用户未登录,请先登录!', plain:true});
     router.push('/login');
     return;
   }
-  comments.value.push(
-    {
-      "commentId": "",
-      "author": {
-        "id": userInfo.value.id,
-        "attributes": {
-          "avatarUrl": userInfo.value.avatarUrl,
-          "userName": userInfo.value.userName,
-          "email": userInfo.value.email
-        }
-      },
-      "content": content,
-      "createdAt": "刚刚",
-      "likesCount": 0,
-      "repliedID": null
-    });
   // TODO.接上评论API
+  const res = await useForumApi().replyPost(route.params.id, content);
+  console.log(res);
+  await initPostContent();
 };
 
 onMounted(async ()=>{
@@ -101,7 +88,7 @@ onMounted(async ()=>{
       </article>
 
       <!-- 功能侧边栏 -->
-      <div>
+      <div class="side">
         <aside class="sidebar">
           <!-- position: sticky的外面还需包裹一层div才能生效 -->
           <div>
@@ -184,5 +171,30 @@ html {
 
 .sidebar .other-btn:hover {
   background-color: var(--color-background-hover);
+}
+
+@media (max-width: 768px) {
+  .post-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .side {
+    margin: 0;
+    width: 100%;
+  }
+
+  .sidebar {
+    position: static;
+    top: 0;
+    order: 0;
+    width: 100%;
+    margin: 0;
+  }
+
+  .main-content {
+    order: 1;
+  }
 }
 </style>

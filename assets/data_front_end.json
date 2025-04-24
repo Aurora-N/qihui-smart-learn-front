@@ -45,7 +45,7 @@
     "depart": null,
     "course1": {
       "level": "入门",
-      "id": "JavaScript(E6+)",
+      "id": "Java Script ES6",
       "content": "Web的编程语言"
     },
     "course2": null
@@ -254,7 +254,7 @@
     "course1": null,
     "course2": {
       "level": "基础",
-      "id": "ESLint+Prettier",
+      "id": "ESLint和Prettier",
       "content": "代码格式化与静态分析及规则检查，代码风格与质量的自动化保证"
     }
   },

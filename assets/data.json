@@ -51,7 +51,7 @@
     "depart": null,
     "course1": {
       "level": "入门",
-      "id": "JavaScript(E6+)",
+      "id": "Java Script ES6",
       "content": "Web的编程语言"
     },
     "course2": null
@@ -282,7 +282,7 @@
     "course1": null,
     "course2": {
       "level": "基础",
-      "id": "ESLint+Prettier",
+      "id": "ESLint和Prettier",
       "content": "代码格式化与静态分析及规则检查，代码风格与质量的自动化保证"
     }
   },
@@ -642,7 +642,7 @@
     "depart": null,
     "course1": {
       "level": "基础",
-      "id": "Spring Boot3 + Spring Cloud",
+      "id": "Spring Boot3和Spring Cloud",
       "content": "一套广泛被应用的后端框架"
     },
     "course2": null
@@ -1269,7 +1269,7 @@
     "depart": null,
     "course1": {
       "level": "深入",
-      "id": "CQRS + Event Sourcing",
+      "id": "CQRS和Event Sourcing",
       "content": "命令查询责任分离与事件溯源，用于处理高并发场景和复杂业务逻辑"
     },
     "course2": null

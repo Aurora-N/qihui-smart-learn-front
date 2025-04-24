@@ -1,61 +1,35 @@
 <script setup>
+import { useForumApi } from '~/api/forum';
+
 definePageMeta({
   layout: 'forum'
 })
 
-const tagDetail = ref({})
+const tags = ref([]);
 
-const gettagDetail = async () => {
-  const res = await {
-    tagId: '1',
-    data: {
-      title: '综合板块', hueColor: '235', description: '综合讨论区，不知道选哪个tag就选这个吧', postCount: 114, updateTime: '今天',
-      topics: [{
-        id: 1,
-        title: '关于大一寒假',
-        author: '0x0001',
-        replyTime: '2 天前',
-        avatar: '',
-        tags: [
-          { text: '综合板块', type: 'main' },
-          { text: '学习讨论', type: 'learn' },
-          { text: '升学就业', type: 'upgrade' }
-        ],
-        replyCount: 3
-      },
-      {
-        id: 2,
-        title: 'Rust学习伙伴',
-        author: '0x0001',
-        replyTime: '3 天前',
-        avatar: '',
-        tags: [
-          { text: '综合板块', type: 'main' },
-          { text: 'Rust', type: 'basic' }
-        ],
-        replyCount: 1
-      },
-      {
-        id: 3,
-        title: '我的 2024 - 稳中求进、热爱生活',
-        author: '0x0001',
-        replyTime: '7 天前',
-        avatar: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-22%20163813-glxOOqHLKGGQRNcY2ioERBWbWGADnq.png',
-        tags: [
-          { text: '综合板块', type: 'main' },
-          { text: '水吧', type: 'water' }
-        ],
-        replyCount: 1
-      },]
-    }
-  }
-  tagDetail.value = res.data
+const getAllTags = async () => {
+  const res = await useForumApi().getAllTags()
+  tags.value = res.data
+}
+
+const tagDetail = ref({});
+
+const topics = ref([]);
+
+const route = useRoute();
+
+const getTagLists = async () => {
+  const res = await useForumApi().getTagPostsList(tagDetail.value.title);
+  topics.value = res.data.posts;
 }
 
 const bannerConfig = inject('bannerConfig');
 
 onMounted(async () => {
-  await gettagDetail();
+  await getAllTags();
+  tagDetail.value = tags.value.filter(item => item.tagId === route.params.id)[0];
+  await getTagLists();
+
   bannerConfig.value = {
     title: tagDetail.value?.title,
     subTitle: tagDetail.value?.description,
@@ -82,25 +56,25 @@ onMounted(async () => {
 
     <!-- Forum Topics -->
     <div class="topics-list">
-      <NuxtLink :to="`/forum/${topic.id}`" class="topic-card" v-for="topic in tagDetail.topics" :key="topic.id">
+      <NuxtLink :to="`/forum/${topic.postId}`" class="topic-card" v-for="topic in topics" :key="topic.postId">
         <div class="topic-left">
-          <img :src="topic.avatar" class="avatar" :alt="topic.author">
+          <img :src="topic.author.attributes.avatarUrl" class="avatar" :alt="topic.author.attributes.userName + '的头像'">
           <div class="topic-info">
             <h3 class="topic-title">{{ topic.title }}</h3>
             <div class="topic-meta">
               <TopRight style="width: 1em; height: 1em; margin-right: 8px;" />
-              <span> {{ topic.author }} </span>
-              <span> 回复于 {{ topic.replyTime }}</span>
+              <span> {{ topic.lastCommentedUser.userName }} </span>
+              <span> 回复于 {{ topic.lastCommentedAt }}</span>
             </div>
           </div>
         </div>
         <div class="topic-right">
-          <span v-for="tag in topic.tags" :key="tag.text" class="tag" :class="tag.type">
-            {{ tag.text }}
+          <span v-for="tag in topic.tags" :key="tag.tagId" class="tag" :class="'tag' + tag.tagId">
+            {{ tag.tagName }}
           </span>
           <div class="reply-count">
             <ChatSquare style="width: 1em; height: 1em; margin-right: 8px;" />
-            <span>{{ topic.replyCount }}</span>
+            <span>{{ topic.commentsCount }}</span>
           </div>
         </div>
       </NuxtLink>

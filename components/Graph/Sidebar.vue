@@ -73,6 +73,7 @@ const getNodeResources = useGraphAttribute().getNodeResources;
 const getNodeColor = useGraphAttribute().getNodeColor;
 
 const getRelatedNodes = (node: Node) => {
+  console.log(node);
   const relatedNodes: Node[] = [];
 
   // 查找直接相连的节点
@@ -154,7 +155,7 @@ defineExpose({
       </div>
 
       <!-- 资源加载完毕后才显示 -->
-      <div v-if="selectNode && selectedNodeResources">
+      <div v-if="selectedNode && selectedNodeResources">
         <!-- 相关资源 -->
         <div class="sidebar-section">
           <div class="sidebar-section-header">
@@ -205,7 +206,7 @@ defineExpose({
         </div>
 
         <!-- 相关节点 -->
-        <div class="sidebar-section">
+        <!-- <div class="sidebar-section">
           <div class="sidebar-section-header">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -223,7 +224,7 @@ defineExpose({
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- 相关知识图谱 -->
         <div class="sidebar-section">
@@ -232,13 +233,12 @@ defineExpose({
             <h4>相关知识图谱</h4>
           </div>
           <div class="sidebar-section-content" title="点击查看全图">
-            <Graph :isEmbedded="true" :graph-id="selectedNode.id" :title="selectedNode.id" />
+            <Graph :is-embedded="true" :graph-id="selectedNode.id" :title="selectedNode.id" :is-relationship="true" />
           </div>
         </div>
       </div>
       <!-- 获取资源失败提示窗口 -->
       <div v-else-if="inResourcesError">
-
         <div class="sidebar-section-error">
           <IconsDataError class="error-icons" />
           <div class="error-tips">请求资源失败，请重试！</div>

@@ -64,6 +64,7 @@ const onMouseLeave = () => {
   min-width: 8rem;
   z-index: 10;
   white-space: nowrap;
+  gap: 0.5rem;
 }
 </style>
 

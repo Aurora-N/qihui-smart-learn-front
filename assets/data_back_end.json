@@ -1,4 +1,4 @@
-[{
+[  {
 
   "category": {
     "id": "后端"
@@ -95,7 +95,7 @@
   "depart": null,
   "course1": {
     "level": "基础",
-    "id": "Spring Boot3 + Spring Cloud",
+    "id": "Spring Boot3和Spring Cloud",
     "content": "一套广泛被应用的后端框架"
   },
   "course2": null
@@ -656,7 +656,7 @@
   "depart": null,
   "course1": {
     "level": "深入",
-    "id": "CQRS + Event Sourcing",
+    "id": "CQRS和Event Sourcing",
     "content": "命令查询责任分离与事件溯源，用于处理高并发场景和复杂业务逻辑"
   },
   "course2": null

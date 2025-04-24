@@ -3,7 +3,7 @@
     <!-- Header with navigation and controls -->
     <div class="header">
       <div class="menu-back-btn">
-        <button @click="$router.push('/')" class="back-btn" title="返回">
+        <button @click="$router.push('/forum')" class="back-btn" title="返回">
           <span class="icon">
             <el-icon>
               <ArrowLeft />
@@ -16,32 +16,21 @@
           <div class="slider-container">
             <div class="slider-track">
               <div class="slider-indicator" :style="sliderStyle"></div>
-              <button 
-                v-if="!isMobileView"
-                @click="setViewMode('split')" 
-                :class="{ active: viewMode === 'split' }" 
-                ref="splitBtn"
-                title="双栏同时显示编辑区和预览区">
+              <button v-if="!isMobileView" @click="setViewMode('split')" :class="{ active: viewMode === 'split' }"
+                ref="splitBtn" title="双栏同时显示编辑区和预览区">
                 <span>双栏</span>
               </button>
-              <button 
-                @click="setViewMode('edit')" 
-                :class="{ active: viewMode === 'edit' }" 
-                ref="editBtn"
-                title="编辑模式">
+              <button @click="setViewMode('edit')" :class="{ active: viewMode === 'edit' }" ref="editBtn" title="编辑模式">
                 <span>编辑</span>
               </button>
-              <button 
-                @click="setViewMode('preview')" 
-                :class="{ active: viewMode === 'preview' }" 
-                ref="previewBtn"
+              <button @click="setViewMode('preview')" :class="{ active: viewMode === 'preview' }" ref="previewBtn"
                 title="预览模式">
                 <span>预览</span>
               </button>
             </div>
           </div>
         </div>
-        
+
         <!-- Mobile menu toggle button -->
         <div class="mobile-menu-toggle" v-if="isMobileView || isTabletView">
           <button @click="isMenuExpanded = !isMenuExpanded" title="格式化选项">
@@ -54,6 +43,26 @@
         </div>
 
         <div class="menu-group-left" :class="{ 'mobile-expanded': isMenuExpanded }">
+
+          <div class="menu-group">
+            <Dropdown open-on="click">
+              <template #trigger>
+                <div class="tag-btn" title="标签">
+                  <span class="icon"><el-icon>
+                      <CollectionTag />
+                    </el-icon></span>
+                  <span>标签</span>
+                </div>
+              </template>
+              <div class="tag-title" v-for="tag of tags" :index="tag" :style="{
+                '--hue': tag.hueColor
+              }" :class="{ 'selected': getTagIndex(tag) !== -1 }" @click="toggleTag(tag)">
+                <div class="tag-color-indicator"></div>
+                <h3 class="tag-name">{{ tag.title }}</h3>
+              </div>
+            </Dropdown>
+          </div>
+
           <div class="menu-group">
             <button @click="insertFormat('# ')" title="1级标题">
               <span class="icon">H1</span>
@@ -144,14 +153,9 @@
     <div class="editor-container" :class="viewMode">
       <div class="editor-pane" v-show="viewMode !== 'preview'">
         <input v-model="postTitle" placeholder="请输入标题..." />
-        <hr style="margin: 0 1rem"/>
-        <textarea 
-          ref="editor" 
-          v-model="markdownText" 
-          @keydown="handleTabKey" 
-          @input="autoResize"
-          :style="{ height: textareaHeight + 'px' }"
-          placeholder="在此处输入Markdown格式的正文..."></textarea>
+        <hr style="margin: 0 1rem" />
+        <textarea ref="editor" v-model="markdownText" @keydown="handleTabKey" @input="autoResize"
+          :style="{ height: textareaHeight + 'px' }" placeholder="在此处输入Markdown格式的正文..."></textarea>
       </div>
       <div class="preview-pane" v-show="viewMode !== 'edit'">
         <div class="preview-content" v-html="renderedHTML"></div>
@@ -166,7 +170,6 @@ import { fromAsyncCodeToHtml } from '@shikijs/markdown-it/async';
 import MarkdownItAsync from 'markdown-it-async';
 import { codeToHtml } from 'shiki';
 import '~/assets/css/post.css';
-import DOMPurify from 'dompurify';
 import markdownItSanitizer from 'markdown-it-sanitizer';
 import { useForumApi } from '~/api/forum';
 
@@ -177,10 +180,40 @@ const editor = ref(null);
 const textareaHeight = ref(500); // 初始高度
 const isMenuExpanded = ref(false);
 
+// 标签相关
+const tags = ref([])
+
+const getAllTags = async () => {
+  const res = await useForumApi().getAllTags()
+  tags.value = res.data
+}
+
+onMounted(() => {
+  getAllTags()
+})
+
+const selectedTags = ref([]);
+
+const getTagIndex = (tag) => selectedTags.value.findIndex(item => item.tagId === parseInt(tag.tagId));
+
+const toggleTag = (tag) => {
+  const tagIndex = getTagIndex(tag);
+  if (tagIndex === -1) {
+    // 没找到标签，添加
+    selectedTags.value.push({
+      tagId: parseInt(tag.tagId),
+      tagName: tag.title
+    });
+  } else {
+    // 找到标签，删除
+    selectedTags.value.splice(tagIndex, 1);
+  }
+}
+
 // 响应式设计相关状态
 const windowWidth = ref(window.innerWidth);
 const isMobileView = computed(() => windowWidth.value < 768);
-const isTabletView = computed(() => windowWidth.value >= 768 && windowWidth.value < 1024);
+const isTabletView = computed(() => windowWidth.value >= 768 && windowWidth.value < 1200);
 
 // 滑块相关引用和状态
 const editBtn = ref(null);
@@ -195,7 +228,7 @@ const sliderStyle = reactive({
 const handleResize = () => {
   windowWidth.value = window.innerWidth;
   updateSliderPosition();
-  
+
   // 在移动视图下自动切换到编辑模式
   if (isMobileView.value && viewMode.value === 'split') {
     setViewMode('edit');
@@ -208,7 +241,7 @@ const setViewMode = (mode) => {
   if (isMobileView.value && mode === 'split') {
     return;
   }
-  
+
   viewMode.value = mode;
   updateSliderPosition();
 };
@@ -226,7 +259,7 @@ const updateSliderPosition = () => {
         const width = previewBtn.value.offsetWidth;
         const left = editBtn.value ? editBtn.value.offsetWidth : 0;
         sliderStyle.width = `${width}px`;
-        sliderStyle.left = `${left-2}px`;
+        sliderStyle.left = `${left - 2}px`;
       }
     } else {
       // 桌面视图有三个按钮
@@ -241,10 +274,10 @@ const updateSliderPosition = () => {
         sliderStyle.left = `${left}px`;
       } else if (viewMode.value === 'preview' && previewBtn.value) {
         const width = previewBtn.value.offsetWidth;
-        const left = (splitBtn.value ? splitBtn.value.offsetWidth : 0) + 
-                    (editBtn.value ? editBtn.value.offsetWidth : 0);
+        const left = (splitBtn.value ? splitBtn.value.offsetWidth : 0) +
+          (editBtn.value ? editBtn.value.offsetWidth : 0);
         sliderStyle.width = `${width}px`;
-        sliderStyle.left = `${left-2}px`;
+        sliderStyle.left = `${left - 2}px`;
       }
     }
   });
@@ -254,17 +287,17 @@ const updateSliderPosition = () => {
 const autoResize = () => {
   const textarea = editor.value;
   if (!textarea) return;
-  
+
   // 保存当前滚动位置
   const scrollPos = window.scrollY;
-  
+
   // 重置高度以获取正确的scrollHeight
   textarea.style.height = 'auto';
-  
+
   // 设置新的高度
   const newHeight = Math.max(500, textarea.scrollHeight);
   textareaHeight.value = newHeight;
-  
+
   // 恢复滚动位置
   window.scrollTo(0, scrollPos);
 };
@@ -290,7 +323,7 @@ const renderedHTML = ref(null);
 watch([markdownText, postTitle], async (newText) => {
   const html = await md.renderAsync(`# ${newText[1]}\n${newText[0]}`);
   renderedHTML.value = html.replace(/#FAFAFA/g, codeColor.value); // 替换代码区背景色
-  
+
   // 内容变化时调整高度
   nextTick(() => {
     autoResize();
@@ -331,11 +364,11 @@ const insertFormat = (prefix, suffix = '') => {
       textarea.selectionStart = newCursorPos;
       textarea.selectionEnd = newCursorPos;
     }
-    
+
     // 调整高度
     autoResize();
   }, 0);
-  
+
   // 在移动视图下，点击格式按钮后关闭菜单
   if (isMobileView.value || isTabletView.value) {
     isMenuExpanded.value = false;
@@ -360,7 +393,7 @@ const handleTabKey = (e) => {
     setTimeout(() => {
       textarea.selectionStart = start + 2;
       textarea.selectionEnd = start + 2;
-      
+
       // 调整高度
       autoResize();
     }, 0);
@@ -372,14 +405,14 @@ const router = useRouter();
 // 发表文章
 const handleSubmit = async () => {
   if (postTitle.value.length <= 0) {
-    ElMessage({type: 'error', message: '请输入标题！', plain: true});
+    ElMessage({ type: 'error', message: '请输入标题！', plain: true });
     return;
   }
   if (markdownText.value.length <= 0) {
-    ElMessage({type: 'error', message: '请输入正文！', plain: true});
+    ElMessage({ type: 'error', message: '请输入正文！', plain: true });
     return;
   }
-  const res = await useForumApi().createNewPost(postTitle.value, markdownText.value, []);
+  const res = await useForumApi().createNewPost(postTitle.value, markdownText.value, selectedTags.value);
   if (res.status === "success") router.push(`/forum/${res.postMeta.postId}`);
 }
 
@@ -388,16 +421,16 @@ onMounted(() => {
   if (editor.value) {
     editor.value.focus();
   }
-  
+
   // 初始化滑块位置
   updateSliderPosition();
-  
+
   // 监听窗口大小变化
   window.addEventListener('resize', handleResize);
-  
+
   // 初始化自动高度调整
   autoResize();
-  
+
   // 如果是移动设备，默认设置为编辑模式
   if (isMobileView.value) {
     setViewMode('edit');
@@ -411,6 +444,8 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+@import url(~/assets/css/tag_color.css);
+
 .markdown-editor {
   display: flex;
   flex-direction: column;
@@ -418,7 +453,7 @@ onUnmounted(() => {
   max-width: 1280px;
   width: 90%;
   margin: auto;
-  overflow: visible; 
+  overflow: visible;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   position: relative;
 }
@@ -697,14 +732,72 @@ input {
   line-height: 1.6;
 }
 
+/* 标签按钮 */
+.tag-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 50rem;
+  padding: 0.2rem 0.5rem;
+  transition: all 0.3s ease-in-out;
+  color: var(--color-meta-text, #6b7280);
+}
+
+.tag-btn:hover {
+  background-color: var(--color-background-hover, #f5f5f5);
+  color: var(--color-text);
+}
+
+/* 标签样式 */
+.tag-title {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  background-color: var(--btn-regular-bg);
+  padding: 4px 8px;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.tag-title:last-child {
+  margin-bottom: 0;
+}
+
+.tag-title:hover {
+  background-color: var(--btn-regular-bg-hover);
+}
+
+.tag-title.selected {
+  background-color: var(--btn-regular-bg-active, rgba(0, 110, 255, 0.1));
+  border-radius: 4px;
+  border-left: 3px solid var(--primary, #006eff);
+}
+
+.tag-color-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  margin-right: 10px;
+}
+
+.tag-name {
+  font-size: 18px;
+  color: var(--color-heading);
+  width: 80%;
+  text-align: center;
+  margin: 0;
+}
+
 /* 响应式样式 */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .mobile-menu-toggle {
     display: flex;
     align-items: center;
     order: 1;
   }
- 
+
   .view-controls {
     flex: 1;
   }
@@ -720,11 +813,11 @@ input {
     justify-content: center;
     cursor: pointer;
   }
-  
+
   .mobile-menu-toggle button:hover {
     background-color: var(--color-background-hover, #f5f5f5);
   }
-  
+
   .menu-bar .menu-group-left {
     display: none;
     position: absolute;
@@ -742,11 +835,11 @@ input {
     z-index: 100;
     border: 1px solid var(--color-border, #e5e7eb);
   }
-  
+
   .menu-bar .menu-group-left.mobile-expanded {
     display: flex;
   }
-  
+
   .menu-bar .menu-group-left .menu-group {
     width: 100%;
     flex-wrap: wrap;
@@ -758,21 +851,21 @@ input {
     padding-bottom: 8px;
     margin-bottom: 8px;
   }
-  
+
   .menu-bar .menu-group-left .menu-group:last-child {
     border-bottom: none;
     margin-bottom: 0;
     padding-bottom: 0;
   }
-  
+
   .view-controls {
     order: 0;
   }
-  
+
   .menu-bar .menu-group-right {
     order: 2;
   }
-  
+
   .menu-bar {
     position: relative;
     justify-content: space-between;
@@ -783,7 +876,7 @@ input {
   .markdown-editor {
     width: 95%;
   }
-  
+
   .view-controls {
     flex: 1;
   }
@@ -792,34 +885,38 @@ input {
     border-radius: 20px;
     padding: 5px 10px;
   }
-  
+
   .menu-bar .menu-group-right {
     width: auto;
     justify-content: flex-end;
     flex-wrap: nowrap;
   }
-  
+
   .char-count {
     display: none;
   }
-  
+
   .submit-btn {
     padding: 0.4rem 0.8rem !important;
   }
-  
+
   .submit-btn-inner {
     font-size: 0.9rem;
   }
-  
+
   .editor-container {
     flex-direction: column;
   }
-  
+
   .editor-container.split .editor-pane,
   .editor-container.split .preview-pane {
     width: 100%;
   }
-  
+  .tag-title.selected {
+  background-color: var(--btn-regular-bg-active, rgba(0, 110, 255, 0.1));
+  border-radius: 4px;
+  border-left: 3px solid var(--primary, #006eff);
+}
   /* textarea, .preview-pane {
     min-height: 60vh;
   } */
@@ -829,16 +926,16 @@ input {
   .menu-back-btn {
     margin-bottom: 5px;
   }
-  
+
   .view-controls {
     flex: 1;
   }
-  
+
   .slider-track button {
     padding: 0.4rem 0.6rem;
     font-size: 0.8rem;
   }
-  
+
   .menu-bar .submit-btn-inner span {
     display: none;
   }

@@ -15,7 +15,6 @@
     <div class="knowledge-graph-card-embeded" @click="toggleFullscreen" v-else-if="!isFullscreen && isEmbedded">
       <div class="embeded-graph-container">
         <div ref="embededGraphContainer" class="graph-container">
-          <!-- <img src="/vue3_graphs_mock.png" width="220px" class="mock-graph"> -->
         </div>
       </div>
     </div>
@@ -97,7 +96,7 @@
 <script setup>
 import { ref, onMounted, watch, nextTick } from 'vue';
 import * as d3 from 'd3';
-import { transformData } from '~/utils/transformData'
+import { transformData, transformRelationData } from '~/utils/transformData'
 import { useWindowSize } from '@vueuse/core';
 import { createSvg, createSimulation, createLink, createNode, createLabel, createLinkLabel, creatArrow, useGraphAttribute } from '~/utils/graph/utils';
 import { useIntersectionObserver } from '@vueuse/core'
@@ -119,6 +118,10 @@ const props = defineProps({
   maxDepth: {
     type: Number,
     default: 5,
+  },
+  isRelationship: {
+    type: Boolean,
+    default: false, // 是否为关系图谱
   }
 })
 
@@ -126,12 +129,11 @@ const props = defineProps({
 import fullData from '~/assets/data.json';
 import frontData from '~/assets/data_front_end.json'
 import backData from '~/assets/data_back_end.json'
-import vueData from '~/assets/data_vue.json'
+import { useGraphApi } from '~/api/graph';
 
 const graphDataSource = computed(() => {
   if (props.title === '前端') return frontData;
   else if (props.title === '后端') return backData;
-  else if (props.title === 'Vue3') return vueData;
   else return fullData;
 })
 
@@ -193,7 +195,14 @@ const toggleLegend = () => {
 };
 
 // 图谱数据
-const graphData = transformData(graphDataSource.value, props.maxDepth);
+const graphData = await (async () => {
+  if (!props.isRelationship) {
+    return transformData(graphDataSource.value, props.maxDepth);
+  } else {
+    const res = await useGraphApi().getNodeRelationship(props.graphId);
+    return transformRelationData(res); // 获取数据
+  }
+})();
 
 // 初始化小图, 大图的等比例缩小版本
 const initMiniGraph = () => {
@@ -302,9 +311,10 @@ const embededGraphInitialized = ref(false)
 
 useIntersectionObserver(
   embededGraphContainer, // 需要观察的目标元素
-  ([{ isIntersecting: intersect }]) => {
+  async ([{ isIntersecting: intersect }]) => {
     if (intersect && embededGraphInitialized.value === false) {
-      embededGraphData.value = transformData(vueData, props.maxDepth); // 获取数据
+      const res = await useGraphApi().getNodeRelationship(props.graphId);
+      embededGraphData.value = transformRelationData(res); // 获取数据
       initEmbeddedGrpah();
       embededGraphInitialized.value = true;
     }

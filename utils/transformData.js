@@ -85,3 +85,53 @@ export const transformData = (data, maxDepth) => {
 
     return { nodes, links };
 };
+
+// 将关系型JSON数据转换为D3.js格式
+export const transformRelationData = (relationData) => {
+    const nodes = [];
+    const links = [];
+    const nodeMap = new Map();
+
+    // 添加节点到Map，确保唯一性
+    const addNode = (id, content, level) => {
+        if (!nodeMap.has(id)) {
+            const newNode = {
+                id,
+                uniqueId: id,
+                name: id,
+                content: content,
+                level: level,
+                // 根据level设置组
+                group: level === "基础" ? 1 :
+                       level === "进阶" ? 2 :
+                       level === "高级" ? 3 : 4
+            };
+            nodes.push(newNode);
+            nodeMap.set(id, newNode);
+            return newNode;
+        }
+        return nodeMap.get(id);
+    };
+
+    // 处理每条关系记录
+    relationData.forEach(relation => {
+        const { 
+            startId, endId, relationType, stepOrder,
+            startContent, startLevel, endContent, endLevel
+        } = relation;
+        
+        // 添加起始和结束节点
+        addNode(startId, startContent, startLevel);
+        addNode(endId, endContent, endLevel);
+        
+        // 创建链接
+        links.push({
+            source: startId,
+            target: endId,
+            relationship: relationType,
+            value: stepOrder || 1
+        });
+    });
+
+    return { nodes, links };
+};

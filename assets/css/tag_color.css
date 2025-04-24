@@ -1,7 +1,8 @@
 /* hue: color palette from <https://github.com/saicaca/fuwari/blob/main/src/styles/main.css> */
 
 .light-mode .tag-card,
-.light-mode .nav-item-tag {
+.light-mode .nav-item-tag,
+.light-mode .tag-title {
     --primary: oklch(.7 .14 var(--hue));
     --page-bg: oklch(.95 .01 var(--hue));
     --card-bg: white;
@@ -16,7 +17,8 @@
 }
 
 .dark-mode .tag-card,
-.dark-mode .nav-item-tag {
+.dark-mode .nav-item-tag,
+.dark-mode .tag-title {
     --primary: oklch(.75 .14 var(--hue));
     --page-bg: oklch(.16 .014 var(--hue));
     --card-bg: oklch(.23 .015 var(--hue));
