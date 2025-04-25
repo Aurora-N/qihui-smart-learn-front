@@ -44,9 +44,8 @@ const selectTocItem = (id: string) => {
 const showArrow = reactive<{ [key: string]: boolean }>({});
 
 const recommendPostsList = ref([
-  { id: '1', title: 'mit-6.031', link: '/articles/hm', type: '理论' },
-  { id: '2', title: '测试', link: '', type: '理论' },
-  { id: '3', title: '动手做一做', link: '', type: '实践' }
+  { id: '1', title: '测试', link: '', type: '理论' },
+  { id: '2', title: '动手做一做', link: '', type: '实践' }
 ]);
 </script>
 

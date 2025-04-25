@@ -13,6 +13,7 @@
         </p>
       </div>
     </div>
+    <div class="footer-background"></div>
   </footer>
 </template>
 
@@ -24,12 +25,37 @@
   background-color: var(--color-background);
   border-top: 1px solid var(--color-border);
   padding: 2rem 0 3rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-background {
+  position: absolute;
+  top: 50%;
+  right: calc((100% - 1280px) / 2);
+  transform: translateY(-50%);
+  width: 150px;
+  height: 150px;
+  background-image: url('/logo_gray.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.3;
+  z-index: 1;
+}
+
+@media (max-width: 1280px) {
+  .footer-background {
+    right: 1rem;
+  }
 }
 
 .container {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 1rem;
+  position: relative;
+  z-index: 2;
 }
 
 .footer-title {

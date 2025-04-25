@@ -19,7 +19,7 @@ definePageMeta({
 <template>
   <Navbar :transparent="false" />
   <div class="container">
-    <iframe src="http://jp.frp.one:23932/ui/chat/5bfb22ba0d4da3ed" style="width: 100%; height: 100%;" frameborder="0"
+    <iframe src="http://lsj.frp.one:39961/ui/chat/5bfb22ba0d4da3ed" style="width: 100%; height: 100%;" frameborder="0"
       allow="microphone">
     </iframe>
   </div>

@@ -241,7 +241,7 @@ defineExpose({
       <div v-else-if="inResourcesError">
         <div class="sidebar-section-error">
           <IconsDataError class="error-icons" />
-          <div class="error-tips">请求资源失败，请重试！</div>
+          <div class="error-tips">此结点没有资源，请尝试点击其他结点</div>
           <button @click="fetchSelectedNodeData()" class="control-btn">
             <IconsRefresh />重新获取数据
           </button>

@@ -52,7 +52,7 @@ const handleBeforeSubmit = async (content) => {
     router.push('/login');
     return;
   }
-  // TODO.接上评论API
+  // 接入评论API
   const res = await useForumApi().replyPost(route.params.id, content);
   await initPostContent();
 };

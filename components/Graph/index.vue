@@ -14,7 +14,7 @@
     <!-- 内嵌小窗口模式 -->
     <div class="knowledge-graph-card-embeded" @click="toggleFullscreen" v-else-if="!isFullscreen && isEmbedded">
       <div class="embeded-graph-container">
-        <div ref="embededGraphContainer" class="graph-container">
+        <div ref="embededGraphContainer" class="graph-container">点击查看大图
         </div>
       </div>
     </div>
