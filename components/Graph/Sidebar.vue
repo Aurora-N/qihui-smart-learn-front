@@ -272,6 +272,8 @@ defineExpose({
 </template>
 
 <style scoped>
+@import url(~/assets/css/knowledge_graph.css);
+
 .light-mode .sidebar-details {
   --primary-color: #2563eb;
   --primary-color-hover: #1d4ed8;

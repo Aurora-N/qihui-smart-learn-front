@@ -63,9 +63,10 @@ onMounted(async () => {
           <div class="topic-info">
             <h3 class="topic-title">{{ topic.title }}</h3>
             <div class="topic-meta">
-              <TopRight style="width: 1em; height: 1em; margin-right: 8px;" />
+              <User style="width: 1em; height: 1em;" />
               <span> {{ topic.lastCommentedUser.userName }} </span>
-              <span> 回复于 {{ topic.lastCommentedAt }}</span>
+              <TopRight v-if="topic.lastCommentedAt" style="width: 1em; height: 1em;" />
+              <span v-if="topic.lastCommentedAt"> 最新回复于 {{ topic.lastCommentedAt }}</span>
             </div>
           </div>
         </div>

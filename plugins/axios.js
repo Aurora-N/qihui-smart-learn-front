@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { useUserStore } from '~/stores/userStore'
 
-
 export default defineNuxtPlugin((nuxtApp) => {
+    const router = useRouter();
+
     const apiClient = axios.create({
         baseURL: 'http://120.76.138.103:5050/', // 服务器地址
         timeout: 20000,
@@ -43,22 +44,20 @@ export default defineNuxtPlugin((nuxtApp) => {
                     type: 'error', message: error.response.data.msg,
                     plain: true,
                 })
-                userStore.clearUserInfo()
                 break;
             case 401:
                 ElMessage({
-                    type: 'error', message: error.response.data.msg,
+                    type: 'error', message: error.response.data.msg + '请先登录！',
                     plain: true,
                 })
                 userStore.clearUserInfo()
-                $router.push('/login')
+                router.push('/login')
                 break;
             case 404:
                 ElMessage({
-                    type: 'error', message: error.response.data.msg,
+                    type: 'error', message: error.response.data.msg + ' 内容未找到！',
                     plain: true,
                 })
-                userStore.clearUserInfo()
                 break;
             case 500:
                 ElMessage({

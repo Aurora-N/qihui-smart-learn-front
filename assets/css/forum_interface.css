@@ -70,6 +70,7 @@
     align-items: center;
     font-size: 0.875rem;
     color: var(--color-meta-text);
+    gap: 8px;
   }
   
   .topic-right {
@@ -89,6 +90,12 @@
     color: #374151;
   }
   
+  .tag.tag0 {
+    --hue: 0;
+    background-color: oklch(.95 .025 var(--hue));
+    color: oklch(.55 .12 var(--hue));
+  }
+
   .tag.tag1 {
     --hue: 235;
     background-color: oklch(.95 .025 var(--hue));

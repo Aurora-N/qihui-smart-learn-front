@@ -1,27 +1,78 @@
 <template>
   <div id="testimonials" class="testimonials-section">
     <div class="container">
-      <div class="testimonials-header">
-        <h2 class="testimonials-title">热门文章</h2>
-        <p class="testimonials-description">
-          来看看大家都在看哪些文章
-        </p>
+      <!-- Popular Articles Section -->
+      <div class="section-container">
+        <div class="testimonials-header">
+          <h2 class="testimonials-title">热门文章</h2>
+          <p class="testimonials-description">
+            来看看大家都在看哪些文章
+          </p>
+        </div>
+
+        <div v-if="isLoadingArticles" class="loading-indicator">
+          加载中...
+        </div>
+        <div v-else-if="articlesError" class="error-message">
+          {{ articlesError }}
+        </div>
+        <div v-else class="testimonials-grid">
+          <div 
+            v-for="article in displayedArticles" 
+            :key="article.name" 
+            class="testimonial-card" 
+            @click="$router.push(formatArticleLink(article.article))"
+          >
+            <div class="testimonial-header">
+              <IconsLearn :alt="article.name" class="testimonial-image" style=" border-radius: 0;" />
+              <div class="testimonial-meta">
+                <div class="testimonial-name">{{ article.name }}</div>
+                <div class="testimonial-role">学习资料</div>
+              </div>
+            </div>
+            <p class="testimonial-quote">{{ article.name }}</p>
+          </div>
+        </div>
       </div>
 
-      <div class="testimonials-grid">
-        <div v-for="(testimonial, index) in testimonials" :key="testimonial.name" class="testimonial-card" @click="$router.push(`${testimonial.link}`)">
-          <div class="testimonial-header">
-            <img :src="testimonial.image" :alt="testimonial.name" class="testimonial-image" />
-            <div class="testimonial-meta">
-              <div class="testimonial-name">{{ testimonial.name }}</div>
-              <div class="testimonial-role">{{ testimonial.role }}</div>
+      <!-- Popular Posts Section -->
+      <div class="section-container">
+        <div class="testimonials-header">
+          <h2 class="testimonials-title">热门帖子</h2>
+          <p class="testimonials-description">
+            来看看大家都在讨论什么
+          </p>
+        </div>
+
+        <div v-if="isLoadingPosts" class="loading-indicator">
+          加载中...
+        </div>
+        <div v-else-if="postsError" class="error-message">
+          {{ postsError }}
+        </div>
+        <div v-else class="testimonials-grid">
+          <div 
+            v-for="post in displayedPosts" 
+            :key="post.postId" 
+            class="testimonial-card" 
+            @click="$router.push(`/forum/${post.postId}`)"
+          >
+            <div class="testimonial-header">
+              <img :src="post.author.attributes.avatarUrl" :alt="post.author.attributes.userName" class="testimonial-image" />
+              <div class="testimonial-meta">
+                <div class="testimonial-name">{{ post.title }}</div>
+                <div class="testimonial-role">{{ post.author.attributes.userName }}</div>
+              </div>
+            </div>
+            <p class="testimonial-quote">{{ post.title }}</p>
+            <div class="post-meta">
+              <span class="post-comments">{{ post.commentsCount }} 评论</span>
+              <span class="post-date">{{ formatDate(post.createdAt) }}</span>
             </div>
           </div>
-          <p class="testimonial-quote">"{{ testimonial.quote }}"</p>
         </div>
       </div>
     </div>
-
     
     <div class="testimonials-background">
       <div class="bg-circle bg-circle-1"></div>
@@ -31,38 +82,137 @@
 </template>
 
 <script setup>
-const testimonials = [
-  {
-    name: "Vue 简介",
-    role: "渐进式 JavaScript 框架",
-    image: "https://tse4-mm.cn.bing.net/th/id/OIP-C.vve0ijhF8bqB4_qxOs21fAAAAA?rs=1&pid=ImgDetMain",
-    quote:
-      "Vue是一款用于构建用户界面的 JavaScript 框架。它基于标准 HTML、CSS 和 JavaScript 构建，并提供了一套声明式的、组件化的编程模型，帮助你高效地开发用户界面。无论是简单还是复杂的界面，Vue 都可以胜任。本文为Vue简介。",
-    link: "/articles/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E4%B8%BB%E6%B5%81%E6%A1%86%E6%9E%B6/Vue3/1.%E7%AE%80%E4%BB%8B"
-  },
-  {
-    name: "如何成为全栈高手",
-    role: "Uika",
-    image: "https://avatars.githubusercontent.com/u/35548919",
-    quote:
-      "在2023年StackOverflow开发者调查中，全栈工程师以55.2%的占比蝉联最受欢迎开发角色。这种既能画界面又能写API的全能选手，正在成为数字化转型浪潮中的核心人才。本文将揭示成为全栈高手的进阶密码。",
-    link: "/forum/1"
-  },
-  {
-    name: "RestFul API 简明教程",
-    role: "RESTful API",
-    image: "https://img-blog.csdnimg.cn/5351e2a6a42948fda8158611d42b4584.png",
-    quote:
-      "一篇文章简单聊聊后端程序员必备的 RESTful API 相关的知识。",
-    link: "articles/后端/API开发与通信/RESTful API/2.RestFul API 简明教程"
-  },
-];
+import { ref, onMounted, computed, onUnmounted } from 'vue'
+import { useHomeApi } from '~/api/home'
+
+// API
+const homeApi = useHomeApi()
+
+// State management
+const popularArticles = ref([])
+const popularPosts = ref([])
+const isLoadingArticles = ref(true)
+const isLoadingPosts = ref(true)
+const articlesError = ref(null)
+const postsError = ref(null)
+
+// Rotation state
+const articleStartIndex = ref(0)
+const postStartIndex = ref(0)
+const itemsToShow = 3
+let rotationTimer = null
+
+// Computed properties for the currently displayed items
+const displayedArticles = computed(() => {
+  if (popularArticles.value.length <= itemsToShow) {
+    return popularArticles.value
+  }
+  
+  const result = []
+  for (let i = 0; i < itemsToShow; i++) {
+    const index = (articleStartIndex.value + i) % popularArticles.value.length
+    result.push(popularArticles.value[index])
+  }
+  return result
+})
+
+const displayedPosts = computed(() => {
+  if (popularPosts.value.length <= itemsToShow) {
+    return popularPosts.value
+  }
+  
+  const result = []
+  for (let i = 0; i < itemsToShow; i++) {
+    const index = (postStartIndex.value + i) % popularPosts.value.length
+    result.push(popularPosts.value[index])
+  }
+  return result
+})
+
+// Rotate displayed items
+const rotateItems = () => {
+  if (popularArticles.value.length > itemsToShow) {
+    articleStartIndex.value = (articleStartIndex.value + 1) % popularArticles.value.length
+  }
+  
+  if (popularPosts.value.length > itemsToShow) {
+    postStartIndex.value = (postStartIndex.value + 1) % popularPosts.value.length
+  }
+}
+
+// Start auto rotation
+const startRotation = () => {
+  stopRotation()
+  rotationTimer = setInterval(rotateItems, 10000) // Rotate every 10 seconds
+}
+
+// Stop rotation
+const stopRotation = () => {
+  if (rotationTimer) {
+    clearInterval(rotationTimer)
+    rotationTimer = null
+  }
+}
+
+// Format article link
+const formatArticleLink = (articlePath) => {
+  // Replace backslashes with forward slashes, remove first two path segments, add /articles prefix
+  const formatted = '/articles/' + articlePath.split('\\').slice(2).join('/')
+  return formatted
+}
+
+// Format date
+const formatDate = (dateString) => {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('zh-CN')
+}
+
+// Fetch data from API
+onMounted(async () => {
+  // Fetch popular articles
+  try {
+    isLoadingArticles.value = true
+    const response = await homeApi.getPopularArticles()
+    if (response.articles) {
+      popularArticles.value = response.articles
+    }
+  } catch (error) {
+    articlesError.value = '获取热门文章失败'
+    console.error('Error fetching popular articles:', error)
+  } finally {
+    isLoadingArticles.value = false
+  }
+
+  // Fetch popular posts
+  try {
+    isLoadingPosts.value = true
+    const response = await homeApi.getPopularPosts()
+    if (response.data && response.data.posts) {
+      popularPosts.value = response.data.posts
+    }
+  } catch (error) {
+    postsError.value = '获取热门帖子失败'
+    console.error('Error fetching popular posts:', error)
+  } finally {
+    isLoadingPosts.value = false
+  }
+  
+  // Start auto rotation if we have more than 3 items
+  if (popularArticles.value.length > itemsToShow || popularPosts.value.length > itemsToShow) {
+    startRotation()
+  }
+})
+
+// Clean up on component unmount
+onUnmounted(() => {
+  stopRotation()
+})
 </script>
 
 <style scoped>
 .testimonials-section {
   position: relative;
-  padding: 4rem 0;
+  padding-bottom: 4rem;
   background-color: var(--secondary-color);
   overflow: hidden;
 }
@@ -75,9 +225,13 @@ const testimonials = [
   z-index: 10;
 }
 
+.section-container {
+  margin-bottom: 4rem;
+}
+
 .testimonials-header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
 }
 
 .testimonials-title {
@@ -97,7 +251,7 @@ const testimonials = [
 
 .testimonials-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 
@@ -108,6 +262,10 @@ const testimonials = [
   padding: 1.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .testimonial-card:hover {
@@ -122,6 +280,7 @@ const testimonials = [
 }
 
 .testimonial-image {
+  color: var(--color-text);
   width: 3rem;
   height: 3rem;
   border-radius: 9999px;
@@ -146,6 +305,16 @@ const testimonials = [
 .testimonial-quote {
   font-style: italic;
   color: var(--text-muted);
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: auto;
 }
 
 .testimonials-background {
@@ -178,6 +347,18 @@ const testimonials = [
   animation: float-alt 7s ease-in-out infinite;
 }
 
+.loading-indicator {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  color: #e53e3e;
+}
+
 @keyframes float {
   0%, 100% {
     transform: translate(0, 0);
@@ -198,11 +379,7 @@ const testimonials = [
 
 @media (min-width: 768px) {
   .testimonials-section {
-    padding: 6rem 0;
-  }
-  
-  .testimonials-grid {
-    grid-template-columns: repeat(2, 1fr);
+    padding-bottom: 4rem;
   }
   
   .testimonials-title {
@@ -210,9 +387,9 @@ const testimonials = [
   }
 }
 
-@media (min-width: 1024px) {
+@media (max-width: 767px) {
   .testimonials-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr;
   }
 }
 </style>

@@ -23,7 +23,8 @@ const comments = ref([])
 const initialized = ref(false);
 
 const initPostContent = async () => {
-  const res = await useForumApi().getPostContent(route.params.id);
+  const isLogin = Object.keys(userStore.userInfo).length !== 0;
+  const res = await useForumApi().getPostContent(route.params.id, isLogin ? userStore.userInfo.data.userId : null);
   post.value = res.data.posts;
   comments.value = res.data.posts.comments;
   initialized.value = true;
@@ -53,9 +54,24 @@ const handleBeforeSubmit = async (content) => {
   }
   // TODO.接上评论API
   const res = await useForumApi().replyPost(route.params.id, content);
-  console.log(res);
   await initPostContent();
 };
+
+// 标签相关
+const tags = ref([])
+
+const getTagsAttributes = async () => {
+  const allTags = await (await useForumApi().getAllTags()).data;
+  
+  for (let tag of post.value.tags) {
+    const tagWithAttr = allTags.filter(item => item.tagId === tag.tagId);
+    tags.value.push({
+      tagId: tagWithAttr[0].tagId,
+      title: tagWithAttr[0].title,
+      hueColor: tagWithAttr[0].hueColor,
+    });
+  }
+}
 
 onMounted(async ()=>{
   await initPostContent();
@@ -63,7 +79,45 @@ onMounted(async ()=>{
   useSeoMeta({
     title: `${post.value.title} —— 启慧论坛`
   })
+  await getTagsAttributes();
 })
+
+const handleLike = async (commentId = null) => {
+  if (Object.keys(userStore.userInfo).length === 0) {
+    ElMessage({type: 'warning', message: '请先登录', plain: true});
+    router.push('/login');
+    return;
+  }
+
+  const res = await useForumApi().doLike(post.value.postId, commentId);
+}
+
+const handleFavorite = async () => {
+  if (Object.keys(userStore.userInfo).length === 0) {
+    ElMessage({type: 'warning', message: '请先登录', plain: true});
+    router.push('/login');
+    return;
+  }
+  
+  try {
+    const res = await useForumApi().doFavor(post.value.postId);
+    if (res.msg === "收藏成功") {
+      post.value.isFavorite = true;
+    } else if (res.msg === "取消收藏成功") {
+      post.value.isFavorite = false;
+    }
+    
+    ElMessage({
+      type: 'success', 
+      message: post.value.isFavorite ? '收藏成功' : '已取消收藏', 
+      plain: true
+    });
+    
+  } catch (error) {
+    ElMessage({type: 'error', message: '操作失败，请重试', plain: true});
+    console.error(error);
+  }
+}
 </script>
 
 <template>
@@ -73,13 +127,12 @@ onMounted(async ()=>{
     <div class="post-content">
       <!-- 帖子内容 -->
       <article class="main-content">
-        <ForumComment :id="post.postId" :author="post.author" :content="post.content" :time="post.createdAt"
-          :likes-count="post.likesCount" />
-        <hr>
+        <ForumComment :id="post.postId" :author="post.author" :content="post.content" :time="post.createdAt" :tags="tags"
+          :likes-count="post.likesCount" @like="handleLike()" :is-content="true" :is-liked="post.isLiked" />
         <!-- 评论区内容 -->
         <div v-for="item of comments" :key="item.commentId">
           <ForumComment :id="item.commentId" :author="item.author" :content="item.content" :time="item.createdAt"
-            :likes-count="item.likesCount" :replied-id="item.repliedID" />
+            :likes-count="item.likesCount" :replied-id="item.repliedID" @like="handleLike(item.commentId)" :is-liked="item.isLiked" />
           <hr>
         </div>
         <div ref="editorRef" class="editor">
@@ -97,8 +150,12 @@ onMounted(async ()=>{
             </el-button>
           </div>
           <div>
-            <el-button type="primary" size="large" class="other-btn">
-              收藏
+            <el-button 
+              :type="post.isFavorite ? 'success' : 'primary'" 
+              size="large" 
+              class="other-btn" 
+              @click="handleFavorite">
+              {{ post.isFavorite ? '已收藏' : '收藏' }}
             </el-button>
           </div>
         </aside>

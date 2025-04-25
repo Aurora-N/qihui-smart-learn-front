@@ -33,23 +33,25 @@ const processData = () => {
 
   pathData.value.forEach(path => {
     if (!nodesMap.has(path.startId)) {
-      const level = 0; 
+      const order = 0; 
       nodesMap.set(path.startId, { 
         id: path.startId, 
-        level,
-        color: '#74b9ff'
+        order,
+        level: path.startLV,
+        content: path.startContent,
+        color: '#55efc4' // 绿色
       });
     }
     
     if (!nodesMap.has(path.endId)) {
-      const level = path.stepOrder;
+      const order = path.stepOrder;
       let color;
-      if (level === 1) {
-        color = '#55efc4'; // 绿色
-      } else if (level === 2) {
+      if (order === 1) {
+        color = '#74b9ff'; // 蓝色
+      } else if (order === 2) {
         color = '#ffeaa7'; // 黄色
       }
-      nodesMap.set(path.endId, { id: path.endId, level, color });
+      nodesMap.set(path.endId, { id: path.endId, order, level: path.endLV, content: path.endContent, color });
     }
     
     links.push({
@@ -91,8 +93,8 @@ const renderGraph = (nodes, links) => {
     .force("center", d3.forceCenter(width / 2, height / 2))
     .force("x", d3.forceX(d => {
 
-      if (d.level === 0) return width * 0.2;
-      if (d.level === 1) return width * 0.5;
+      if (d.order === 0) return width * 0.2;
+      if (d.order === 1) return width * 0.5;
       return width * 0.8;
     }).strength(0.5))
     .force("y", d3.forceY(height / 2).strength(0.1))
@@ -278,9 +280,9 @@ defineExpose({
 }
 
 :root {
-  --level-0-color: #74b9ff; /* 蓝色 */
-  --level-1-color: #55efc4; /* 绿色 */
-  --level-2-color: #ffeaa7; /* 黄色 */
+  --order-0-color: #55efc4; /* 绿色 */
+  --order-1-color: #74b9ff; /* 蓝色 */
+  --order-2-color: #ffeaa7; /* 黄色 */
 }
 
 .graph-svg {
