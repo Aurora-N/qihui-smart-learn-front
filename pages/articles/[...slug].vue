@@ -82,8 +82,8 @@ const recommendPostsList = ref([
   <Footer />
 </template>
 
-<style scope>
-@import url("~/assets/css/post.css");
+<style lang="scss" scoped>
+@import url("~/assets/css/post.scss");
 
 .main-container {
   display: flex;

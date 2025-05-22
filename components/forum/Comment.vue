@@ -2,7 +2,7 @@
 import { fromAsyncCodeToHtml } from '@shikijs/markdown-it/async'
 import MarkdownItAsync from 'markdown-it-async'
 import { codeToHtml } from 'shiki'
-import '~/assets/css/post.css'
+import '~/assets/css/post.scss'
 
 const props = defineProps({
   id: { type: String, required: true }, // 评论的ID CommitId
@@ -100,8 +100,8 @@ const finalContent = renderedContent.replace(/#FAFAFA/g, codeColor); // 替换�
   </div>
 </template>
 
-<style scoped>
-@import url(~/assets/css/tag_color.css);
+<style lang="scss" scoped>
+@import url(~/assets/css/tag_color.scss);
 
 .comment-container {
   display: flex;

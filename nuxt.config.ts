@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   alias:{
     assets: "/<rootDir>/assets",
   },
-  css: ["~/assets/css/main.css"],
+  css: ["~/assets/css/main.scss"],
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
   ssr: true,

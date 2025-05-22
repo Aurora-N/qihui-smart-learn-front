@@ -57,8 +57,8 @@ definePageMeta({
   </div>
 </template>
 
-<style scoped>
-@import url(~/assets/css/tag_color.css);
+<style lang="scss" scoped>
+@import url(~/assets/css/tag_color.scss);
 
 .tags-container {
   width: 100%;

@@ -169,7 +169,7 @@ import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from
 import { fromAsyncCodeToHtml } from '@shikijs/markdown-it/async';
 import MarkdownItAsync from 'markdown-it-async';
 import { codeToHtml } from 'shiki';
-import '~/assets/css/post.css';
+import '~/assets/css/post.scss';
 import markdownItSanitizer from 'markdown-it-sanitizer';
 import { useForumApi } from '~/api/forum';
 
@@ -443,8 +443,8 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
-@import url(~/assets/css/tag_color.css);
+<style lang="scss" scoped>
+@import url(~/assets/css/tag_color.scss);
 
 .markdown-editor {
   display: flex;

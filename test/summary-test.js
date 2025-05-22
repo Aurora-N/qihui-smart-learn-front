@@ -170,7 +170,7 @@ passed += runTest('样式引入检查', () => {
   const stylePart = indexVueContent.split('<style scoped>')[1].split('</style>')[0];
   
   assert.strictEqual(stylePart.includes('@import url('), true);
-  assert.strictEqual(stylePart.includes('forum_interface.css'), true);
+  assert.strictEqual(stylePart.includes('forum_interface.scss'), true);
 });
 
 // 打印测试摘要

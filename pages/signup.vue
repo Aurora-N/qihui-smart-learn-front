@@ -104,6 +104,6 @@ useSeoMeta({
 })
 </script>
 
-<style scoped>
-@import url(~/assets/css/login_page.css);
+<style lang="scss" scoped>
+@import url(~/assets/css/login_page.scss);
 </style>

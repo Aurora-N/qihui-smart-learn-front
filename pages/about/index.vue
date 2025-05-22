@@ -162,8 +162,8 @@ export default {
 }
 </script>
 
-<style scoped>
-@import url(~/assets/css/post.css);
+<style lang="scss" scoped>
+@import url(~/assets/css/post.scss);
 
 .container {
   display: flex;

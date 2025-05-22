@@ -1,5 +1,5 @@
 <script setup>
-import '~/assets/css/home.css'
+import '~/assets/css/home.scss'
 </script>
 
 <template>
@@ -14,6 +14,6 @@ import '~/assets/css/home.css'
   </div>
 </template>
 
-<style scoped>
-/* @import url(~/assets/css/home.css); */
+<style lang="scss" scoped>
+/* @import url(~/assets/css/home.scss); */
 </style>

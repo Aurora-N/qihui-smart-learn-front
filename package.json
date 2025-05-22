@@ -57,7 +57,6 @@
     "nuxt-shiki": "^0.3.0",
     "pinia-plugin-persistedstate": "^4.2.0",
     "pinyin": "^4.0.0-alpha.2",
-    "sass": "^1.85.1",
     "segmentit": "^2.0.3",
     "shiki": "^3.1.0",
     "vue": "latest",
@@ -78,6 +77,7 @@
     "happy-dom": "^17.4.4",
     "playwright-core": "^1.51.1",
     "prettier": "^3.5.2",
+    "sass": "^1.89.0",
     "vitest": "^3.1.1"
   }
 }

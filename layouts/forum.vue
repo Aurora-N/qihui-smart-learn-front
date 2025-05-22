@@ -154,8 +154,8 @@ provide("bannerConfig", bannerConfig)
   <Footer />
 </template>
 
-<style scoped>
-@import url(~/assets/css/tag_color.css);
+<style lang="scss" scoped>
+@import url(~/assets/css/tag_color.scss);
 
 .container {
   min-height: 100vh;
