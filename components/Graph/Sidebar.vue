@@ -198,7 +198,7 @@ defineExpose({
               <h4>{{ video.name }}</h4>
               <div class="video-embed">
                 <iframe :src="video.url" frameborder="0"
-                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" loading="lazy"
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                   allowfullscreen></iframe>
               </div>
             </div>

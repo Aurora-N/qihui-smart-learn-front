@@ -4,9 +4,9 @@
   <div class="learn">
     <ForumBanner title="学习方向" sub-title="选择你感兴趣的知识进行学习吧！" content-width="1100px">
       <div class="graph">
-        <Graph title="总览" :max-depth="3" />
-        <Graph title="前端" graph-id="前端" />
-        <Graph title="后端" graph-id="后端" />
+        <AsyncGraphComp title="总览" :max-depth="3" />
+        <AsyncGraphComp title="前端" graph-id="前端" />
+        <AsyncGraphComp title="后端" graph-id="后端" />
       </div>
       <!-- 学习路线 -->
       <div class="my-path">
@@ -22,6 +22,11 @@
 <script setup>
 definePageMeta({
   layout:false
+})
+
+const AsyncGraphComp = defineAsyncComponent({
+  loader: () => import('@/components/Graph/index.vue'),
+  delay: 100,
 })
 </script>
 
