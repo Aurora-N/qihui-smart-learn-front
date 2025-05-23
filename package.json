@@ -12,7 +12,11 @@
     "test:watch": "vitest",
     "test:simple": "node --no-warnings test/simple-test.js",
     "test:dom": "node --no-warnings test/dom-test.js",
-    "test:summary": "node --no-warnings test/summary-test.js"
+    "test:summary": "node --no-warnings test/summary-test.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",

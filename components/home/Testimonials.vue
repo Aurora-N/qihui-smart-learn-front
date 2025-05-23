@@ -5,32 +5,36 @@
       <div class="section-container">
         <div class="testimonials-header">
           <h2 class="testimonials-title">热门文章</h2>
-          <p class="testimonials-description">
-            来看看大家都在看哪些文章
-          </p>
+          <p class="testimonials-description">来看看大家都在看哪些文章</p>
         </div>
 
-        <div v-if="isLoadingArticles" class="loading-indicator">
-          加载中...
-        </div>
+        <div v-if="isLoadingArticles" class="loading-indicator">加载中...</div>
         <div v-else-if="articlesError" class="error-message">
           {{ articlesError }}
         </div>
         <div v-else class="testimonials-grid">
-          <div 
-            v-for="article in displayedArticles" 
-            :key="article.name" 
-            class="testimonial-card" 
+          <div
+            v-for="article in displayedArticles"
+            :key="article.name"
+            class="testimonial-card"
             @click="$router.push(formatArticleLink(article.article))"
           >
             <div class="testimonial-header">
-              <IconsLearn :alt="article.name" class="testimonial-image" style=" border-radius: 0;" />
+              <IconsLearn
+                :alt="article.name"
+                class="testimonial-image"
+                style="border-radius: 0"
+              />
               <div class="testimonial-meta">
-                <div class="testimonial-name">{{ article.name }}</div>
+                <div class="testimonial-name">
+                  {{ article.name }}
+                </div>
                 <div class="testimonial-role">学习资料</div>
               </div>
             </div>
-            <p class="testimonial-quote">{{ article.name }}</p>
+            <p class="testimonial-quote">
+              {{ article.name }}
+            </p>
           </div>
         </div>
       </div>
@@ -39,32 +43,38 @@
       <div class="section-container">
         <div class="testimonials-header">
           <h2 class="testimonials-title">热门帖子</h2>
-          <p class="testimonials-description">
-            来看看大家都在讨论什么
-          </p>
+          <p class="testimonials-description">来看看大家都在讨论什么</p>
         </div>
 
-        <div v-if="isLoadingPosts" class="loading-indicator">
-          加载中...
-        </div>
+        <div v-if="isLoadingPosts" class="loading-indicator">加载中...</div>
         <div v-else-if="postsError" class="error-message">
           {{ postsError }}
         </div>
         <div v-else class="testimonials-grid">
-          <div 
-            v-for="post in displayedPosts" 
-            :key="post.postId" 
-            class="testimonial-card" 
+          <div
+            v-for="post in displayedPosts"
+            :key="post.postId"
+            class="testimonial-card"
             @click="$router.push(`/forum/${post.postId}`)"
           >
             <div class="testimonial-header">
-              <img :src="post.author.attributes.avatarUrl" :alt="post.author.attributes.userName" class="testimonial-image" />
+              <img
+                :src="post.author.attributes.avatarUrl"
+                :alt="post.author.attributes.userName"
+                class="testimonial-image"
+              />
               <div class="testimonial-meta">
-                <div class="testimonial-name">{{ post.title }}</div>
-                <div class="testimonial-role">{{ post.author.attributes.userName }}</div>
+                <div class="testimonial-name">
+                  {{ post.title }}
+                </div>
+                <div class="testimonial-role">
+                  {{ post.author.attributes.userName }}
+                </div>
               </div>
             </div>
-            <p class="testimonial-quote">{{ post.title }}</p>
+            <p class="testimonial-quote">
+              {{ post.title }}
+            </p>
             <div class="post-meta">
               <span class="post-comments">{{ post.commentsCount }} 评论</span>
               <span class="post-date">{{ formatDate(post.createdAt) }}</span>
@@ -73,10 +83,10 @@
         </div>
       </div>
     </div>
-    
+
     <div class="testimonials-background">
-      <div class="bg-circle bg-circle-1"></div>
-      <div class="bg-circle bg-circle-2"></div>
+      <div class="bg-circle bg-circle-1" />
+      <div class="bg-circle bg-circle-2" />
     </div>
   </div>
 </template>
@@ -107,7 +117,7 @@ const displayedArticles = computed(() => {
   if (popularArticles.value.length <= itemsToShow) {
     return popularArticles.value
   }
-  
+
   const result = []
   for (let i = 0; i < itemsToShow; i++) {
     const index = (articleStartIndex.value + i) % popularArticles.value.length
@@ -120,7 +130,7 @@ const displayedPosts = computed(() => {
   if (popularPosts.value.length <= itemsToShow) {
     return popularPosts.value
   }
-  
+
   const result = []
   for (let i = 0; i < itemsToShow; i++) {
     const index = (postStartIndex.value + i) % popularPosts.value.length
@@ -132,11 +142,13 @@ const displayedPosts = computed(() => {
 // Rotate displayed items
 const rotateItems = () => {
   if (popularArticles.value.length > itemsToShow) {
-    articleStartIndex.value = (articleStartIndex.value + 1) % popularArticles.value.length
+    articleStartIndex.value =
+      (articleStartIndex.value + 1) % popularArticles.value.length
   }
-  
+
   if (popularPosts.value.length > itemsToShow) {
-    postStartIndex.value = (postStartIndex.value + 1) % popularPosts.value.length
+    postStartIndex.value =
+      (postStartIndex.value + 1) % popularPosts.value.length
   }
 }
 
@@ -155,14 +167,14 @@ const stopRotation = () => {
 }
 
 // Format article link
-const formatArticleLink = (articlePath) => {
+const formatArticleLink = articlePath => {
   // Replace backslashes with forward slashes, remove first two path segments, add /articles prefix
   const formatted = '/articles/' + articlePath.split('\\').slice(2).join('/')
   return formatted
 }
 
 // Format date
-const formatDate = (dateString) => {
+const formatDate = dateString => {
   const date = new Date(dateString)
   return date.toLocaleDateString('zh-CN')
 }
@@ -196,9 +208,12 @@ onMounted(async () => {
   } finally {
     isLoadingPosts.value = false
   }
-  
+
   // Start auto rotation if we have more than 3 items
-  if (popularArticles.value.length > itemsToShow || popularPosts.value.length > itemsToShow) {
+  if (
+    popularArticles.value.length > itemsToShow ||
+    popularPosts.value.length > itemsToShow
+  ) {
     startRotation()
   }
 })
@@ -260,8 +275,12 @@ onUnmounted(() => {
   border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   cursor: pointer;
   height: 100%;
   display: flex;
@@ -270,7 +289,9 @@ onUnmounted(() => {
 
 .testimonial-card:hover {
   transform: translateY(-0.25rem);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .testimonial-header {
@@ -360,7 +381,8 @@ onUnmounted(() => {
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0);
   }
   50% {
@@ -369,7 +391,8 @@ onUnmounted(() => {
 }
 
 @keyframes float-alt {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0);
   }
   50% {
@@ -381,7 +404,7 @@ onUnmounted(() => {
   .testimonials-section {
     padding-bottom: 4rem;
   }
-  
+
   .testimonials-title {
     font-size: 2.5rem;
   }
@@ -393,4 +416,3 @@ onUnmounted(() => {
   }
 }
 </style>
-

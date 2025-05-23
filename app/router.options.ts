@@ -6,10 +6,9 @@ export default {
       return {
         el: to.hash,
         top: 80, // 保持 20px 的间距
-        behavior: "smooth"
-      };
+        behavior: 'smooth',
+      }
     }
-    return { top: 0 };
-  }
-
+    return { top: 0 }
+  },
 } satisfies RouterConfig

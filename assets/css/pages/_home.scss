@@ -1,0 +1,32 @@
+// =================================
+// Home Page Styles
+// =================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// Global font and base styles for home page
+html,
+body {
+  font-family: $font-family-base;
+  margin: 0;
+  padding: 0;
+  color: var(--text-color);
+  scroll-behavior: smooth;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// Screen reader only utility
+.sr-only {
+  @include sr-only;
+}
+
+// Container utility (currently commented out in original)
+// .container {
+//   @include container;
+// }

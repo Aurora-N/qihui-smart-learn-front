@@ -1,42 +1,59 @@
 <template>
   <div class="search-container">
-    <button class="mobile-search-button" @click="openSearch" aria-label="Search">
+    <button
+      class="mobile-search-button"
+      aria-label="Search"
+      @click="openSearch"
+    >
       <IconsSearch class="search-icon" />
     </button>
 
     <Teleport to="body">
-      <div class="search-modal" :class="{ 'active': isSearchOpen }">
-        <div class="search-overlay" @click="closeSearch"></div>
+      <div class="search-modal" :class="{ active: isSearchOpen }">
+        <div class="search-overlay" @click="closeSearch" />
         <div class="search-content">
           <div class="search-header">
             <h2>搜索</h2>
             <button class="close-button" @click="closeSearch">
-              <IconsClose style="width: 1.5rem; height: 1.5rem;" />
+              <IconsClose style="width: 1.5rem; height: 1.5rem" />
             </button>
           </div>
 
           <div class="search-input-container">
             <IconsSearch class="search-input-icon" />
-            <input type="text" class="search-input" placeholder="输入关键词搜索..." v-model="searchQuery" ref="searchInputRef"
-              @keyup.esc="closeSearch" @keydown="handleKeyDown" />
+            <input
+              ref="searchInputRef"
+              v-model="searchQuery"
+              type="text"
+              class="search-input"
+              placeholder="输入关键词搜索..."
+              @keyup.esc="closeSearch"
+              @keydown="handleKeyDown"
+            />
           </div>
 
-          <div class="search-results" v-if="searchResults.length > 0">
+          <div v-if="searchResults.length > 0" class="search-results">
             <div class="results-header">
               <h3>搜索结果 ({{ searchResults.length }})</h3>
             </div>
             <div class="results-list">
-              <div v-for="(result, index) in searchResults" :key="index" class="result-item"
-                @click="navigateToResult(result)">
-                <div class="result-title">{{ result.title || '未命名文章' }}</div>
-                <div class="result-excerpt" v-if="result.content">
+              <div
+                v-for="(result, index) in searchResults"
+                :key="index"
+                class="result-item"
+                @click="navigateToResult(result)"
+              >
+                <div class="result-title">
+                  {{ result.title || '未命名文章' }}
+                </div>
+                <div v-if="result.content" class="result-excerpt">
                   {{ truncateContent(result.content, 150) }}
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="no-results" v-else-if="hasSearched && searchQuery.trim()">
+          <div v-else-if="hasSearched && searchQuery.trim()" class="no-results">
             <p>没有找到与 "{{ searchQuery }}" 相关的内容</p>
           </div>
         </div>
@@ -46,54 +63,54 @@
 </template>
 
 <script setup>
-const router = useRouter();
-const emit = defineEmits(['search']);
+const router = useRouter()
+const emit = defineEmits(['search'])
 
-const isSearchOpen = ref(false);
-const searchQuery = ref('');
-const searchInputRef = ref(null);
-const searchResults = ref([]);
-const hasSearched = ref(false);
+const isSearchOpen = ref(false)
+const searchQuery = ref('')
+const searchInputRef = ref(null)
+const searchResults = ref([])
+const hasSearched = ref(false)
 
 const openSearch = () => {
-  isSearchOpen.value = true;
-  document.body.style.overflow = 'hidden';
+  isSearchOpen.value = true
+  document.body.style.overflow = 'hidden'
 
   nextTick(() => {
-    searchInputRef.value?.focus();
-  });
-};
+    searchInputRef.value?.focus()
+  })
+}
 
 const closeSearch = () => {
-  isSearchOpen.value = false;
-  document.body.style.overflow = '';
+  isSearchOpen.value = false
+  document.body.style.overflow = ''
 
   if (searchQuery.value.trim()) {
-    emit('search', searchQuery.value);
+    emit('search', searchQuery.value)
   }
 
-  searchQuery.value = '';
-  searchResults.value = [];
-  hasSearched.value = false;
-};
+  searchQuery.value = ''
+  searchResults.value = []
+  hasSearched.value = false
+}
 
 // 如果按下esc键，关闭
-watch(isSearchOpen, (newValue) => {
+watch(isSearchOpen, newValue => {
   if (newValue) {
-    window.addEventListener('keydown', handleEscapeKey);
+    window.addEventListener('keydown', handleEscapeKey)
   } else {
-    window.removeEventListener('keydown', handleEscapeKey);
+    window.removeEventListener('keydown', handleEscapeKey)
   }
-});
+})
 
-const handleEscapeKey = (e) => {
+const handleEscapeKey = e => {
   if (e.key === 'Escape') {
-    closeSearch();
+    closeSearch()
   }
-};
+}
 
 // 可搜索的片段
-const searchSections = ref([]);
+const searchSections = ref([])
 
 // 初始化可搜索的片段
 const initSearchSections = async () => {
@@ -102,80 +119,78 @@ const initSearchSections = async () => {
       ignoredTags: ['code'],
     })
   })
-  searchSections.value = sections.value;
-};
+  searchSections.value = sections.value
+}
 
 // 处理搜索
-const handleSearch = async (target) => {
+const handleSearch = async target => {
   if (!target || !target.trim()) {
-    searchResults.value = [];
-    hasSearched.value = true;
-    return;
+    searchResults.value = []
+    hasSearched.value = true
+    return
   }
 
   if (!searchSections.value || searchSections.value.length === 0) {
-    await initSearchSections();
+    await initSearchSections()
   }
 
   if (!searchSections.value) {
-    searchResults.value = [];
-    hasSearched.value = true;
-    return;
+    searchResults.value = []
+    hasSearched.value = true
+    return
   }
 
-  const query = target.trim().toLowerCase();
-  const results = searchSections.value.filter((item) => {
+  const query = target.trim().toLowerCase()
+  const results = searchSections.value.filter(item => {
     return (
       item.level === 1 &&
-      (item.content && item.content.toLowerCase().includes(query) ||
-        item.title && item.title.toLowerCase().includes(query))
-    );
-  });
+      ((item.content && item.content.toLowerCase().includes(query)) ||
+        (item.title && item.title.toLowerCase().includes(query)))
+    )
+  })
 
-  searchResults.value = results;
-  hasSearched.value = true;
-};
+  searchResults.value = results
+  hasSearched.value = true
+}
 
 // 截断内容
 const truncateContent = (content, maxLength) => {
-  if (!content) return '';
-  if (content.length <= maxLength) return content;
-  return content.substring(0, maxLength) + '...';
-};
+  if (!content) return ''
+  if (content.length <= maxLength) return content
+  return content.substring(0, maxLength) + '...'
+}
 
 // 导航到搜索结果页面
-const navigateToResult = async (result) => {
-  if (!result) return;
-  const targetTitle = result.title;
+const navigateToResult = async result => {
+  if (!result) return
+  const targetTitle = result.title
   const { data: foundItemByTitle, error: errorSpecific } = await useAsyncData(
     `content-by-title-${targetTitle}`,
-    () => queryCollection('content')
-      .where('title', '=', targetTitle)
-      .first()
-  );
+    () => queryCollection('content').where('title', '=', targetTitle).first()
+  )
   if (errorSpecific.value) {
-    ElMessage({ type: 'error', message: errorSpecific.value, plain: true });
-    return;
+    ElMessage({ type: 'error', message: errorSpecific.value, plain: true })
+    return
   }
-  router.push(`/articles/${foundItemByTitle.value.stem}`);
-  closeSearch();
-};
+  router.push(`/articles/${foundItemByTitle.value.stem}`)
+  closeSearch()
+}
 
-const debounceTimer = ref(null);
+const debounceTimer = ref(null)
 
 // 处理输入框键盘事件
-const handleKeyDown = (e) => {
+const handleKeyDown = e => {
   // 清除前一个定时器
-  clearTimeout(debounceTimer.value);
+  clearTimeout(debounceTimer.value)
   // 设置新的定时器
   debounceTimer.value = setTimeout(async () => {
-    await handleSearch(searchQuery.value);
-  }, 500); // 500 毫秒后触发搜索
-};
+    await handleSearch(searchQuery.value)
+  }, 500) // 500 毫秒后触发搜索
+}
 
 onMounted(async () => {
-  await initSearchSections();
-});
+  await initSearchSections()
+})
 </script>
 
 <style scoped>
@@ -215,7 +230,9 @@ onMounted(async () => {
   align-items: flex-start;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
 }
 
 .search-modal.active {
@@ -306,7 +323,9 @@ onMounted(async () => {
   border-radius: 8px;
   font-size: 16px;
   outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
   background: var(--color-background);
 }
 

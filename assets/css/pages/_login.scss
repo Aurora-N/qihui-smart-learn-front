@@ -1,0 +1,199 @@
+// =================================
+// Login & Signup Page Styles
+// =================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+@use '../abstracts/functions' as *;
+
+// Page layouts
+.login,
+.signup {
+  height: 100vh;
+  padding: $spacing-md;
+  @include flex-center;
+}
+
+.login {
+  background-color: #badef0;
+}
+
+.signup {
+  background-color: #bddce9;
+}
+
+// Login container and card
+.login-container {
+  @include flex-center;
+  width: 80vw;
+  height: 80vh;
+}
+
+.login-card {
+  background-color: var(--color-background-blur);
+  border-color: var(--color-border);
+  width: 100%;
+  max-width: rem(460);
+}
+
+// Background container
+.bg-container {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+
+  .background {
+    height: 90vh;
+  }
+}
+
+// Element UI deep selectors (for Vue component styling)
+:deep(.el-card) {
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-md;
+}
+
+// Header section
+.header {
+  @include flex-between;
+  margin-bottom: $spacing-lg;
+
+  .header-left {
+    display: flex;
+    gap: $spacing-md;
+    align-items: center;
+  }
+
+  .logo {
+    width: $spacing-3xl;
+    height: $spacing-3xl;
+  }
+
+  h1 {
+    color: var(--color-text);
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+  }
+
+  .close-btn {
+    border-color: #e5e7eb;
+    height: $spacing-xl;
+
+    &:hover {
+      background-color: #f9fafb;
+    }
+  }
+}
+
+// Form inputs styling
+:deep(.el-input) {
+  margin-bottom: $spacing-md;
+
+  .el-input__wrapper {
+    padding: rem(12) $spacing-md;
+    background: var(--color-background);
+
+    &:hover {
+      background: var(--color-background-hover);
+    }
+  }
+
+  .el-input__inner {
+    color: var(--color-text);
+  }
+}
+
+.input-bar {
+  height: $input-height;
+}
+
+// Submit button
+.submit-btn {
+  @include button-base;
+  @include button-size($btn-height, $btn-padding-x, $font-size-md);
+  width: 100%;
+  margin-bottom: $spacing-md;
+  background-color: var(--main-color);
+  border-color: var(--main-color);
+
+  &:hover {
+    background-color: var(--main-color-hover-lighter);
+    border-color: var(--main-color-hover-lighter);
+  }
+}
+
+// Divider section
+.divider {
+  @include flex-center;
+  margin: $spacing-sm 0 $spacing-lg 0;
+  color: var(--color-text-2);
+  font-size: $font-size-sm;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-devider);
+  }
+
+  span {
+    padding: 0 $spacing-md;
+  }
+}
+
+// Other authentication buttons
+.other-btn {
+  @include button-base;
+  @include button-size($btn-height, $btn-padding-x, $font-size-md);
+  width: 100%;
+  margin-bottom: $spacing-md;
+  font-weight: $font-weight-normal;
+  color: var(--color-text);
+  background: var(--color-background);
+  border-color: var(--color-border);
+
+  &:hover {
+    background-color: var(--color-background-hover);
+  }
+}
+
+.social-icon {
+  width: rem(20);
+  height: rem(20);
+  margin-right: rem(12);
+}
+
+// Terms and conditions
+.terms {
+  text-align: center;
+  font-size: $font-size-sm;
+  color: var(--color-text-2);
+  line-height: $line-height-normal;
+
+  a {
+    color: var(--main-color);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Responsive design
+@include respond-below(rem(1350)) {
+  .login-card {
+    position: absolute;
+    left: auto;
+    right: auto;
+    background-color: var(--color-background-blur);
+    border-color: var(--color-border);
+    width: 100%;
+    max-width: rem(460);
+  }
+
+  .background {
+    display: none;
+  }
+}

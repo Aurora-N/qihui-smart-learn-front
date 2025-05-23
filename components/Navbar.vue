@@ -1,5 +1,12 @@
 <script setup>
-import { ChevronDown as ChevronDownIcon, Settings as SettingsIcon, Menu as MenuIcon, X as XIcon, Sun as LightIcon, Moon as DarkIcon } from 'lucide-vue-next'
+import {
+  ChevronDown as ChevronDownIcon,
+  Settings as SettingsIcon,
+  Menu as MenuIcon,
+  X as XIcon,
+  Sun as LightIcon,
+  Moon as DarkIcon,
+} from 'lucide-vue-next'
 import ThemeToggle from './ThemeToggle.vue'
 
 const isMobileMenuOpen = ref(false)
@@ -7,17 +14,17 @@ const userStore = useUserStore()
 const router = useRouter()
 
 const toggleMobileMenu = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
   if (isMobileMenuOpen.value) {
-    document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+    document.body.style.overflow = 'hidden' // Prevent scrolling when menu is open
   } else {
-    document.body.style.overflow = ''; // Restore scrolling
+    document.body.style.overflow = '' // Restore scrolling
   }
 }
 
-const routerTo = (path) => {
-  if (isMobileMenuOpen.value) toggleMobileMenu();
-  router.push(path);
+const routerTo = path => {
+  if (isMobileMenuOpen.value) toggleMobileMenu()
+  router.push(path)
 }
 
 const logout = () => {
@@ -29,8 +36,8 @@ const props = defineProps({
   title: String,
   transparent: {
     type: Boolean,
-    default: true
-  }
+    default: true,
+  },
 })
 
 const activeItem = ref('')
@@ -40,8 +47,11 @@ const activeItem = ref('')
   <!-- Navigation Bar -->
   <nav class="navbar" :class="{ 'navbar-transparent': transparent }">
     <div class="navbar-head" @click="$router.push('/')">
-      <img class="logo" :src="`/logo_${useColorMode().preference === 'system' ? 'light' : useColorMode().preference}.png`"
-      alt="OurLogo" />
+      <img
+        class="logo"
+        :src="`/logo_${useColorMode().preference === 'system' ? 'light' : useColorMode().preference}.png`"
+        alt="OurLogo"
+      />
       启慧智学
     </div>
 
@@ -66,21 +76,33 @@ const activeItem = ref('')
           <IconsAbout class="nav-icon" />关于
         </NuxtLink>
       </div>
-      <div v-else class="navbar-title">{{ props.title }}</div>
+      <div v-else class="navbar-title">
+        {{ props.title }}
+      </div>
     </div>
 
     <div class="nav-right">
       <SearchModal class="nav-button" />
       <ThemeToggle class="nav-button" />
       <div class="desktop-controls">
-        <div class="user" v-if="userStore.userInfo.data">
+        <div v-if="userStore.userInfo.data" class="user">
           <el-dropdown class="dropdown">
-            <NuxtLink :to="`/user/${userStore.userInfo.data.userId}`" class="avatar-link">
-              <el-avatar :size="35" :src="userStore.userInfo.data.avatar" class="avatar"></el-avatar>
+            <NuxtLink
+              :to="`/user/${userStore.userInfo.data.userId}`"
+              class="avatar-link"
+            >
+              <el-avatar
+                :size="35"
+                :src="userStore.userInfo.data.avatar"
+                class="avatar"
+              />
             </NuxtLink>
             <template #dropdown>
               <el-dropdown-menu class="dropdown-menu">
-                <el-dropdown-item class="dropdown-item" @click="$router.push('/user/settings/profile')">
+                <el-dropdown-item
+                  class="dropdown-item"
+                  @click="$router.push('/user/settings/profile')"
+                >
                   <IconsSettings />账号配置
                 </el-dropdown-item>
                 <el-dropdown-item class="dropdown-item" @click="logout">
@@ -90,7 +112,7 @@ const activeItem = ref('')
             </template>
           </el-dropdown>
         </div>
-        <div class="user" v-else>
+        <div v-else class="user">
           <NuxtLink to="/signup" class="nav-button">注册</NuxtLink>
           <NuxtLink to="/login" class="login-button">登录</NuxtLink>
         </div>
@@ -103,8 +125,12 @@ const activeItem = ref('')
   </nav>
 
   <!-- 移动端侧边栏 -->
-  <div class="mobile-menu-overlay" :class="{ 'active': isMobileMenuOpen }" @click="toggleMobileMenu"></div>
-  <div class="mobile-menu" :class="{ 'active': isMobileMenuOpen }">
+  <div
+    class="mobile-menu-overlay"
+    :class="{ active: isMobileMenuOpen }"
+    @click="toggleMobileMenu"
+  />
+  <div class="mobile-menu" :class="{ active: isMobileMenuOpen }">
     <div class="mobile-menu-header">
       <!-- <a href="/" class="logo">LOGO</a> -->
       <button class="close-menu-button" @click="toggleMobileMenu">
@@ -114,27 +140,27 @@ const activeItem = ref('')
 
     <div class="mobile-menu-content">
       <div class="mobile-nav-links">
-        <div @click="routerTo('/')" class="mobile-nav-button">
+        <div class="mobile-nav-button" @click="routerTo('/')">
           <IconsHome class="nav-icon" />首页
         </div>
-        <div @click="routerTo('/learn')" class="mobile-nav-button">
+        <div class="mobile-nav-button" @click="routerTo('/learn')">
           <IconsLearn class="nav-icon" />学习方向
         </div>
-        <div @click="routerTo('/articles')" class="mobile-nav-button">
+        <div class="mobile-nav-button" @click="routerTo('/articles')">
           <IconsArticle class="nav-icon" />文章
         </div>
-        <div @click="routerTo('/chat')" class="mobile-nav-button">
+        <div class="mobile-nav-button" @click="routerTo('/chat')">
           <IconsChat class="nav-icon" />在线答疑
         </div>
-        <div @click="routerTo('/forum')" class="mobile-nav-button">
+        <div class="mobile-nav-button" @click="routerTo('/forum')">
           <IconsForum class="nav-icon" />论坛
         </div>
-        <div @click="routerTo('/about')" class="mobile-nav-button">
+        <div class="mobile-nav-button" @click="routerTo('/about')">
           <IconsAbout class="nav-icon" />关于
         </div>
       </div>
 
-      <div class="mobile-menu-divider"></div>
+      <div class="mobile-menu-divider" />
 
       <!-- <div class="mobile-menu-divider"></div> -->
 
@@ -143,15 +169,29 @@ const activeItem = ref('')
         <div class="mobile-section-title">用户</div>
         <template v-if="userStore.userInfo.data">
           <div class="mobile-user-info">
-            <div @click="routerTo(`/user/${userStore.userInfo.data.userId}`)" class="mobile-user-profile">
-              <el-avatar :size="50" :src="userStore.userInfo.data.avatar" class="mobile-avatar"></el-avatar>
+            <div
+              class="mobile-user-profile"
+              @click="routerTo(`/user/${userStore.userInfo.data.userId}`)"
+            >
+              <el-avatar
+                :size="50"
+                :src="userStore.userInfo.data.avatar"
+                class="mobile-avatar"
+              />
               <div class="mobile-user-details">
-                <div class="mobile-username">{{ userStore.userInfo.data.userName }}</div>
-                <div class="mobile-user-description">{{ userStore.userInfo.data.selfDescription }}</div>
+                <div class="mobile-username">
+                  {{ userStore.userInfo.data.userName }}
+                </div>
+                <div class="mobile-user-description">
+                  {{ userStore.userInfo.data.selfDescription }}
+                </div>
               </div>
             </div>
             <div class="mobile-auth-buttons">
-              <button class="mobile-settings-button" @click="routerTo('/user/settings/profile')">
+              <button
+                class="mobile-settings-button"
+                @click="routerTo('/user/settings/profile')"
+              >
                 <IconsSettings />
                 <span>设置</span>
               </button>
@@ -160,13 +200,16 @@ const activeItem = ref('')
                 <span>退出</span>
               </button>
             </div>
-
           </div>
         </template>
         <template v-else>
           <div class="mobile-auth-buttons">
-            <div @click="routerTo('/login')" class="mobile-login-button">登录</div>
-            <div @click="routerTo('/signup')" class="mobile-signup-button">注册</div>
+            <div class="mobile-login-button" @click="routerTo('/login')">
+              登录
+            </div>
+            <div class="mobile-signup-button" @click="routerTo('/signup')">
+              注册
+            </div>
           </div>
         </template>
       </div>
@@ -264,7 +307,8 @@ const activeItem = ref('')
   border-radius: 0.375rem;
 }
 
-.nav-button .nav-icon, .mobile-nav-button .nav-icon {
+.nav-button .nav-icon,
+.mobile-nav-button .nav-icon {
   height: 1.1rem;
   width: 1.1rem;
 }
@@ -336,7 +380,9 @@ const activeItem = ref('')
   z-index: 60;
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
   overflow: auto;
 }
 

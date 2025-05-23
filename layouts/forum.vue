@@ -1,5 +1,5 @@
 <script setup>
-import { useForumApi } from '~/api/forum';
+import { useForumApi } from '~/api/forum'
 
 const router = useRouter()
 const route = useRoute()
@@ -15,22 +15,20 @@ const closeMobileMenu = () => {
 }
 
 const selectedNav = computed(() => {
-  const nav = route.path.split("/").pop();
+  const nav = route.path.split('/').pop()
   return nav !== 'forum' ? nav : 'all'
-});
+})
 
-const switchToNav = (item) => {
+const switchToNav = item => {
   selectedNav.value = item
-  if (item !== 'all')
-    router.push(`/forum/${item}`)
-  else
-    router.push(`/forum`)
+  if (item !== 'all') router.push(`/forum/${item}`)
+  else router.push(`/forum`)
 }
 
 const bannerConfig = ref({
   title: '启慧论坛',
   subTitle: '来一场思想上的碰撞',
-  hueColor: '250'
+  hueColor: '250',
 })
 
 const tags = ref([])
@@ -42,22 +40,29 @@ const getAllTags = async () => {
 
 onMounted(() => getAllTags())
 
-provide("bannerConfig", bannerConfig)
+provide('bannerConfig', bannerConfig)
 </script>
 
 <template>
   <NuxtLayout name="default">
     <div class="container">
       <!-- Welcome Banner -->
-      <ForumBanner :title="bannerConfig.title" :sub-title="bannerConfig.subTitle" :hue="bannerConfig.hueColor">
-      </ForumBanner>
+      <ForumBanner
+        :title="bannerConfig.title"
+        :sub-title="bannerConfig.subTitle"
+        :hue="bannerConfig.hueColor"
+      />
 
       <!-- 内容区域 -->
       <div class="forum-content">
         <div class="main-forum-container">
           <!-- Mobile Menu Toggle Button -->
           <div class="mobile-menu-toggle">
-            <button class="toggle-menu-button" @click="toggleMobileMenu" :style="{ '--hue': bannerConfig?.hueColor }">
+            <button
+              class="toggle-menu-button"
+              :style="{ '--hue': bannerConfig?.hueColor }"
+              @click="toggleMobileMenu"
+            >
               <el-icon>
                 <Menu />
               </el-icon>
@@ -68,26 +73,49 @@ provide("bannerConfig", bannerConfig)
           <!-- Mobile Menu (between banner and content) -->
           <Transition name="slide-down">
             <div v-if="isMobileMenuOpen" class="mobile-menu">
-              <button class="publish-button mobile-publish" @click="$router.push('/newpost')"
-                :style="{ '--hue': bannerConfig?.hueColor }">发布主题</button>
+              <button
+                class="publish-button mobile-publish"
+                :style="{ '--hue': bannerConfig?.hueColor }"
+                @click="$router.push('/newpost')"
+              >
+                发布主题
+              </button>
 
               <div class="mobile-nav-items">
-                <div class="nav-item" :class="{ active: selectedNav === 'all' }"
-                  @click="switchToNav('all'); closeMobileMenu()">
+                <div
+                  class="nav-item"
+                  :class="{ active: selectedNav === 'all' }"
+                  @click="
+                    switchToNav('all')
+                    closeMobileMenu()
+                  "
+                >
                   <el-icon>
                     <ChatDotRound />
                   </el-icon>
                   <span>全部主题</span>
                 </div>
-                <div class="nav-item" :class="{ active: selectedNav === 'favorite' }"
-                  @click="switchToNav('favorite'); closeMobileMenu()">
+                <div
+                  class="nav-item"
+                  :class="{ active: selectedNav === 'favorite' }"
+                  @click="
+                    switchToNav('favorite')
+                    closeMobileMenu()
+                  "
+                >
                   <el-icon>
                     <Star />
                   </el-icon>
                   <span>我的收藏</span>
                 </div>
-                <div class="nav-item" :class="{ active: selectedNav === 'tags' }"
-                  @click="switchToNav('tags'); closeMobileMenu()">
+                <div
+                  class="nav-item"
+                  :class="{ active: selectedNav === 'tags' }"
+                  @click="
+                    switchToNav('tags')
+                    closeMobileMenu()
+                  "
+                >
                   <el-icon>
                     <Menu />
                   </el-icon>
@@ -96,9 +124,17 @@ provide("bannerConfig", bannerConfig)
 
                 <!-- 标签（如前端/后端/C++等） -->
                 <div class="mobile-tags-container">
-                  <div class="nav-item-tag" v-for="tag of tags" :key="tag.tagId"
-                    :class="{ 'active-tag': selectedNav === tag.tagId }" :style="{ '--hue': tag.hueColor }"
-                    @click="switchToNav(`tags/${tag.tagId}`); closeMobileMenu()">
+                  <div
+                    v-for="tag of tags"
+                    :key="tag.tagId"
+                    class="nav-item-tag"
+                    :class="{ 'active-tag': selectedNav === tag.tagId }"
+                    :style="{ '--hue': tag.hueColor }"
+                    @click="
+                      switchToNav(`tags/${tag.tagId}`)
+                      closeMobileMenu()
+                    "
+                  >
                     <el-icon>
                       <CollectionTag />
                     </el-icon>
@@ -111,32 +147,54 @@ provide("bannerConfig", bannerConfig)
 
           <!-- Desktop Sidebar -->
           <div class="sidebar desktop-sidebar">
-            <button class="publish-button" @click="$router.push('/newpost')"
-              :style="{ '--hue': bannerConfig?.hueColor }">发布主题</button>
+            <button
+              class="publish-button"
+              :style="{ '--hue': bannerConfig?.hueColor }"
+              @click="$router.push('/newpost')"
+            >
+              发布主题
+            </button>
             <Sidebar class="sidebar" height="auto">
-              <div class="nav-item" :class="{ active: selectedNav === 'all' }" @click="switchToNav('all')">
+              <div
+                class="nav-item"
+                :class="{ active: selectedNav === 'all' }"
+                @click="switchToNav('all')"
+              >
                 <el-icon>
                   <ChatDotRound />
                 </el-icon>
                 <span>全部主题</span>
               </div>
-              <div class="nav-item" :class="{ active: selectedNav === 'favorite' }" @click="switchToNav('favorite')">
+              <div
+                class="nav-item"
+                :class="{ active: selectedNav === 'favorite' }"
+                @click="switchToNav('favorite')"
+              >
                 <el-icon>
                   <Star />
                 </el-icon>
                 <span>我的收藏</span>
               </div>
-              <div class="nav-item" :class="{ active: selectedNav === 'tags' }" @click="switchToNav('tags')">
+              <div
+                class="nav-item"
+                :class="{ active: selectedNav === 'tags' }"
+                @click="switchToNav('tags')"
+              >
                 <el-icon>
                   <Menu />
                 </el-icon>
                 <span>标签</span>
               </div>
-              <hr>
+              <hr />
               <!-- 标签（如前端/后端/C++等） -->
-              <div class="nav-item-tag" v-for="tag of tags" :key="tag.tagId"
-                :class="{ 'active-tag': selectedNav === tag.tagId }" :style="{ '--hue': tag.hueColor }"
-                @click="switchToNav(`tags/${tag.tagId}`)">
+              <div
+                v-for="tag of tags"
+                :key="tag.tagId"
+                class="nav-item-tag"
+                :class="{ 'active-tag': selectedNav === tag.tagId }"
+                :style="{ '--hue': tag.hueColor }"
+                @click="switchToNav(`tags/${tag.tagId}`)"
+              >
                 <el-icon>
                   <CollectionTag />
                 </el-icon>
@@ -267,7 +325,6 @@ provide("bannerConfig", bannerConfig)
   box-shadow: 0 0 5px oklch(0.52 0.21 var(--hue) / 0.5);
   /* rgba(0, 96, 223, 0.5) */
 }
-
 
 /* 移动端菜单样式 */
 .mobile-menu-toggle {

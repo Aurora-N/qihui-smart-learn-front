@@ -6,11 +6,14 @@ const toggleSidebar = () => {
 }
 
 // Close sidebar when clicking outside on mobile
-const closeSidebarOnOutsideClick = (event) => {
+const closeSidebarOnOutsideClick = event => {
   if (window.innerWidth <= 768 && isOpen.value) {
     const sidebar = document.querySelector('.mobile-sidebar-container')
-    if (sidebar && !sidebar.contains(event.target) &&
-      !event.target.classList.contains('toggle-sidebar-button')) {
+    if (
+      sidebar &&
+      !sidebar.contains(event.target) &&
+      !event.target.classList.contains('toggle-sidebar-button')
+    ) {
       isOpen.value = false
     }
   }

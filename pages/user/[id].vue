@@ -1,4 +1,15 @@
 <script setup>
+import {
+  Timer,
+  ChatDotRound,
+  Menu,
+  Star,
+  User,
+  Back,
+  MoreFilled,
+  DataAnalysis,
+  Plus,
+} from '@element-plus/icons-vue'
 import { useUserApi } from '~/api/user'
 import { useForumApi } from '~/api/forum'
 
@@ -9,105 +20,93 @@ const userApi = useUserApi()
 const forumApi = useForumApi()
 const userInfo = ref({
   userId: userId,
-  userName: "",
-  email: "",
-  avatar: "",
-  selfDescription: "",
-  registerDate: "",
+  userName: '',
+  email: '',
+  avatar: '',
+  selfDescription: '',
+  registerDate: '',
   counts: {
     reply: 0,
     topics: 0,
     follower: 0,
-    following: 0
-  }
+    following: 0,
+  },
 })
 
-const getUserProfile = async (userId) => {
+const getUserProfile = async userId => {
   const res = await userApi.getUserInfo(userId)
   userInfo.value = res.data
 
   // 动态更新标题
   useHead(() => ({
     title: userInfo.value.userName + '的主页',
-  }));
+  }))
 }
 
-import {
-  Timer,
-  ChatDotRound,
-  Menu,
-  Star,
-  User,
-  Back,
-  MoreFilled,
-  DataAnalysis,
-  Plus
-} from '@element-plus/icons-vue';
-
-const posts = ref([]);
-const isLoading = ref(false);
+const posts = ref([])
+const isLoading = ref(false)
 
 onMounted(async () => {
-  await getUserProfile(userId);
-  await fetchUserPosts();
+  await getUserProfile(userId)
+  await fetchUserPosts()
 })
 
 // 高亮导航索引
-const selectedNav = ref('posts');
+const selectedNav = ref('posts')
 
 // 监听导航变化，加载相应的内容
-watch(selectedNav, async (newValue) => {
-  isLoading.value = true;
-  posts.value = [];
-  
+watch(selectedNav, async newValue => {
+  isLoading.value = true
+  posts.value = []
+
   if (newValue === 'posts') {
-    await fetchUserPosts();
+    await fetchUserPosts()
   } else if (newValue === 'likes') {
-    await fetchUserFavorites();
+    await fetchUserFavorites()
   }
-  
-  isLoading.value = false;
-});
+
+  isLoading.value = false
+})
 
 // 获取用户发布的帖子
 const fetchUserPosts = async () => {
   try {
-    isLoading.value = true;
-    const res = await forumApi.getUserPostedList(userId);
-    posts.value = res.data.posts || [];
+    isLoading.value = true
+    const res = await forumApi.getUserPostedList(userId)
+    posts.value = res.data.posts || []
   } catch (error) {
     ElMessage({
       type: 'warning',
       message: '你还没有发表过任何帖子',
-      plain: true
-    });
+      plain: true,
+    })
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-};
+}
 
 // 获取用户收藏的帖子
 const fetchUserFavorites = async () => {
   try {
-    isLoading.value = true;
-    const res = await forumApi.getFavoritePostsList(userId);
-    posts.value = res.favorites || [];
+    isLoading.value = true
+    const res = await forumApi.getFavoritePostsList(userId)
+    posts.value = res.favorites || []
   } catch (error) {
-    console.error('获取用户收藏失败:', error);
+    console.error('获取用户收藏失败:', error)
     ElMessage({
       type: 'error',
       message: '获取收藏失败',
-      plain: true
-    });
+      plain: true,
+    })
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-};
+}
 
 // 跳转到帖子详情页
-const goToPost = (postId) => {
-  navigateTo(`/forum/${postId}`);
-};
+const goToPost = postId => {
+  navigateTo(`/forum/${postId}`)
+}
 </script>
 
 <template>
@@ -117,11 +116,13 @@ const goToPost = (postId) => {
       <div class="container">
         <div class="user-info">
           <div class="avatar-container">
-            <el-avatar :size="100" :src="userInfo.avatar"></el-avatar>
+            <el-avatar :size="100" :src="userInfo.avatar" />
           </div>
           <div class="user-details">
             <div class="username-container">
-              <h1 class="username">{{ userInfo.userName }}</h1>
+              <h1 class="username">
+                {{ userInfo.userName }}
+              </h1>
             </div>
             <div class="user-meta">
               <span class="meta-item">
@@ -136,9 +137,13 @@ const goToPost = (postId) => {
             </div>
           </div>
         </div>
-        <div class="actions" title="修改用户资料" @click="router.push('/user/settings/profile')">
+        <div
+          class="actions"
+          title="修改用户资料"
+          @click="router.push('/user/settings/profile')"
+        >
           <el-button type="primary" size="large" class="subscribe-btn">
-            <el-icon style="margin-right: 0.5rem;">
+            <el-icon style="margin-right: 0.5rem">
               <Setting />
             </el-icon>
             修改资料
@@ -159,14 +164,22 @@ const goToPost = (postId) => {
             <span>我的回复</span>
             <span class="count">{{ userInfo.counts.reply }}</span>
           </div> -->
-          <div class="nav-item" :class="{ active: selectedNav === 'posts' }" @click="selectedNav = 'posts'">
+          <div
+            class="nav-item"
+            :class="{ active: selectedNav === 'posts' }"
+            @click="selectedNav = 'posts'"
+          >
             <el-icon>
               <Menu />
             </el-icon>
             <span>我发布的帖子</span>
             <!-- <span class="count">{{ userInfo.counts.topics }}</span> -->
           </div>
-          <div class="nav-item" :class="{ active: selectedNav === 'likes' }" @click="selectedNav = 'likes'">
+          <div
+            class="nav-item"
+            :class="{ active: selectedNav === 'likes' }"
+            @click="selectedNav = 'likes'"
+          >
             <el-icon>
               <Star />
             </el-icon>
@@ -182,22 +195,27 @@ const goToPost = (postId) => {
 
         <!-- 右侧内容 -->
         <div class="main-content">
-          <el-skeleton :rows="5" animated v-if="isLoading" />
-          
-          <div class="empty-post" v-else-if="posts.length === 0">
+          <el-skeleton v-if="isLoading" :rows="5" animated />
+
+          <div v-else-if="posts.length === 0" class="empty-post">
             这里空空如也
           </div>
-          
-          <div class="post-list" v-else>
-            <div 
-              class="post-item" 
-              v-for="post in posts" 
+
+          <div v-else class="post-list">
+            <div
+              v-for="post in posts"
               :key="post.postId"
-              @click="goToPost(post.postId)">
-              <div class="post-title">{{ post.title }}</div>
+              class="post-item"
+              @click="goToPost(post.postId)"
+            >
+              <div class="post-title">
+                {{ post.title }}
+              </div>
               <div class="post-info">
                 <div class="post-meta">
-                  <span class="post-author">{{ post.author?.attributes?.userName || '未知用户' }}</span>
+                  <span class="post-author">{{
+                    post.author?.attributes?.userName || '未知用户'
+                  }}</span>
                   <span class="post-time">{{ post.createdAt }}</span>
                 </div>
                 <div class="post-stats">
@@ -365,7 +383,9 @@ const goToPost = (postId) => {
 
 .post-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border-color: var(--color-border-hover);
   background-color: var(--color-background-hover);
 }

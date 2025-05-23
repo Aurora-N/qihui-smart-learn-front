@@ -2,8 +2,8 @@
   <div class="container">
     <div class="banner">
       <div class="banner-content">
-        <div class="banner-title"></div>
-        <div class="banner-subtitle"></div>
+        <div class="banner-title" />
+        <div class="banner-subtitle" />
       </div>
     </div>
     <!-- 内容区域 -->
@@ -12,32 +12,32 @@
       <article class="main-content">
         <div class="comment-container">
           <div class="comment-left">
-            <div class="avatar"></div>
+            <div class="avatar" />
           </div>
           <div class="comment-right">
             <div class="comment-info">
-              <div class="author-name"></div>
-              <div class="comment-date"></div>
+              <div class="author-name" />
+              <div class="comment-date" />
             </div>
             <div v-for="i in 6" :key="i">
-              <div class="comment-content" style="width: 100%;"></div>
+              <div class="comment-content" style="width: 100%" />
             </div>
-            <div class="comment-content" style="width: 80%;"></div>
+            <div class="comment-content" style="width: 80%" />
           </div>
         </div>
 
         <div v-for="i in 4" :key="i">
           <div class="comment-container">
             <div class="comment-left">
-              <div class="avatar"></div>
+              <div class="avatar" />
             </div>
             <div class="comment-right">
               <div class="comment-info">
-                <div class="author-name"></div>
-                <div class="comment-date"></div>
+                <div class="author-name" />
+                <div class="comment-date" />
               </div>
-              <div class="comment-content" style="width: 100%;"></div>
-              <div class="comment-content" style="width: 80%;"></div>
+              <div class="comment-content" style="width: 100%" />
+              <div class="comment-content" style="width: 80%" />
             </div>
           </div>
         </div>
@@ -47,8 +47,8 @@
       <div>
         <aside class="sidebar">
           <!-- position: sticky的外面还需包裹一层div才能生效 -->
-          <div class="btn"></div>
-          <div class="btn"></div>
+          <div class="btn" />
+          <div class="btn" />
         </aside>
       </div>
     </div>
@@ -75,7 +75,7 @@
 }
 
 .light-mode .container {
-  --banner-color: oklch(.97 .01 250);
+  --banner-color: oklch(0.97 0.01 250);
   --title: #3741517a;
   --sub-title: #6b728070;
   --background-color-sidebar: #f8f8f8;
@@ -83,7 +83,7 @@
 }
 
 .dark-mode .container {
-  --banner-color: oklch(.20 .014 250);
+  --banner-color: oklch(0.2 0.014 250);
   --title: rgb(248, 250, 252);
   --sub-title: rgb(231, 236, 243);
   --background-color-sidebar: #454545;
@@ -166,7 +166,6 @@
   border-radius: 3px;
   animation: pulse 2s infinite;
 }
-
 
 .comment-container {
   display: flex;

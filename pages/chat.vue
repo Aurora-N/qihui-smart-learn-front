@@ -5,10 +5,10 @@ onMounted(() => {
   // script.async = true;
   // script.defer = true;
   // document.body.appendChild(script);
-});
+})
 
 useSeoMeta({
-  title: '计算机在线学习平台问答助手'
+  title: '计算机在线学习平台问答助手',
 })
 
 definePageMeta({
@@ -19,9 +19,12 @@ definePageMeta({
 <template>
   <Navbar :transparent="false" />
   <div class="container">
-    <iframe src="http://lsj.frp.one:39961/ui/chat/5bfb22ba0d4da3ed" style="width: 100%; height: 100%;" frameborder="0"
-      allow="microphone">
-    </iframe>
+    <iframe
+      src="http://lsj.frp.one:39961/ui/chat/5bfb22ba0d4da3ed"
+      style="width: 100%; height: 100%"
+      frameborder="0"
+      allow="microphone"
+    />
   </div>
 </template>
 

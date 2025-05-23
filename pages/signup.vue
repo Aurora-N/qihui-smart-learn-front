@@ -1,48 +1,84 @@
 <template>
   <div class="signup">
-  <div class="login-container">
-    <div class="bg-container">
+    <div class="login-container">
+      <div class="bg-container">
         <img class="background" src="/signup_bg.png" alt="login background" />
       </div>
 
-    <el-card class="login-card">
-      <div class="header">
-        <div class="header-left">
-            <img class="logo"
+      <el-card class="login-card">
+        <div class="header">
+          <div class="header-left">
+            <img
+              class="logo"
               :src="`/logo_${useColorMode().preference === 'system' ? useColorMode().preference : 'light'}.png`"
-              alt="OurLogo" />
+              alt="OurLogo"
+            />
             <h1>注册</h1>
           </div>
-        <el-button :icon="Close" circle class="close-btn" @click="$router.push('/')" />
-      </div>
+          <el-button
+            :icon="Close"
+            circle
+            class="close-btn"
+            @click="$router.push('/')"
+          />
+        </div>
 
-      <el-input v-model="userData.userName" placeholder="请输入用户名" size="large" class="input-bar" />
+        <el-input
+          v-model="userData.userName"
+          placeholder="请输入用户名"
+          size="large"
+          class="input-bar"
+        />
 
-      <el-input v-model="userData.email" placeholder="请输入用于登陆的邮箱" size="large" class="input-bar" />
+        <el-input
+          v-model="userData.email"
+          placeholder="请输入用于登陆的邮箱"
+          size="large"
+          class="input-bar"
+        />
 
-      <el-input v-model="userData.password" placeholder="请输入密码" size="large" class="input-bar" show-password />
+        <el-input
+          v-model="userData.password"
+          placeholder="请输入密码"
+          size="large"
+          class="input-bar"
+          show-password
+        />
 
-      <el-input v-model="passwordCheck" placeholder="请再次输入密码" size="large" class="input-bar" show-password />
+        <el-input
+          v-model="passwordCheck"
+          placeholder="请再次输入密码"
+          size="large"
+          class="input-bar"
+          show-password
+        />
 
-      <el-button type="primary" size="large" class="submit-btn" @click="signUp">
-        注册
-      </el-button>
-
-      <div>
-        <el-button class="other-btn" size="large" @click="$router.push('/login')">
-          已有账号，去登陆
+        <el-button
+          type="primary"
+          size="large"
+          class="submit-btn"
+          @click="signUp"
+        >
+          注册
         </el-button>
-      </div>
-    </el-card>
+
+        <div>
+          <el-button
+            class="other-btn"
+            size="large"
+            @click="$router.push('/login')"
+          >
+            已有账号，去登陆
+          </el-button>
+        </div>
+      </el-card>
+    </div>
   </div>
-</div>
 </template>
 
 <script setup>
-import {
-  Close
-} from '@element-plus/icons-vue'
-import { useUserStore } from '~/stores/userStore';
+import { Close } from '@element-plus/icons-vue'
+import { useUserStore } from '~/stores/userStore'
 
 const passwordCheck = ref('')
 
@@ -56,7 +92,7 @@ const userData = ref({
 const fieldLabels = {
   userName: '用户名',
   email: '邮箱',
-  password: '密码'
+  password: '密码',
 }
 
 const router = useRouter()
@@ -68,20 +104,20 @@ const validateFields = () => {
       ElMessage({
         type: 'warning',
         message: `请填写${fieldLabels[key]}`,
-        plain: true
+        plain: true,
       })
-      return false;
+      return false
     }
   }
   if (userData.value.password !== passwordCheck.value) {
     ElMessage({
-      type:'warning',
+      type: 'warning',
       message: '两次输入的密码不一致，请重新输入',
-      plain:true
+      plain: true,
     })
-    return false;
+    return false
   }
-  return true;
+  return true
 }
 
 const userStore = useUserStore()
@@ -96,11 +132,11 @@ const signUp = async () => {
 }
 
 definePageMeta({
-  layout: false
-});
+  layout: false,
+})
 
 useSeoMeta({
-  title: '注册新用户'
+  title: '注册新用户',
 })
 </script>
 

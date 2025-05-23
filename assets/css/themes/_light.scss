@@ -1,0 +1,95 @@
+// =================================
+// Light Theme Variables
+// =================================
+
+@use '../abstracts/variables' as *;
+
+.light-mode {
+  // Base Colors
+  --color-background: #{$white};
+  --color-background-soft: #{$white-soft};
+  --color-background-mute: #{$white-mute};
+  --color-background-blur: #{$white-blur};
+  --color-background-hover: #f5f5f5;
+  --color-background-nav-hover: rgb(248, 250, 252);
+  --color-background-quote: rgb(248, 250, 252);
+  --color-background-layer: #{$white};
+  --color-background-translucent: rgba(255, 255, 255, 0.8);
+
+  // Border Colors
+  --color-border: #{$divider-light-2};
+  --color-border-hover: #{$divider-light-2};
+  --color-border-quote: rgb(231, 236, 243);
+  --color-border-shadow: #8f8f8f7d;
+
+  // Text Colors
+  --color-heading: #{$text-light-1};
+  --color-text: #{$text-light-1};
+  --color-text-2: #{$text-light-2};
+  --color-meta-text: #6b7280;
+
+  // Divider
+  --color-devider: #{$divider-light-2};
+  --color-marker: #{$marker-light};
+
+  // Primary Colors for components
+  --primary-rgb: 59, 130, 246;
+  --primary-color: #{$color-primary};
+  --primary-hover: rgb(37, 99, 235);
+  --primary-foreground: #{$white};
+  --primary-foreground-rgb: 255, 255, 255;
+
+  // Secondary Colors
+  --secondary-rgb: 241, 245, 249;
+  --secondary-color: #e6effd;
+  --secondary-hover: rgb(226, 232, 240);
+  --secondary-foreground: #1e293b;
+
+  // Accent Colors
+  --accent-color: #f1f5f9;
+  --accent-hover: #e2e8f0;
+
+  // Link Colors
+  --link-color: #{$color-link};
+
+  // Knowledge Graph specific
+  --knowledge-graph-primary: #{$color-primary};
+  --knowledge-graph-primary-hover: #{$color-primary-hover-darker};
+  --knowledge-graph-background: #f8f9fa;
+  --knowledge-graph-card-bg: #{$white};
+  --knowledge-graph-text: #1f2937;
+  --knowledge-graph-border: var(--color-border);
+  --knowledge-graph-shadow: rgba(0, 0, 0, 0.1);
+  --knowledge-graph-sidebar-header: #f9fafb;
+  --knowledge-graph-sidebar-title: #333;
+  --knowledge-graph-sidebar-hover: #edf2fd;
+  --knowledge-graph-close-btn: #666;
+
+  // Additional semantic colors
+  --color-info: #17a2b8;
+  --color-info-light: #d1ecf1;
+  --color-info-dark: #0c5460;
+  --color-warning: #ffc107;
+  --color-warning-dark: #e0a800;
+  --color-primary-light: #e7f3ff;
+  --color-primary-dark: #004085;
+}
+
+// Tag Colors for Light Mode
+.light-mode {
+  .tag-card,
+  .nav-item-tag,
+  .tag-title {
+    --primary: oklch(0.7 0.14 var(--hue));
+    --page-bg: oklch(0.95 0.01 var(--hue));
+    --card-bg: white;
+    --btn-content: oklch(0.55 0.12 var(--hue));
+    --btn-regular-bg: oklch(0.95 0.025 var(--hue));
+    --btn-regular-bg-hover: oklch(0.9 0.05 var(--hue));
+    --btn-regular-bg-active: oklch(0.85 0.08 var(--hue));
+    --btn-plain-bg-hover: oklch(0.95 0.025 var(--hue));
+    --btn-plain-bg-active: oklch(0.98 0.01 var(--hue));
+    --btn-card-bg-hover: oklch(0.98 0.005 var(--hue));
+    --btn-card-bg-active: oklch(0.9 0.03 var(--hue));
+  }
+}

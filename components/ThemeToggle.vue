@@ -1,5 +1,10 @@
 <template>
-  <button class="theme-toggle" @click="toggleColorMode" :title="buttonTitle" aria-label="Toggle theme">
+  <button
+    class="theme-toggle"
+    :title="buttonTitle"
+    aria-label="Toggle theme"
+    @click="toggleColorMode"
+  >
     <SunIcon v-if="colorMode.value === 'dark'" class="icon" />
     <MoonIcon v-else class="icon" />
   </button>

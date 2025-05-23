@@ -1,0 +1,79 @@
+// =================================
+// Functions - Calculation Utilities
+// =================================
+
+// Convert px to rem
+@function rem($pixels, $base: 16px) {
+  @return ($pixels / $base) * 1rem;
+}
+
+// Convert px to em
+@function em($pixels, $base: 16px) {
+  @return ($pixels / $base) * 1em;
+}
+
+// Lighten color
+@function lighten-color($color, $percentage) {
+  @return lighten($color, $percentage);
+}
+
+// Darken color
+@function darken-color($color, $percentage) {
+  @return darken($color, $percentage);
+}
+
+// Alpha blend
+@function alpha($color, $opacity) {
+  @return rgba($color, $opacity);
+}
+
+// Get tag hue by index
+@function get-tag-hue($index) {
+  @if map-has-key($tag-hues, $index) {
+    @return map-get($tag-hues, $index);
+  }
+  @return 0; // Default hue
+}
+
+// Responsive font size calculation
+@function fluid-font-size(
+  $min-size,
+  $max-size,
+  $min-vw: 320px,
+  $max-vw: 1200px
+) {
+  @return calc(
+    #{$min-size} + #{($max-size - $min-size)} *
+      ((100vw - #{$min-vw}) / #{($max-vw - $min-vw)})
+  );
+}
+
+// Z-index management
+@function z($layer) {
+  $z-indexes: (
+    dropdown: $z-dropdown,
+    sticky: $z-sticky,
+    fixed: $z-fixed,
+    modal-backdrop: $z-modal-backdrop,
+    modal: $z-modal,
+    popover: $z-popover,
+    tooltip: $z-tooltip,
+  );
+
+  @if map-has-key($z-indexes, $layer) {
+    @return map-get($z-indexes, $layer);
+  }
+
+  @warn "Unknown z-index layer: #{$layer}";
+  @return 0;
+}
+
+// Generate spacing utility
+@function spacing($multiplier) {
+  @return $spacing-md * $multiplier;
+}
+
+// Clamp function for older browsers
+@function clamp-fallback($min, $val, $max) {
+  @return max($min, min($val, $max));
+}

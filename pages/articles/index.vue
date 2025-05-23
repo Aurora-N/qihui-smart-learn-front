@@ -1,40 +1,44 @@
 <script setup>
 import articleLinkLists from '~/assets/article_links.json'
-const FrontendIcon = resolveComponent('IconsFrontend');
-const BackendIcon = resolveComponent('IconsBackend');
+
+const FrontendIcon = resolveComponent('IconsFrontend')
+const BackendIcon = resolveComponent('IconsBackend')
 
 const articlesList = ref([
   {
     id: '前端',
     name: '前端',
     icon: FrontendIcon,
-    articles: articleLinkLists[0].links[1].links
+    articles: articleLinkLists[0].links[1].links,
   },
   {
     id: '后端',
     name: '后端',
     icon: BackendIcon,
-    articles: articleLinkLists[0].links[0].links
+    articles: articleLinkLists[0].links[0].links,
   },
 ])
 
 const currentCateIndex = ref(0)
 
 /* 选中分类相应模块 */
-const selectCategory = (id) => {
-  currentCateIndex.value = articlesList.value.findIndex(item => item.id === id);
+const selectCategory = id => {
+  currentCateIndex.value = articlesList.value.findIndex(item => item.id === id)
 }
 
 useSeoMeta({
-  title: () => `学习区文章——${articlesList.value[currentCateIndex.value].id}系列教程`
+  title: () =>
+    `学习区文章——${articlesList.value[currentCateIndex.value].id}系列教程`,
 })
 </script>
 
 <template>
   <div class="articles">
     <!-- Welcome Banner -->
-    <ForumBanner :title="`${articlesList[currentCateIndex].id}系列教程`" sub-title="浏览学习资源文章">
-    </ForumBanner>
+    <ForumBanner
+      :title="`${articlesList[currentCateIndex].id}系列教程`"
+      sub-title="浏览学习资源文章"
+    />
 
     <!-- 内容区域 -->
     <div class="article-content">
@@ -42,11 +46,20 @@ useSeoMeta({
         <!-- Sidebar -->
         <div class="sidebar">
           <div class="articles-category">
-            <h3 style="margin-top: 0; margin-bottom: 1rem;">文章分类</h3>
-            <el-menu default-active="0" class="articles-category-menu" @select="selectCategory">
-              <el-menu-item v-for="item of articlesList" :index="item.id" :key="item.id" class="articles-category-item">
+            <h3 style="margin-top: 0; margin-bottom: 1rem">文章分类</h3>
+            <el-menu
+              default-active="0"
+              class="articles-category-menu"
+              @select="selectCategory"
+            >
+              <el-menu-item
+                v-for="item of articlesList"
+                :key="item.id"
+                :index="item.id"
+                class="articles-category-item"
+              >
                 <el-icon>
-                  <component v-if="item.icon" :is="item.icon" />
+                  <component :is="item.icon" v-if="item.icon" />
                   <document v-else />
                 </el-icon>
                 <span>{{ item.name }}</span>
@@ -57,8 +70,10 @@ useSeoMeta({
 
         <!-- Content Section -->
         <main class="main-content">
-          <!-- articles --> 
-          <ArticleList :article-list="articlesList[currentCateIndex].articles" />
+          <!-- articles -->
+          <ArticleList
+            :article-list="articlesList[currentCateIndex].articles"
+          />
         </main>
       </div>
     </div>

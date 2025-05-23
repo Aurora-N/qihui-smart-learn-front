@@ -4,21 +4,29 @@ const props = defineProps({
   level: {
     type: Number,
     default: 1,
-  }
+  },
 })
 
-const hasSubCategory = (obj) => {
-  return obj.hasOwnProperty('links');
+const hasSubCategory = obj => {
+  return 'links' in obj
 }
 
-const tag = computed(() => `h${props.level}`);
+const tag = computed(() => `h${props.level}`)
 </script>
 
 <template>
   <!-- articles -->
-  <div class="articles-list" v-for="obj of props.articleList">
+  <div
+    v-for="obj of props.articleList"
+    :key="obj.link || obj.category"
+    class="articles-list"
+  >
     <div v-if="!hasSubCategory(obj)">
-      <NuxtLink :to="`/articles${obj.link}`" class="article-card" :key="obj.link">
+      <NuxtLink
+        :key="obj.link"
+        :to="`/articles${obj.link}`"
+        class="article-card"
+      >
         <h3 class="article-title">{{ obj.title }}</h3>
         <div class="article-meta">
           <!-- <IconsLike />
@@ -28,14 +36,15 @@ const tag = computed(() => `h${props.level}`);
     </div>
 
     <div v-else>
-      <component :is="tag" class="content-title">{{ obj.category }}</component>
+      <component :is="tag" class="content-title">
+        {{ obj.category }}
+      </component>
       <ArticleList :article-list="obj.links" :level="props.level + 1" />
     </div>
-</div>
+  </div>
 </template>
 
 <style scoped>
-
 .content-title {
   font-weight: bold;
   color: var(--color-text);

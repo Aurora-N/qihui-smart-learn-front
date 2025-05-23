@@ -1,11 +1,11 @@
 <template>
   <div class="comment-editor">
-    <textarea 
-      v-model="markdownText" 
-      placeholder="在此回复，支持Markdown格式"
+    <textarea
       ref="textarea"
+      v-model="markdownText"
+      placeholder="在此回复，支持Markdown格式"
       @input="adjustHeight"
-    ></textarea>
+    />
     <el-button v-if="btnShow" type="primary" class="submit-btn">
       <span class="submit-btn-inner" @click="handleSubmit">
         <IconsSubmit />提交
@@ -16,30 +16,30 @@
 
 <script setup>
 // 定义beforeSubmit事件，把数据传递给父组件
-const emit = defineEmits(["beforeSubmit"]);
+const emit = defineEmits(['beforeSubmit'])
 
 // 控制提交按钮显示与否
-const btnShow = computed(() => markdownText.value.length > 0);
+const btnShow = computed(() => markdownText.value.length > 0)
 
-const markdownText = ref('');
+const markdownText = ref('')
 
-const textarea = ref(null);
+const textarea = ref(null)
 
 // 调整textarea高度
 const adjustHeight = () => {
-  textarea.value.style.height = 'auto';  // 先重置为自动高度
-  textarea.value.style.height = `${textarea.value.scrollHeight}px`; // 设置为内容的高度
+  textarea.value.style.height = 'auto' // 先重置为自动高度
+  textarea.value.style.height = `${textarea.value.scrollHeight}px` // 设置为内容的高度
 
   if (textarea.value.style.height.slice(0, -2) > 300) {
-    textarea.value.style.overflow = 'auto';
+    textarea.value.style.overflow = 'auto'
   } else {
-    textarea.value.style.overflow = 'hidden';
+    textarea.value.style.overflow = 'hidden'
   }
-};
+}
 
 const handleSubmit = async () => {
-  emit("beforeSubmit", markdownText.value);
-  markdownText.value = ''; // 清空内容
+  emit('beforeSubmit', markdownText.value)
+  markdownText.value = '' // 清空内容
 }
 </script>
 
@@ -81,13 +81,13 @@ textarea {
   bottom: 18px;
   right: 12px;
   padding: 0.5rem;
-  background-color: #0060DF;
-  border-color: #0060DF;
+  background-color: #0060df;
+  border-color: #0060df;
 }
 
 .comment-editor .submit-btn:hover {
-  background-color: #0250BB;
-  border-color: #0250BB;
+  background-color: #0250bb;
+  border-color: #0250bb;
 }
 
 .submit-btn .submit-btn-inner {

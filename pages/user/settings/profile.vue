@@ -4,7 +4,7 @@ import { ElMessage } from 'element-plus'
 import { ChatDotRound, User } from '@element-plus/icons-vue'
 import { useUserApi } from '~/api/user'
 import AvatarUploader from '~/components/AvatarUploader.vue'
-import { encryptWithRSA } from '~/utils/rsaEncrypt';
+import { encryptWithRSA } from '~/utils/rsaEncrypt'
 
 const router = useRouter()
 
@@ -23,7 +23,7 @@ const getUserInfo = async () => {
     form.confirmPassword = ''
     avatarUrl.value = userStore.userInfo.data.avatar
   } else {
-    ElMessage({type: 'warning', message: '用户未登录', plain: true})
+    ElMessage({ type: 'warning', message: '用户未登录', plain: true })
     router.replace({ path: '/login' })
   }
 }
@@ -35,7 +35,7 @@ const form = reactive({
   avatar: '',
   selfDescription: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
 })
 
 // 表单验证规则
@@ -43,7 +43,7 @@ const rules = {
   userName: [{ required: true, message: '用户名不可为空', trigger: 'blur' }],
   email: [{ required: true, message: '登录邮箱不可为空', trigger: 'blur' }],
   password: [{ validator: validatePassword, trigger: 'blur' }],
-  confirmPassword: [{ validator: validateConfirmPassword, trigger: 'blur' }]
+  confirmPassword: [{ validator: validateConfirmPassword, trigger: 'blur' }],
 }
 
 const formRef = ref(null)
@@ -75,7 +75,7 @@ function validateConfirmPassword(rule, value, callback) {
 }
 
 // 处理头像上传
-const handleAvatarUpload = (file) => {
+const handleAvatarUpload = file => {
   form.avatar = file
 }
 
@@ -83,11 +83,11 @@ const handleAvatarUpload = (file) => {
 async function submitForm() {
   if (!formRef.value) return
 
-  formRef.value.validate(async (valid) => {
+  formRef.value.validate(async valid => {
     if (valid) {
       isLoading.value = true
-      if (form.password) form.password = await encryptWithRSA(form.password);
-      const { confirmPassword, ...rest } = form;
+      if (form.password) form.password = await encryptWithRSA(form.password)
+      const { confirmPassword, ...rest } = form
       // 调用API保存用户信息
       const res = await useUserApi().updateUserInfo(rest)
       if (res.status === 'success') {
@@ -106,14 +106,22 @@ async function submitForm() {
     <div class="user-settings-content">
       <!-- 左侧导航 -->
       <div class="left-sidebar">
-        <el-button class="back-btn" size="large" @click="$router.push(`/user/${userInfo.userId}`)">
+        <el-button
+          class="back-btn"
+          size="large"
+          @click="$router.push(`/user/${userInfo.userId}`)"
+        >
           <el-icon>
             <ArrowLeft />
           </el-icon>
           返回用户中心
         </el-button>
         <Sidebar class="sidebar-nav" height="auto">
-          <div class="nav-item" :class="{ active: selectedNav === 'profile' }" @click="selectedNav = 'profile'">
+          <div
+            class="nav-item"
+            :class="{ active: selectedNav === 'profile' }"
+            @click="selectedNav = 'profile'"
+          >
             <el-icon>
               <User />
             </el-icon>
@@ -125,7 +133,11 @@ async function submitForm() {
             </el-icon>
             <span>发布帖子</span>
           </div> -->
-          <div class="nav-item" :class="{ active: selectedNav === 'style' }" @click="selectedNav = 'style'">
+          <div
+            class="nav-item"
+            :class="{ active: selectedNav === 'style' }"
+            @click="selectedNav = 'style'"
+          >
             <el-icon>
               <Operation />
             </el-icon>
@@ -139,7 +151,14 @@ async function submitForm() {
         <div class="profile-container">
           <div class="profile-header">
             <h1 class="profile-title">个人资料设置</h1>
-            <el-button type="primary" @click="submitForm" :loading="isLoading" class="submit-btn">保存修改</el-button>
+            <el-button
+              type="primary"
+              :loading="isLoading"
+              class="submit-btn"
+              @click="submitForm"
+            >
+              保存修改
+            </el-button>
           </div>
 
           <div class="user-info-display">
@@ -153,7 +172,13 @@ async function submitForm() {
             </div>
           </div>
 
-          <el-form ref="formRef" :model="form" :rules="rules" label-width="100px" class="profile-form">
+          <el-form
+            ref="formRef"
+            :model="form"
+            :rules="rules"
+            label-width="100px"
+            class="profile-form"
+          >
             <el-form-item label="用户名" prop="userName">
               <el-input v-model="form.userName" placeholder="请输入用户名" />
             </el-form-item>
@@ -164,20 +189,39 @@ async function submitForm() {
 
             <el-form-item label="头像">
               <div class="avatar-uploader">
-                <AvatarUploader :name="userInfo.userName" :avatarurl="avatarUrl" @update:avatar="handleAvatarUpload" />
+                <AvatarUploader
+                  :name="userInfo.userName"
+                  :avatarurl="avatarUrl"
+                  @update:avatar="handleAvatarUpload"
+                />
               </div>
             </el-form-item>
 
             <el-form-item label="自我描述">
-              <el-input v-model="form.selfDescription" type="textarea" :rows="3" placeholder="请输入自我描述" />
+              <el-input
+                v-model="form.selfDescription"
+                type="textarea"
+                :rows="3"
+                placeholder="请输入自我描述"
+              />
             </el-form-item>
 
             <el-form-item label="新密码" prop="password">
-              <el-input v-model="form.password" type="password" placeholder="请输入新密码，不修改请留空" show-password />
+              <el-input
+                v-model="form.password"
+                type="password"
+                placeholder="请输入新密码，不修改请留空"
+                show-password
+              />
             </el-form-item>
 
             <el-form-item label="确认密码" prop="confirmPassword">
-              <el-input v-model="form.confirmPassword" type="password" placeholder="请再次输入新密码" show-password />
+              <el-input
+                v-model="form.confirmPassword"
+                type="password"
+                placeholder="请再次输入新密码"
+                show-password
+              />
             </el-form-item>
           </el-form>
         </div>
@@ -278,15 +322,14 @@ async function submitForm() {
 }
 
 .submit-btn {
-  background-color: #0060DF;
-  border-color: #0060DF;
+  background-color: #0060df;
+  border-color: #0060df;
 }
 
 .submit-btn:hover {
-  background-color: #0250BB;
-  border-color: #0250BB;
+  background-color: #0250bb;
+  border-color: #0250bb;
 }
-
 
 .user-info-display {
   margin-bottom: 20px;

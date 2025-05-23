@@ -4,27 +4,30 @@ import { ArrowRight } from '@element-plus/icons-vue'
 const props = defineProps({
   currentTitle: {
     type: String,
-    default: ''
+    default: '',
   },
-  parents: { //除了根目录外的父级目录
+  parents: {
+    // 除了根目录外的父级目录
     type: Array,
-    default: () => []
+    default: () => [],
   },
   root: {
     type: Object,
     default: () => ({
       title: '文章',
-      link: '/articles'
-    })
-  }
+      link: '/articles',
+    }),
+  },
 })
 </script>
 
 <template>
   <div class="breadcrumb">
     <el-breadcrumb :separator-icon="ArrowRight">
-      <el-breadcrumb-item :to="{ path: props.root.link }">{{ props.root.title }}</el-breadcrumb-item>
-      <el-breadcrumb-item v-for="(parent, index) in props.parents">
+      <el-breadcrumb-item :to="{ path: props.root.link }">
+        {{ props.root.title }}
+      </el-breadcrumb-item>
+      <el-breadcrumb-item v-for="parent in props.parents" :key="parent">
         <!-- :to="`/articles/${props.parents.slice(0, index + 1).join('/')}`" -->
         {{ parent }}
       </el-breadcrumb-item>
@@ -38,7 +41,7 @@ const props = defineProps({
   margin-top: 1rem;
   margin-bottom: 2rem;
   --el-text-color-primary: var(--color-text-2);
-  --el-text-color-regular: var(--color-text)
+  --el-text-color-regular: var(--color-text);
 }
 
 :deep(.el-breadcrumb__item .el-breadcrumb__inner, .is-link) {

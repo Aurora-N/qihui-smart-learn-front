@@ -1,0 +1,171 @@
+// =================================
+// Design System Variables
+// =================================
+
+// Color Palette
+// Based on Vue.js theme colors
+$white: #ffffff;
+$white-soft: #f8f8f8;
+$white-mute: #f2f2f2;
+$white-blur: rgba(255, 255, 255, 0.8);
+
+$black: #181818;
+$black-soft: #222222;
+$black-mute: #282828;
+$black-blur: rgba(1, 1, 1, 0.5);
+
+$indigo: #2c3e50;
+
+// Primary Colors
+$color-primary: #0068df;
+$color-primary-hover-darker: #0250bb;
+$color-primary-hover-lighter: #1576ff;
+$color-primary-shadow: rgba(0, 110, 255, 0.5);
+$color-link: #0069c2;
+
+// Divider Colors
+$divider-light-1: rgba(60, 60, 60, 0.29);
+$divider-light-2: rgba(60, 60, 60, 0.12);
+$divider-dark-1: rgba(84, 84, 84, 0.65);
+$divider-dark-2: rgba(84, 84, 84, 0.48);
+
+// Text Colors
+$text-light-1: $indigo;
+$text-light-2: #606266;
+$text-dark-1: $white;
+$text-dark-2: rgb(241, 245, 249);
+
+// Marker Colors
+$marker-light: rgb(210, 215, 221);
+$marker-dark: rgb(241, 245, 249);
+
+// Spacing System
+$spacing-xs: 0.25rem; // 4px
+$spacing-sm: 0.5rem; // 8px
+$spacing-md: 1rem; // 16px
+$spacing-lg: 1.5rem; // 24px
+$spacing-xl: 2rem; // 32px
+$spacing-2xl: 3rem; // 48px
+$spacing-3xl: 4rem; // 64px
+$spacing-4xl: 6rem; // 96px
+$spacing-5xl: 10rem; // 160px
+
+$section-gap: 10rem; // 160px
+
+// Font System
+$font-family-base:
+  Inter,
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  Roboto,
+  Oxygen,
+  Ubuntu,
+  Cantarell,
+  'Fira Sans',
+  'Droid Sans',
+  'Helvetica Neue',
+  sans-serif;
+$font-family-mono:
+  'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New',
+  monospace;
+
+$font-size-xs: 0.75rem; // 12px
+$font-size-sm: 0.875rem; // 14px
+$font-size-base: 0.9375rem; // 15px
+$font-size-md: 1rem; // 16px
+$font-size-lg: 1.125rem; // 18px
+$font-size-xl: 1.25rem; // 20px
+$font-size-2xl: 1.5rem; // 24px
+$font-size-3xl: 2rem; // 32px
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.6;
+
+// Border Radius
+$border-radius-sm: 0.25rem; // 4px
+$border-radius: 0.375rem; // 6px
+$border-radius-md: 0.5rem; // 8px
+$border-radius-lg: 0.75rem; // 12px
+$border-radius-xl: 1rem; // 16px
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow:
+  0 1px 3px 0 rgba(0, 0, 0, 0.1),
+  0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-md:
+  0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg:
+  0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl:
+  0 20px 25px -5px rgba(0, 0, 0, 0.1),
+  0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-base: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Breakpoints
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+// Z-index Scale
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal-backdrop: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;
+
+// Tag Colors (Hue based system)
+$tag-hues: (
+  0: 0,
+  // Red
+  1: 235,
+  // Blue
+  2: 160,
+  // Green
+  3: 60,
+  // Yellow
+  4: 210, // Light Blue
+);
+
+// Component Specific Variables
+// Buttons
+$btn-height: 3rem; // 48px
+$btn-padding-x: $spacing-md;
+$btn-padding-y: $spacing-sm;
+
+// Cards
+$card-padding: $spacing-md;
+$card-border-radius: $border-radius-lg;
+
+// Forms
+$input-height: 3rem; // 48px
+$input-padding-x: $spacing-md;
+$input-padding-y: $spacing-sm;
+
+// Avatar
+$avatar-size-sm: 2rem; // 32px
+$avatar-size-md: 2.5rem; // 40px
+$avatar-size-lg: 3rem; // 48px
+
+// Layout
+$header-height: 4rem; // 64px
+$sidebar-width: 16rem; // 256px
+$container-max-width: 80rem; // 1280px

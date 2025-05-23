@@ -2,7 +2,7 @@
 const content = ref('<h1></h1>')
 
 definePageMeta({
-  layout: false
+  layout: false,
 })
 </script>
 
@@ -10,7 +10,7 @@ definePageMeta({
   <div class="container">
     <ClientOnly>
       <!-- <Editor v-model="content" /> -->
-       <MarkdownEditor />
+      <MarkdownEditor />
     </ClientOnly>
   </div>
 </template>

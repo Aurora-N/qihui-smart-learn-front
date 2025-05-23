@@ -2,15 +2,23 @@
   <div id="features" class="features-section">
     <div class="container">
       <div class="features">
-        <div v-for="(feature, index) in features" :key="feature.name" class="feature-container"
-          @click="$router.replace(`${feature.path}`)">
+        <div
+          v-for="(feature, index) in features"
+          :key="feature.name"
+          class="feature-container"
+          @click="$router.replace(`${feature.path}`)"
+        >
           <div class="feature-item">
             <div class="feature-icon">
               <component :is="feature.icon" />
             </div>
             <div class="feature-content">
-              <h3 class="feature-name">{{ feature.name }}</h3>
-              <p class="feature-description">{{ feature.description }}</p>
+              <h3 class="feature-name">
+                {{ feature.name }}
+              </h3>
+              <p class="feature-description">
+                {{ feature.description }}
+              </p>
             </div>
           </div>
         </div>
@@ -21,37 +29,37 @@
 
 <script setup>
 // Define icon components
-const LearnIcon = resolveComponent('IconsLearn');
-const ArticleIcon = resolveComponent('IconsArticle');
-const ChatIcon = resolveComponent('IconsChat');
-const ForumIcon = resolveComponent('IconsForum');
+const LearnIcon = resolveComponent('IconsLearn')
+const ArticleIcon = resolveComponent('IconsArticle')
+const ChatIcon = resolveComponent('IconsChat')
+const ForumIcon = resolveComponent('IconsForum')
 
 const features = [
   {
-    name: "学习方向",
-    description: "选择感兴趣的学习方向",
+    name: '学习方向',
+    description: '选择感兴趣的学习方向',
     icon: LearnIcon,
-    path: '/learn'
+    path: '/learn',
   },
   {
-    name: "文章",
-    description: "浏览学习资源文章",
+    name: '文章',
+    description: '浏览学习资源文章',
     icon: ArticleIcon,
-    path: '/articles'
+    path: '/articles',
   },
   {
-    name: "在线答疑",
-    description: "AI助手边问边学",
+    name: '在线答疑',
+    description: 'AI助手边问边学',
     icon: ChatIcon,
-    path: '/chat'
+    path: '/chat',
   },
   {
-    name: "论坛",
-    description: "和志同道合的人一起讨论",
+    name: '论坛',
+    description: '和志同道合的人一起讨论',
     icon: ForumIcon,
-    path: '/forum'
+    path: '/forum',
   },
-];
+]
 </script>
 
 <style scoped>

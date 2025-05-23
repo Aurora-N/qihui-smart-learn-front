@@ -6,32 +6,36 @@
         <div class="hero-content">
           <h1 class="hero-title">
             <span class="hero-title-primary">启慧智学</span>
-            <span class="hero-title-secondary">基于多模态知识图谱的Web开发学习平台</span>
+            <span class="hero-title-secondary"
+              >基于多模态知识图谱的Web开发学习平台</span
+            >
           </h1>
-          <p class="hero-description">
-            改变你的学习方式，与知识图谱合作
-          </p>
+          <p class="hero-description">改变你的学习方式，与知识图谱合作</p>
           <div class="hero-buttons">
             <NuxtLink to="/learn" class="btn btn-primary">开始学习</NuxtLink>
             <NuxtLink to="#features" class="btn btn-outline">了解更多</NuxtLink>
           </div>
         </div>
-        
+
         <!-- Logo -->
         <div class="hero-logo">
           <div class="logo-container">
             <!-- Replace with your actual logo -->
-            <img :src="`/logo_${useColorMode().preference === 'system' ? 'light' : useColorMode().preference}.png`" alt="ourlogo" class="logo-image" />
+            <img
+              :src="`/logo_${useColorMode().preference === 'system' ? 'light' : useColorMode().preference}.png`"
+              alt="ourlogo"
+              class="logo-image"
+            />
           </div>
         </div>
       </div>
     </div>
 
-    <HomeFeatures/>
-    
+    <HomeFeatures />
+
     <div class="hero-background">
-      <div class="bg-circle bg-circle-1"></div>
-      <div class="bg-circle bg-circle-2"></div>
+      <div class="bg-circle bg-circle-1" />
+      <div class="bg-circle bg-circle-2" />
     </div>
   </div>
 </template>
@@ -190,7 +194,9 @@
   width: 100%;
   height: 100%;
   background-color: rgba(var(--primary-rgb), 0.1);
-  animation: rotate 20s linear infinite, scale 20s ease-in-out infinite;
+  animation:
+    rotate 20s linear infinite,
+    scale 20s ease-in-out infinite;
 }
 
 @keyframes fadeInUp {
@@ -226,7 +232,8 @@
 }
 
 @keyframes scale {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
 
@@ -287,7 +294,7 @@
   }
 
   .hero-title-secondary {
-    font-size: 3.0rem;
+    font-size: 3rem;
   }
 
   .logo-container {

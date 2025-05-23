@@ -8,10 +8,10 @@ export default defineVitestConfig({
         domEnvironment: 'happy-dom',
         mock: {
           intersectionObserver: true,
-          indexedDb: false
-        }
-      }
+          indexedDb: false,
+        },
+      },
     },
-    globals: true
-  }
-}) 
+    globals: true,
+  },
+})

@@ -1,6 +1,6 @@
 <script setup>
-import { ClockIcon, FolderIcon } from 'lucide-vue-next';
-import { useForumApi } from '~/api/forum';
+import { ClockIcon, FolderIcon } from 'lucide-vue-next'
+import { useForumApi } from '~/api/forum'
 
 const tags = ref([])
 
@@ -9,19 +9,19 @@ const getAllTags = async () => {
   tags.value = res.data
 }
 
-const bannerConfig = inject('bannerConfig');
+const bannerConfig = inject('bannerConfig')
 
 onMounted(() => {
   getAllTags()
   bannerConfig.value = {
     title: '标签',
     subTitle: '来看看我们都有哪些栏目吧',
-    hueColor: '250'
+    hueColor: '250',
   }
 })
 
 definePageMeta({
-  layout: 'forum'
+  layout: 'forum',
 })
 </script>
 
@@ -29,18 +29,27 @@ definePageMeta({
   <div class="tags-container">
     <h1 class="tags-title">标签</h1>
     <div class="tags-list">
-      <div class="tag-card" v-for="tag in tags" :key="tag.tagId" :style="{
-        '--hue': tag.hueColor
-      }">
+      <div
+        v-for="tag in tags"
+        :key="tag.tagId"
+        class="tag-card"
+        :style="{
+          '--hue': tag.hueColor,
+        }"
+      >
         <div class="tag-header">
           <div class="tag-title">
-            <div class="tag-color-indicator"></div>
-            <h3 class="tag-name">{{ tag.title }}</h3>
+            <div class="tag-color-indicator" />
+            <h3 class="tag-name">
+              {{ tag.title }}
+            </h3>
           </div>
           <div class="tag-posts-count">{{ tag.postsCount }} 篇帖子</div>
         </div>
 
-        <p class="tag-description">{{ tag.description }}</p>
+        <p class="tag-description">
+          {{ tag.description }}
+        </p>
 
         <div class="tag-footer">
           <div class="tag-recent">
@@ -48,7 +57,10 @@ definePageMeta({
             <span>最近更新: {{ tag.lastPostTime }}</span>
           </div>
 
-          <button class="link-btn" @click="$router.push(`/forum/tags/${tag.tagId}`)">
+          <button
+            class="link-btn"
+            @click="$router.push(`/forum/tags/${tag.tagId}`)"
+          >
             去看看
           </button>
         </div>
@@ -71,7 +83,7 @@ definePageMeta({
 .tags-list {
   display: flex;
   gap: 1rem;
-  flex-flow: row wrap
+  flex-flow: row wrap;
 }
 
 .tag-card {

@@ -6,30 +6,30 @@
   <div class="main-container">
     <div class="side">
       <div class="skeleton-sidebar">
-        <div class="skeleton-sidebar-title"></div>
+        <div class="skeleton-sidebar-title" />
         <div class="skeleton-menu-items">
-          <div class="skeleton-menu-item" v-for="i in 5" :key="i"></div>
+          <div v-for="i in 5" :key="i" class="skeleton-menu-item" />
         </div>
       </div>
     </div>
 
     <div class="content">
       <article>
-        <div class="skeleton-breadcrumb"></div>
-        <div class="skeleton-title"></div>
+        <div class="skeleton-breadcrumb" />
+        <div class="skeleton-title" />
 
         <div class="skeleton-content">
-          <div class="skeleton-paragraph" v-for="i in 3" :key="i"></div>
-          <div class="skeleton-heading"></div>
-          <div class="skeleton-paragraph" v-for="i in 2" :key="i"></div>
-          <div class="skeleton-heading"></div>
-          <div class="skeleton-paragraph" v-for="i in 2" :key="i"></div>
+          <div v-for="i in 3" :key="i" class="skeleton-paragraph" />
+          <div class="skeleton-heading" />
+          <div v-for="i in 2" :key="i" class="skeleton-paragraph" />
+          <div class="skeleton-heading" />
+          <div v-for="i in 2" :key="i" class="skeleton-paragraph" />
         </div>
 
         <div class="skeleton-recommend">
-          <div class="skeleton-recommend-title"></div>
+          <div class="skeleton-recommend-title" />
           <div class="skeleton-recommend-items">
-            <div class="skeleton-recommend-item" v-for="i in 3" :key="i"></div>
+            <div v-for="i in 3" :key="i" class="skeleton-recommend-item" />
           </div>
         </div>
       </article>

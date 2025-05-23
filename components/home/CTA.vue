@@ -72,7 +72,7 @@
   .cta-title {
     font-size: 2.25rem;
   }
-  
+
   .cta-button {
     padding: 0.875rem 2rem;
     font-size: 1.125rem;
@@ -83,10 +83,9 @@
   .cta-section {
     padding: 5rem 0;
   }
-  
+
   .cta-title {
     font-size: 2.5rem;
   }
 }
 </style>
-

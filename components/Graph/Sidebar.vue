@@ -1,45 +1,45 @@
 <script setup lang="ts">
-import { useGraphAttribute } from '~/utils/graph/utils';
-import { defineProps } from 'vue';
+import { defineProps } from 'vue'
+import { useGraphAttribute } from '~/utils/graph/utils'
 
 interface Node {
-  id: string,
-  level: string,
-  content: string,
-  uniqueId: string,
-  fx?: null,
-  fy?: null,
-  group: number,
-  index: number,
-  type: string,
-  vx: number,
-  vy: number,
-  x: number,
-  y: number,
-};
+  id: string
+  level: string
+  content: string
+  uniqueId: string
+  fx?: null
+  fy?: null
+  group: number
+  index: number
+  type: string
+  vx: number
+  vy: number
+  x: number
+  y: number
+}
 
 interface Link {
-  index: number,
-  relationship: string,
-  source: Node,
-  target: Node,
-  value: number,
-};
+  index: number
+  relationship: string
+  source: Node
+  target: Node
+  value: number
+}
 
 interface Article {
-  url: string,
-  name: string,
-};
+  url: string
+  name: string
+}
 
 interface Video {
-  url: string,
-  name: string,
-};
+  url: string
+  name: string
+}
 
 interface NodeResources {
-  articles: Array<Article>,
-  videos: Array<Video>,
-};
+  articles: Array<Article>
+  videos: Array<Video>
+}
 
 const props = defineProps({
   nodes: {
@@ -49,82 +49,93 @@ const props = defineProps({
   links: {
     type: Array<Link>,
     default: [],
-  }
-});
+  },
+})
 
 // 获取资源失败状态
-const inResourcesError = ref(false);
+const inResourcesError = ref(false)
 
 // 选中结点的资源
-const selectedNodeResources = ref<NodeResources | null>(null);
+const selectedNodeResources = ref<NodeResources | null>(null)
 
 const fetchSelectedNodeData = async () => {
   try {
-    inResourcesError.value = false;
-    selectedNodeResources.value = null; // 先清空之前的旧的数据
-    selectedNodeResources.value = await getNodeResources(selectedNode.value);
-  } catch(error) {
-    inResourcesError.value = true;
+    inResourcesError.value = false
+    selectedNodeResources.value = null // 先清空之前的旧的数据
+    selectedNodeResources.value = await getNodeResources(selectedNode.value)
+  } catch (error) {
+    inResourcesError.value = true
   }
 }
 
-const getLevelClass = useGraphAttribute().getLevelClass;
-const getNodeResources = useGraphAttribute().getNodeResources;
-const getNodeColor = useGraphAttribute().getNodeColor;
+const getLevelClass = useGraphAttribute().getLevelClass
+const getNodeResources = useGraphAttribute().getNodeResources
+const getNodeColor = useGraphAttribute().getNodeColor
 
 const getRelatedNodes = (node: Node) => {
-  console.log(node);
-  const relatedNodes: Node[] = [];
+  console.log(node)
+  const relatedNodes: Node[] = []
 
   // 查找直接相连的节点
   props.links.forEach(link => {
     if (link.source.uniqueId === node.uniqueId) {
-      const targetNode = props.nodes.find(n => n.uniqueId === link.target.uniqueId);
-      if (targetNode && !relatedNodes.some(n => n.uniqueId === targetNode.uniqueId)) {
-        relatedNodes.push(targetNode);
+      const targetNode = props.nodes.find(
+        n => n.uniqueId === link.target.uniqueId
+      )
+      if (
+        targetNode &&
+        !relatedNodes.some(n => n.uniqueId === targetNode.uniqueId)
+      ) {
+        relatedNodes.push(targetNode)
       }
     } else if (link.target.uniqueId === node.uniqueId) {
-      const sourceNode = props.nodes.find(n => n.uniqueId === link.source.uniqueId);
-      if (sourceNode && !relatedNodes.some(n => n.uniqueId === sourceNode.uniqueId)) {
-        relatedNodes.push(sourceNode);
+      const sourceNode = props.nodes.find(
+        n => n.uniqueId === link.source.uniqueId
+      )
+      if (
+        sourceNode &&
+        !relatedNodes.some(n => n.uniqueId === sourceNode.uniqueId)
+      ) {
+        relatedNodes.push(sourceNode)
       }
     }
-  });
+  })
   // 限制返回的相关节点数量
-  return relatedNodes.slice(0, 5);
-};
+  return relatedNodes.slice(0, 5)
+}
 
-const selectedNode = ref<Node | null>(null);
+const selectedNode = ref<Node | null>(null)
 
 const selectNode = (node: Node) => {
-  selectedNode.value = node;
-};
+  selectedNode.value = node
+}
 
 // 控制侧边栏是否展开
-const showSidebar = ref(false);
+const showSidebar = ref(false)
 
 const openSidebar = async (node: Node | null) => {
   if (node) {
-    selectedNode.value = node;
-    showSidebar.value = true;
-    await fetchSelectedNodeData();
+    selectedNode.value = node
+    showSidebar.value = true
+    await fetchSelectedNodeData()
   }
 }
 
 const closeSidebar = () => {
-  showSidebar.value = false;
+  showSidebar.value = false
 }
 
 defineExpose({
-  openSidebar, closeSidebar
-});
+  openSidebar,
+  closeSidebar,
+})
 </script>
 
 <template>
-  <div class="sidebar-details" v-if="showSidebar && selectedNode">
+  <div v-if="showSidebar && selectedNode" class="sidebar-details">
     <div class="sidebar-header">
       <h3>{{ selectedNode.id }}</h3>
-      <button @click="closeSidebar" class="close-sidebar-btn">
+      <button class="close-sidebar-btn" @click="closeSidebar">
         <IconsClose />
       </button>
     </div>
@@ -133,18 +144,30 @@ defineExpose({
       <!-- 基本信息 -->
       <div class="sidebar-section">
         <div class="sidebar-section-header">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="16" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
           </svg>
           <h4>基本信息</h4>
         </div>
         <div class="sidebar-section-content">
           <div v-if="selectedNode.level" class="info-item">
             <span class="info-label">难度:</span>
-            <span class="info-badge" :class="'level-' + getLevelClass(selectedNode.level)">
+            <span
+              class="info-badge"
+              :class="'level-' + getLevelClass(selectedNode.level)"
+            >
               {{ selectedNode.level }}
             </span>
           </div>
@@ -159,47 +182,95 @@ defineExpose({
         <!-- 相关资源 -->
         <div class="sidebar-section">
           <div class="sidebar-section-header">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path
+                d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
+              />
             </svg>
             <h4>相关资源</h4>
           </div>
           <div class="sidebar-section-content">
             <!-- 这里可以根据节点数据动态生成资源链接 -->
             <div class="resource-links">
-              <a v-if="selectedNodeResources.articles.length > 0" v-for="article in selectedNodeResources.articles"
-                :key="article.name" :href="`articles/${article.url}`" target="_blank" class="resource-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                  <polyline points="15 3 21 3 21 9"></polyline>
-                  <line x1="10" y1="14" x2="21" y2="3"></line>
-                </svg>
-                <span>{{ article.name }}</span>
-              </a>
+              <template v-if="selectedNodeResources.articles.length > 0">
+                <a
+                  v-for="article in selectedNodeResources.articles"
+                  :key="article.name"
+                  :href="`articles/${article.url}`"
+                  target="_blank"
+                  class="resource-link"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                  <span>{{ article.name }}</span>
+                </a>
+              </template>
             </div>
           </div>
         </div>
 
         <!-- 视频教程 -->
-        <div class="sidebar-section" v-if="selectedNodeResources.videos.length > 0">
+        <div
+          v-if="selectedNodeResources.videos.length > 0"
+          class="sidebar-section"
+        >
           <div class="sidebar-section-header">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="23 7 16 12 23 17 23 7"></polygon>
-              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polygon points="23 7 16 12 23 17 23 7" />
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
             </svg>
             <h4>视频教程</h4>
           </div>
           <div class="sidebar-section-content">
-            <div class="video-container" v-for="video in selectedNodeResources.videos" :key="video.name">
+            <div
+              v-for="video in selectedNodeResources.videos"
+              :key="video.name"
+              class="video-container"
+            >
               <h4>{{ video.name }}</h4>
               <div class="video-embed">
-                <iframe :src="video.url" frameborder="0"
-                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowfullscreen></iframe>
+                <iframe
+                  :src="video.url"
+                  frameborder="0"
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                />
               </div>
             </div>
           </div>
@@ -229,11 +300,16 @@ defineExpose({
         <!-- 相关知识图谱 -->
         <div class="sidebar-section">
           <div class="sidebar-section-header">
-            <IconsGraph style="width:20px; height: 20px;" />
+            <IconsGraph style="width: 20px; height: 20px" />
             <h4>相关知识图谱</h4>
           </div>
           <div class="sidebar-section-content" title="点击查看全图">
-            <Graph :is-embedded="true" :graph-id="selectedNode.id" :title="selectedNode.id" :is-relationship="true" />
+            <Graph
+              :is-embedded="true"
+              :graph-id="selectedNode.id"
+              :title="selectedNode.id"
+              :is-relationship="true"
+            />
           </div>
         </div>
       </div>
@@ -242,7 +318,7 @@ defineExpose({
         <div class="sidebar-section-error">
           <IconsDataError class="error-icons" />
           <div class="error-tips">此结点没有资源，请尝试点击其他结点</div>
-          <button @click="fetchSelectedNodeData()" class="control-btn">
+          <button class="control-btn" @click="fetchSelectedNodeData()">
             <IconsRefresh />重新获取数据
           </button>
         </div>
@@ -250,18 +326,29 @@ defineExpose({
       <div v-else>
         <div class="sidebar-section">
           <div class="sidebar-section-header">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path
+                d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
+              />
             </svg>
             <h4>相关资源加载中</h4>
           </div>
           <div class="sidebar-section-content">
             <div class="resource-links">
-              <div class="skeleton-link" v-for="i in 3" :key="i">
-                <div class="skeleton-icon-small"></div>
-                <div class="skeleton-text"></div>
+              <div v-for="i in 3" :key="i" class="skeleton-link">
+                <div class="skeleton-icon-small" />
+                <div class="skeleton-text" />
               </div>
             </div>
           </div>
@@ -503,7 +590,6 @@ defineExpose({
   height: 12px;
   border-radius: 50%;
 }
-
 
 /* 资源加载骨架 */
 .skeleton-icon-small,

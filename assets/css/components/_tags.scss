@@ -1,0 +1,28 @@
+// =================================
+// Tag Colors Component
+// =================================
+// Based on hue color palette from fuwari theme
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// Generate tag colors for each defined hue
+@each $index, $hue in $tag-hues {
+  .tag#{$index} {
+    @include tag-color($hue);
+  }
+}
+
+// Base tag styling (if not already defined elsewhere)
+.tag {
+  display: inline-block;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  // Default fallback colors
+  background-color: #f3f4f6;
+  color: #374151;
+}

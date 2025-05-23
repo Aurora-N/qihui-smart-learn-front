@@ -1,0 +1,400 @@
+// =================================
+// Knowledge Graph Component Styles
+// =================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+@use '../abstracts/functions' as *;
+
+.knowledge-graph-viewer {
+  font-family: $font-family-base;
+}
+
+// Container with theme variables
+.knowledge-graph-container {
+  font-family: $font-family-base;
+
+  // Theme-specific variables are already defined in theme files
+}
+
+// Small window card styles
+.knowledge-graph-card {
+  @include card-base;
+  min-width: rem(320);
+  height: rem(260);
+  overflow: hidden;
+  cursor: pointer;
+
+  @include card-hover;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+.card-content {
+  padding: $spacing-md;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  h3 {
+    margin: 0 0 rem(12) 0;
+    color: var(--knowledge-graph-text);
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.knowledge-graph-card-embeded {
+  height: 100%;
+  display: flex;
+  width: 100%;
+  height: rem(300);
+}
+
+.mini-graph {
+  flex: 1;
+  background-color: var(--knowledge-graph-background);
+  border-radius: $border-radius-md;
+  overflow: hidden;
+}
+
+.expand-hint {
+  @include flex-center;
+  padding: $spacing-sm 0 0 0;
+  font-size: $font-size-sm;
+  color: var(--knowledge-graph-primary);
+}
+
+// Fullscreen mode
+.fullscreen-viewer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--knowledge-graph-background);
+  z-index: z('modal');
+  display: flex;
+  flex-direction: column;
+  @include fade-in;
+}
+
+.fullscreen-header {
+  @include flex-between;
+  padding: $spacing-md $spacing-lg;
+  background-color: var(--knowledge-graph-card-bg);
+  box-shadow: $shadow-sm;
+
+  h2 {
+    margin: 0;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-extrabold;
+    color: var(--knowledge-graph-sidebar-title);
+  }
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--knowledge-graph-close-btn);
+  @include flex-center;
+  padding: $spacing-sm;
+  border-radius: 50%;
+  transition: background-color $transition-base;
+
+  &:hover {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+}
+
+.fullscreen-content {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+// Controls panel
+.controls {
+  position: absolute;
+  bottom: $spacing-lg;
+  left: $spacing-lg;
+  z-index: 10;
+  @include glass-effect;
+  padding: $spacing-md;
+  border-radius: $border-radius-lg;
+  max-width: rem(250);
+}
+
+.controls-container {
+  display: block;
+}
+
+.control-btn {
+  @include button-base;
+  @include button-variant(var(--knowledge-graph-primary), $white);
+  width: 100%;
+  padding: rem(10) $spacing-md;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-sm;
+  @include flex-center;
+  gap: $spacing-sm;
+  font-size: $font-size-md;
+  margin-bottom: $spacing-md;
+
+  &:hover {
+    background-color: var(--knowledge-graph-primary-hover);
+  }
+}
+
+// Form controls
+.checkbox-control {
+  @include flex-center;
+  margin-bottom: $spacing-md;
+
+  input[type='checkbox'] {
+    margin-right: $spacing-sm;
+  }
+}
+
+.search-control {
+  margin-bottom: $spacing-md;
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.search-input {
+  @include input-base;
+  font-size: $font-size-sm;
+  box-shadow: $shadow-sm;
+  background-color: var(--color-background);
+  color: var(--color-text);
+
+  &:focus {
+    border-color: #4a6cf7;
+  }
+}
+
+// Legend
+.legend-container {
+  border-top: 1px solid var(--knowledge-graph-border);
+  padding-top: rem(10);
+  transition: all 1s ease-in-out;
+}
+
+.legend-header {
+  @include flex-between;
+  cursor: pointer;
+  padding: rem(5) 0;
+  font-weight: $font-weight-medium;
+}
+
+.rotate-icon {
+  transform: rotate(180deg);
+}
+
+.legend {
+  margin-top: rem(10);
+  transition: max-height $transition-base;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: $font-size-xs;
+  margin-bottom: $spacing-sm;
+}
+
+.legend-color {
+  display: inline-block;
+  width: rem(12);
+  height: rem(12);
+  border-radius: 50%;
+}
+
+// Graph containers
+.graph-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.embeded-graph-container {
+  background-color: var(--color-background);
+  width: 100%;
+  border-radius: $border-radius-md;
+  transition: background-color $transition-base;
+
+  &:hover {
+    background-color: var(--knowledge-graph-background);
+  }
+}
+
+.mock-graph {
+  background-color: #f8f9fa;
+  height: 100%;
+}
+
+// Animation classes
+.slide-enter-active,
+.slide-leave-active {
+  transition:
+    transform $transition-base,
+    opacity $transition-base;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+// Node and graph elements
+.node-label {
+  font-size: rem(10);
+  fill: var(--knowledge-graph-text);
+  pointer-events: none;
+  transition:
+    opacity $transition-base,
+    transform $transition-base,
+    fill $transition-base,
+    font-weight $transition-base,
+    font-size $transition-base;
+}
+
+.node {
+  transition:
+    r $transition-base,
+    opacity $transition-base,
+    stroke-width $transition-base,
+    filter $transition-base;
+  cursor: pointer;
+}
+
+// Filter panel
+.filter-panel {
+  background-color: $white;
+  padding: $spacing-md $spacing-lg;
+  box-shadow: $shadow-sm;
+  z-index: 10;
+}
+
+.filter-input-container {
+  display: flex;
+  gap: rem(10);
+  align-items: center;
+}
+
+.filter-input {
+  flex: 1;
+  @include input-base;
+  border: 1px solid #e0e0e0;
+  font-size: $font-size-sm;
+
+  &:focus {
+    border-color: #4a6cf7;
+  }
+}
+
+.filter-btn {
+  @include button-base;
+  @include button-variant(#4a6cf7, $white, #3a56d4);
+  padding: rem(10) $spacing-md;
+  font-size: $font-size-sm;
+}
+
+.reset-btn {
+  @include button-base;
+  @include button-variant(#f0f0f0, #333, #e0e0e0);
+  padding: rem(10) $spacing-md;
+  font-size: $font-size-sm;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.filter-info {
+  margin-top: rem(10);
+  @include flex-between;
+  font-size: $font-size-sm;
+  color: #666;
+}
+
+.filter-count {
+  background-color: #f0f0f0;
+  padding: rem(4) $spacing-sm;
+  border-radius: rem(4);
+  font-size: $font-size-xs;
+}
+
+// Mobile responsiveness
+.mobile-legend-btn {
+  display: none;
+}
+
+@include respond-below($breakpoint-md) {
+  .controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    max-width: 100%;
+    width: 100vh;
+    border-radius: $border-radius-lg $border-radius-lg 0 0;
+    border: 1px solid var(--knowledge-graph-border);
+  }
+
+  .controls-container {
+    display: flex;
+    gap: $spacing-md;
+    align-items: center;
+    justify-content: space-between;
+
+    .control-btn {
+      order: 1;
+      width: 25%;
+      margin-bottom: 0;
+    }
+  }
+
+  .search-control {
+    order: 2;
+    margin: 0;
+    flex: 1;
+  }
+
+  .checkbox-control {
+    order: 3;
+    margin: 0;
+  }
+
+  .legend-header {
+    display: none;
+  }
+
+  .legend-container {
+    padding-top: 0;
+    border: none;
+  }
+
+  .mobile-legend-btn {
+    display: flex;
+    order: 4;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    .legend-item {
+      margin-right: $spacing-md;
+    }
+  }
+}

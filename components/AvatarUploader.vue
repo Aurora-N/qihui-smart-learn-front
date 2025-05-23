@@ -1,7 +1,10 @@
 <template>
   <div class="avatar-upload">
-    <div class="avatar-container" @click="triggerFileInput"
-      :style="{ backgroundImage: previewUrl ? `url(${previewUrl})` : 'none' }">
+    <div
+      class="avatar-container"
+      :style="{ backgroundImage: previewUrl ? `url(${previewUrl})` : 'none' }"
+      @click="triggerFileInput"
+    >
       <div v-if="!previewUrl" class="avatar-placeholder">
         <span>{{ initials }}</span>
       </div>
@@ -11,85 +14,91 @@
         </el-icon>
       </div>
       <div v-if="uploading" class="loading-overlay">
-        <div class="loading-spinner"></div>
+        <div class="loading-spinner" />
       </div>
     </div>
-    <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" class="file-input" />
+    <input
+      ref="fileInput"
+      type="file"
+      accept="image/*"
+      class="file-input"
+      @change="handleFileChange"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   name: {
     type: String,
-    default: 'User'
+    default: 'User',
   },
   size: {
     type: Number,
-    default: 100
+    default: 100,
   },
   avatarurl: {
     type: String,
-    default: ''
-  }
-});
+    default: '',
+  },
+})
 
-const emit = defineEmits(['update:avatar', 'upload-success', 'upload-error']);
+const emit = defineEmits(['update:avatar', 'upload-success', 'upload-error'])
 
-const fileInput = ref(null);
-const previewUrl = ref('');
-const uploading = ref(false);
+const fileInput = ref(null)
+const previewUrl = ref('')
+const uploading = ref(false)
 
 onBeforeMount(() => {
-  previewUrl.value = props.avatarurl;
+  previewUrl.value = props.avatarurl
 })
 
 const initials = computed(() => {
-  if (!props.name) return 'U';
-  return props.name.split(' ')
+  if (!props.name) return 'U'
+  return props.name
+    .split(' ')
     .map(name => name.charAt(0))
     .join('')
     .toUpperCase()
-    .substring(0, 2);
-});
+    .substring(0, 2)
+})
 
 const triggerFileInput = () => {
-  fileInput.value.click();
-};
+  fileInput.value.click()
+}
 
-const handleFileChange = (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
+const handleFileChange = event => {
+  const file = event.target.files[0]
+  if (!file) return
 
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    previewUrl.value = e.target.result;
-    uploadAvatar(file);
-  };
-  reader.readAsDataURL(file);
-};
-
-const uploadAvatar = async (file) => {
-  try {
-    uploading.value = true;
-
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    emit('update:avatar', file);
-    emit('upload-success', { file, url: previewUrl.value });
-
-  } catch (error) {
-    console.error('Upload failed:', error);
-    emit('upload-error', error);
-  } finally {
-    uploading.value = false;
+  const reader = new FileReader()
+  reader.onload = e => {
+    previewUrl.value = e.target.result
+    uploadAvatar(file)
   }
-};
+  reader.readAsDataURL(file)
+}
+
+const uploadAvatar = async file => {
+  try {
+    uploading.value = true
+
+    await new Promise(resolve => setTimeout(resolve, 1500))
+
+    emit('update:avatar', file)
+    emit('upload-success', { file, url: previewUrl.value })
+  } catch (error) {
+    console.error('Upload failed:', error)
+    emit('upload-error', error)
+  } finally {
+    uploading.value = false
+  }
+}
 
 definePageMeta({
-  layout: false
+  layout: false,
 })
 </script>
 

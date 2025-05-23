@@ -1,11 +1,16 @@
 <template>
-  <div class="dropdown" @click="toggle" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
+  <div
+    class="dropdown"
+    @click="toggle"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+  >
     <div class="trigger">
-      <slot name="trigger"></slot>
+      <slot name="trigger" />
     </div>
-    <div class="dropdown-wrapper" v-if="isOpen">
+    <div v-if="isOpen" class="dropdown-wrapper">
       <div class="dropdown-content">
-        <slot></slot>
+        <slot />
       </div>
     </div>
   </div>
@@ -18,8 +23,8 @@ const props = defineProps({
   openOn: {
     type: String,
     default: 'click',
-    validator: (value: string) => ['click', 'hover'].includes(value)
-  }
+    validator: (value: string) => ['click', 'hover'].includes(value),
+  },
 })
 
 const isOpen = ref(false)

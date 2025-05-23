@@ -1,0 +1,113 @@
+// =================================
+// Main SCSS Entry Point
+// =================================
+
+// 1. Abstracts Layer
+@use 'abstracts/variables' as *;
+@use 'abstracts/functions' as *;
+@use 'abstracts/mixins' as *;
+
+// 2. Themes Layer
+@use 'themes/light';
+@use 'themes/dark';
+
+// 3. Base Layer (Global Styles)
+// Import the optimized main.scss for base styles
+@use 'main';
+
+// 4. Components Layer
+@use 'components/knowledge-graph';
+@use 'components/tags';
+
+// 5. Pages Layer
+@use 'pages/home';
+@use 'pages/login';
+@use 'pages/post';
+@use 'pages/forum';
+
+// =================================
+// Utility Classes
+// =================================
+
+// Responsive container
+.container {
+  @include container;
+}
+
+// Flex utilities
+.flex {
+  display: flex;
+
+  &--center {
+    @include flex-center;
+  }
+
+  &--between {
+    @include flex-between;
+  }
+}
+
+// Text utilities
+.text {
+  &--truncate {
+    @include text-truncate;
+  }
+
+  &--center {
+    text-align: center;
+  }
+
+  &--left {
+    text-align: left;
+  }
+
+  &--right {
+    text-align: right;
+  }
+}
+
+// Spacing utilities
+.mt {
+  &--xs {
+    margin-top: variables.$spacing-xs;
+  }
+  &--sm {
+    margin-top: variables.$spacing-sm;
+  }
+  &--md {
+    margin-top: variables.$spacing-md;
+  }
+  &--lg {
+    margin-top: variables.$spacing-lg;
+  }
+  &--xl {
+    margin-top: variables.$spacing-xl;
+  }
+}
+
+.mb {
+  &--xs {
+    margin-bottom: variables.$spacing-xs;
+  }
+  &--sm {
+    margin-bottom: variables.$spacing-sm;
+  }
+  &--md {
+    margin-bottom: variables.$spacing-md;
+  }
+  &--lg {
+    margin-bottom: variables.$spacing-lg;
+  }
+  &--xl {
+    margin-bottom: variables.$spacing-xl;
+  }
+}
+
+// Display utilities
+.hidden {
+  display: none;
+}
+
+.sr-only {
+  @include sr-only;
+}

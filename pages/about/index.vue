@@ -1,7 +1,7 @@
 <template>
   <main class="container">
     <article class="about">
-      <div class="header"> 
+      <div class="header">
         <img src="/logo_light.png" width="100px" />
         <h1 class="title">关于我们</h1>
       </div>
@@ -14,11 +14,21 @@
 
       <div class="section">
         <h2>技术栈</h2>
-        
-        <div class="tech-category" v-for="(category, catIndex) in techCategories" :key="catIndex">
-          <h3 class="category-title">{{ category.name }}</h3>
+
+        <div
+          v-for="(category, catIndex) in techCategories"
+          :key="catIndex"
+          class="tech-category"
+        >
+          <h3 class="category-title">
+            {{ category.name }}
+          </h3>
           <div class="tech-stack">
-            <div class="tech-card" v-for="(tech, index) in category.techs" :key="index">
+            <div
+              v-for="(tech, index) in category.techs"
+              :key="index"
+              class="tech-card"
+            >
               <div class="tech-icon">
                 <img :src="tech.icon" :alt="tech.name" />
               </div>
@@ -34,13 +44,21 @@
       <div class="section">
         <h2>团队成员</h2>
         <div class="team-members">
-          <div class="member-card" v-for="(member, index) in teamMembers" :key="index">
+          <div
+            v-for="(member, index) in teamMembers"
+            :key="index"
+            class="member-card"
+          >
             <div class="member-avatar">
               <img :src="member.avatar" :alt="member.name" />
             </div>
             <h3>{{ member.name }}</h3>
-            <p class="member-role">{{ member.role }}</p>
-            <p class="member-bio">{{ member.bio }}</p>
+            <p class="member-role">
+              {{ member.role }}
+            </p>
+            <p class="member-bio">
+              {{ member.bio }}
+            </p>
           </div>
         </div>
       </div>
@@ -55,110 +73,118 @@ export default {
     return {
       techCategories: [
         {
-          name: "前端技术",
+          name: '前端技术',
           techs: [
             {
               name: 'Nuxt.js & Vue.js',
-              description: '基于Vue.js的SSR框架，提供高性能的用户界面和良好的SEO支持。',
-              icon: '/icons/nuxt.svg'
+              description:
+                '基于Vue.js的SSR框架，提供高性能的用户界面和良好的SEO支持。',
+              icon: '/icons/nuxt.svg',
             },
             {
               name: 'D3.js',
-              description: '强大的数据可视化库，用于构建交互式图表和知识图谱展示。',
-              icon: '/icons/d3.svg'
+              description:
+                '强大的数据可视化库，用于构建交互式图表和知识图谱展示。',
+              icon: '/icons/d3.svg',
             },
             {
               name: 'Pinia',
-              description: '新一代Vue状态管理库，提供简洁直观的API和出色的TypeScript支持。',
-              icon: '/icons/pinia.svg'
+              description:
+                '新一代Vue状态管理库，提供简洁直观的API和出色的TypeScript支持。',
+              icon: '/icons/pinia.svg',
             },
             {
               name: 'Element Plus',
-              description: '基于Vue 3的组件库，帮助我们快速构建一致的用户界面。',
-              icon: '/icons/element.png'
+              description:
+                '基于Vue 3的组件库，帮助我们快速构建一致的用户界面。',
+              icon: '/icons/element.png',
             },
             {
               name: 'Axios',
               description: '基于Promise的HTTP客户端，用于浏览器和Node.js环境。',
-              icon: '/icons/axios.png'
-            }
-          ]
+              icon: '/icons/axios.png',
+            },
+          ],
         },
         {
-          name: "后端技术",
+          name: '后端技术',
           techs: [
             {
               name: 'Flask & Python',
-              description: '轻量级的Python Web框架，灵活且易于扩展，支持快速开发。',
-              icon: '/icons/flask.png'
+              description:
+                '轻量级的Python Web框架，灵活且易于扩展，支持快速开发。',
+              icon: '/icons/flask.png',
             },
             {
               name: 'MySQL',
               description: '关系型数据库，用于存储结构化数据和用户信息。',
-              icon: '/icons/mysql.svg'
+              icon: '/icons/mysql.svg',
             },
             {
               name: 'Neo4j',
               description: '图数据库，专为存储和查询复杂的知识图谱关系而设计。',
-              icon: '/icons/neo4j.png'
+              icon: '/icons/neo4j.png',
             },
             {
               name: 'JWT',
               description: '用于用户身份验证与鉴权。',
-              icon: '/icons/jwt.svg'
+              icon: '/icons/jwt.svg',
             },
             {
               name: 'RSA',
-              description: '一种非对称加密算法，基于大质数分解的困难性。提高系统安全性。',
-              icon: '/icons/rsa.svg'
+              description:
+                '一种非对称加密算法，基于大质数分解的困难性。提高系统安全性。',
+              icon: '/icons/rsa.svg',
             },
-          ]
+          ],
         },
         {
-          name: "AI技术",
+          name: 'AI技术',
           techs: [
             {
               name: 'MaxKB',
               description: '多模态知识库技术，整合文本、图像和视频等多源信息。',
-              icon: '/icons/maxkb.png'
+              icon: '/icons/maxkb.png',
             },
             {
               name: 'RAG技术',
-              description: '检索增强生成技术，提供精准的知识检索和内容生成能力。',
-              icon: '/icons/rag.svg'
+              description:
+                '检索增强生成技术，提供精准的知识检索和内容生成能力。',
+              icon: '/icons/rag.svg',
             },
             {
               name: 'AI智能问答',
-              description: '基于大型语言模型的智能问答系统，为学习者提供实时帮助。',
-              icon: '/icons/ai.svg'
-            }
-          ]
-        }
+              description:
+                '基于大型语言模型的智能问答系统，为学习者提供实时帮助。',
+              icon: '/icons/ai.svg',
+            },
+          ],
+        },
       ],
       teamMembers: [
         {
           name: 'Ho.GiGi',
-          avatar: '/team/hgg.jpg'
+          avatar: '/team/hgg.jpg',
         },
         {
           name: 'ST',
-          avatar: '/team/st.png'
+          avatar: '/team/st.png',
         },
         {
           name: 'Sinkhorn',
-          avatar: '/team/sinkhorn.png'
+          avatar: '/team/sinkhorn.png',
         },
         {
           name: 'R-y-o',
-          avatar: '/team/ryo.png'
+          avatar: '/team/ryo.png',
         },
         {
           name: 'Aurorallz',
-          avatar: '/team/aurorallz.png'
-        }
-      ]
+          avatar: '/team/aurorallz.png',
+        },
+      ],
     }
-  }
+  },
 }
 </script>
 
@@ -224,12 +250,14 @@ export default {
   border-radius: 8px;
   padding: 20px;
   border: 1px solid var(--color-border-quote);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .tech-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .tech-icon {
@@ -341,16 +369,17 @@ export default {
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .tech-stack, .team-members {
+  .tech-stack,
+  .team-members {
     grid-template-columns: 1fr;
   }
-  
+
   .tech-card {
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
-  
+
   .tech-icon {
     margin-right: 0;
     margin-bottom: 15px;

@@ -7,12 +7,14 @@ import '~/assets/css/post.scss'
 const props = defineProps({
   id: { type: String, required: true }, // 评论的ID CommitId
   author: {
-    type: Object, required: true, default: () => ({
+    type: Object,
+    required: true,
+    default: () => ({
       attributes: {
         avatarUrl: '',
-        userName: ''
-      }
-    })
+        userName: '',
+      },
+    }),
   }, // 评论的作者
   content: { type: String, required: true }, // 评论内容
   tags: { type: Array }, // 标签
@@ -28,8 +30,8 @@ const emit = defineEmits(['like'])
 const authors = ref({
   attributes: {
     avatarUrl: '',
-    userName: ''
-  }
+    userName: '',
+  },
 })
 
 const isLiked = ref(props.isLiked)
@@ -37,19 +39,19 @@ const localLikesCount = ref(props.likesCount)
 
 const toggleLike = () => {
   isLiked.value = !isLiked.value
-  localLikesCount.value = isLiked.value 
-    ? localLikesCount.value + 1 
+  localLikesCount.value = isLiked.value
+    ? localLikesCount.value + 1
     : localLikesCount.value - 1
-  
+
   emit('like', {
     commentId: props.id,
-    isLiked: isLiked.value
+    isLiked: isLiked.value,
   })
 }
 
 onMounted(() => {
   authors.value = props.author
-  if (props.tags) console.log(props.tags);
+  if (props.tags) console.log(props.tags)
 })
 
 const md = MarkdownItAsync()
@@ -59,39 +61,52 @@ md.use(
     // Pass the codeToHtml function
     codeToHtml,
     {
-      theme: 'material-theme-lighter'
+      theme: 'material-theme-lighter',
     }
   )
 )
 
 const renderedContent = await md.renderAsync(props.content)
 
-const codeColor = computed(() => useColorMode().preference === 'light' ? '#F8FAFC' : '#1E293B')
+const codeColor = computed(() =>
+  useColorMode().preference === 'light' ? '#F8FAFC' : '#1E293B'
+)
 
-const finalContent = renderedContent.replace(/#FAFAFA/g, codeColor); // 替换代码区背景色
+const finalContent = renderedContent.replace(/#FAFAFA/g, codeColor) // 替换代码区背景色
 </script>
 
 <template>
   <div class="comment-container" :class="{ 'is-content': props.isContent }">
     <div class="comment-left">
-      <img :src="authors.attributes.avatarUrl" class="avatar" alt="">
+      <img :src="authors.attributes.avatarUrl" class="avatar" alt="" />
     </div>
     <div class="comment-right">
       <div class="comment-info">
-        <div class="author-name">{{ authors.attributes.userName }}</div>
+        <div class="author-name">
+          {{ authors.attributes.userName }}
+        </div>
         <div class="comment-date">
           <span>{{ props.time }}</span>
         </div>
         <div class="tag-container">
-          <div class="tag-title" v-for="tag in props.tags" :index="tag.tagId" :style="{'--hue': tag.hueColor}">
+          <div
+            v-for="tag in props.tags"
+            :key="tag.tagId"
+            class="tag-title"
+            :index="tag.tagId"
+            :style="{ '--hue': tag.hueColor }"
+          >
             <span class="tag-name">{{ tag.title }}</span>
           </div>
         </div>
       </div>
-      <div class="comment-content" v-html="finalContent">
-      </div>
+      <div class="comment-content" v-html="finalContent" />
       <div class="comment-meta">
-        <button class="like-button" @click="toggleLike" :class="{ 'liked': isLiked }">
+        <button
+          class="like-button"
+          :class="{ liked: isLiked }"
+          @click="toggleLike"
+        >
           <IconsLike />
         </button>
         <span>{{ localLikesCount }} 人赞了</span>

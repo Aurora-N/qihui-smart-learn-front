@@ -2,23 +2,25 @@
 const props = defineProps({
   title: {
     type: String,
-    default: ''
+    default: '',
   },
   height: {
     type: String,
-    default: '20rem'
+    default: '20rem',
   },
   stickyTop: {
     type: String,
-    default: '5rem'
-  }
+    default: '5rem',
+  },
 })
 </script>
 
 <template>
   <div class="sidebar" :style="`top: ${props.stickyTop};`">
     <div class="lists">
-      <h3 style="margin-top: 0;" v-if="title.length !== 0">{{ props.title }}</h3>
+      <h3 v-if="title.length !== 0" style="margin-top: 0">
+        {{ props.title }}
+      </h3>
       <el-scrollbar :height="props.height">
         <slot />
       </el-scrollbar>

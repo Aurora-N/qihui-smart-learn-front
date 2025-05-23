@@ -13,12 +13,11 @@
         </p>
       </div>
     </div>
-    <div class="footer-background"></div>
+    <div class="footer-background" />
   </footer>
 </template>
 
-<script setup>
-</script>
+<script setup></script>
 
 <style scoped>
 .footer {
@@ -121,18 +120,18 @@
   .footer-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   .footer-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  
+
   .social-links {
     margin-bottom: 0;
     order: 2;
   }
-  
+
   .copyright {
     order: 1;
   }
@@ -144,4 +143,3 @@
   }
 }
 </style>
-

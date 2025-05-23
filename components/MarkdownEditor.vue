@@ -3,7 +3,7 @@
     <!-- Header with navigation and controls -->
     <div class="header">
       <div class="menu-back-btn">
-        <button @click="$router.push('/forum')" class="back-btn" title="返回">
+        <button class="back-btn" title="返回" @click="$router.push('/forum')">
           <span class="icon">
             <el-icon>
               <ArrowLeft />
@@ -15,16 +15,30 @@
         <div class="view-controls">
           <div class="slider-container">
             <div class="slider-track">
-              <div class="slider-indicator" :style="sliderStyle"></div>
-              <button v-if="!isMobileView" @click="setViewMode('split')" :class="{ active: viewMode === 'split' }"
-                ref="splitBtn" title="双栏同时显示编辑区和预览区">
+              <div class="slider-indicator" :style="sliderStyle" />
+              <button
+                v-if="!isMobileView"
+                ref="splitBtn"
+                :class="{ active: viewMode === 'split' }"
+                title="双栏同时显示编辑区和预览区"
+                @click="setViewMode('split')"
+              >
                 <span>双栏</span>
               </button>
-              <button @click="setViewMode('edit')" :class="{ active: viewMode === 'edit' }" ref="editBtn" title="编辑模式">
+              <button
+                ref="editBtn"
+                :class="{ active: viewMode === 'edit' }"
+                title="编辑模式"
+                @click="setViewMode('edit')"
+              >
                 <span>编辑</span>
               </button>
-              <button @click="setViewMode('preview')" :class="{ active: viewMode === 'preview' }" ref="previewBtn"
-                title="预览模式">
+              <button
+                ref="previewBtn"
+                :class="{ active: viewMode === 'preview' }"
+                title="预览模式"
+                @click="setViewMode('preview')"
+              >
                 <span>预览</span>
               </button>
             </div>
@@ -32,8 +46,8 @@
         </div>
 
         <!-- Mobile menu toggle button -->
-        <div class="mobile-menu-toggle" v-if="isMobileView || isTabletView">
-          <button @click="isMenuExpanded = !isMenuExpanded" title="格式化选项">
+        <div v-if="isMobileView || isTabletView" class="mobile-menu-toggle">
+          <button title="格式化选项" @click="isMenuExpanded = !isMenuExpanded">
             <span class="icon">
               <el-icon>
                 <Menu />
@@ -42,63 +56,75 @@
           </button>
         </div>
 
-        <div class="menu-group-left" :class="{ 'mobile-expanded': isMenuExpanded }">
-
+        <div
+          class="menu-group-left"
+          :class="{ 'mobile-expanded': isMenuExpanded }"
+        >
           <div class="menu-group">
             <Dropdown open-on="click">
               <template #trigger>
                 <div class="tag-btn" title="标签">
-                  <span class="icon"><el-icon>
-                      <CollectionTag />
-                    </el-icon></span>
+                  <span class="icon"
+                    ><el-icon> <CollectionTag /> </el-icon
+                  ></span>
                   <span>标签</span>
                 </div>
               </template>
-              <div class="tag-title" v-for="tag of tags" :index="tag" :style="{
-                '--hue': tag.hueColor
-              }" :class="{ 'selected': getTagIndex(tag) !== -1 }" @click="toggleTag(tag)">
-                <div class="tag-color-indicator"></div>
-                <h3 class="tag-name">{{ tag.title }}</h3>
+              <div
+                v-for="tag of tags"
+                :key="tag.tagId"
+                class="tag-title"
+                :index="tag"
+                :style="{
+                  '--hue': tag.hueColor,
+                }"
+                :class="{ selected: getTagIndex(tag) !== -1 }"
+                @click="toggleTag(tag)"
+              >
+                <div class="tag-color-indicator" />
+                <h3 class="tag-name">
+                  {{ tag.title }}
+                </h3>
               </div>
             </Dropdown>
           </div>
 
           <div class="menu-group">
-            <button @click="insertFormat('# ')" title="1级标题">
+            <button title="1级标题" @click="insertFormat('# ')">
               <span class="icon">H1</span>
             </button>
-            <button @click="insertFormat('## ')" title="2级标题">
+            <button title="2级标题" @click="insertFormat('## ')">
               <span class="icon">H2</span>
             </button>
-            <button @click="insertFormat('### ')" title="3级标题">
+            <button title="3级标题" @click="insertFormat('### ')">
               <span class="icon">H3</span>
             </button>
           </div>
 
           <div class="menu-group">
-            <button @click="insertFormat('**', '**')" title="加粗">
+            <button title="加粗" @click="insertFormat('**', '**')">
               <strong class="icon">B</strong>
             </button>
-            <button @click="insertFormat('*', '*')" title="斜体">
+            <button title="斜体" @click="insertFormat('*', '*')">
               <i class="icon">I</i>
             </button>
-            <button @click="insertFormat('~~', '~~')" title="删除线">
+            <button title="删除线" @click="insertFormat('~~', '~~')">
               <s class="icon">S</s>
             </button>
           </div>
 
           <div class="menu-group">
-            <button @click="insertFormat('- ')" title="无序列表">
+            <button title="无序列表" @click="insertFormat('- ')">
               <span class="icon">
                 <IconsUnorderList />
               </span>
             </button>
-            <button @click="insertFormat('1. ')" title="有序列表">
+            <button title="有序列表" @click="insertFormat('1. ')">
               <span class="icon">
                 <IconsOrderedList />
               </span>
             </button>
-            <button @click="insertFormat('- [ ] ')" title="方形勾选框">
+            <button title="方形勾选框" @click="insertFormat('- [ ] ')">
               <span class="icon">
                 <IconsChecked />
               </span>
@@ -106,12 +132,15 @@
           </div>
 
           <div class="menu-group">
-            <button @click="insertFormat('> ')" title="引用">
+            <button title="引用" @click="insertFormat('> ')">
               <span class="icon">
                 <IconsQuote />
               </span>
             </button>
-            <button @click="insertFormat('\`\`\`\n', '\n\`\`\`')" title="代码块">
+            <button
+              title="代码块"
+              @click="insertFormat('\`\`\`\n', '\n\`\`\`')"
+            >
               <span class="icon">
                 <IconsCode />
               </span>
@@ -119,20 +148,27 @@
           </div>
 
           <div class="menu-group">
-            <button @click="insertFormat('[', '](url)')" title="链接">
+            <button title="链接" @click="insertFormat('[', '](url)')">
               <span class="icon">
                 <IconsLink />
               </span>
             </button>
-            <button @click="insertFormat('![alt text](', ')')" title="图片链接">
-              <span class="icon"><el-icon>
-                  <Picture />
-                </el-icon></span>
+            <button title="图片链接" @click="insertFormat('![alt text](', ')')">
+              <span class="icon"
+                ><el-icon> <Picture /> </el-icon
+              ></span>
             </button>
-            <button @click="insertFormat('| Header | Header |\n| ------ | ------ |\n| Cell   | Cell   |')" title="表格">
-              <span class="icon"><el-icon>
-                  <Grid />
-                </el-icon></span>
+            <button
+              title="表格"
+              @click="
+                insertFormat(
+                  '| Header | Header |\n| ------ | ------ |\n| Cell   | Cell   |'
+                )
+              "
+            >
+              <span class="icon"
+                ><el-icon> <Grid /> </el-icon
+              ></span>
             </button>
           </div>
         </div>
@@ -141,44 +177,61 @@
           <span class="char-count">共{{ markdownText.length }}个字符</span>
           <ThemeToggle class="nav-button" />
 
-          <el-button type="primary" class="submit-btn" title="发表帖子" @click="handleSubmit">
-            <span class="submit-btn-inner">
-              <IconsSubmit />发表
-            </span>
+          <el-button
+            type="primary"
+            class="submit-btn"
+            title="发表帖子"
+            @click="handleSubmit"
+          >
+            <span class="submit-btn-inner"> <IconsSubmit />发表 </span>
           </el-button>
         </div>
       </div>
     </div>
 
     <div class="editor-container" :class="viewMode">
-      <div class="editor-pane" v-show="viewMode !== 'preview'">
+      <div v-show="viewMode !== 'preview'" class="editor-pane">
         <input v-model="postTitle" placeholder="请输入标题..." />
         <hr style="margin: 0 1rem" />
-        <textarea ref="editor" v-model="markdownText" @keydown="handleTabKey" @input="autoResize"
-          :style="{ height: textareaHeight + 'px' }" placeholder="在此处输入Markdown格式的正文..."></textarea>
+        <textarea
+          ref="editor"
+          v-model="markdownText"
+          :style="{ height: textareaHeight + 'px' }"
+          placeholder="在此处输入Markdown格式的正文..."
+          @keydown="handleTabKey"
+          @input="autoResize"
+        />
       </div>
-      <div class="preview-pane" v-show="viewMode !== 'edit'">
-        <div class="preview-content" v-html="renderedHTML"></div>
+      <div v-show="viewMode !== 'edit'" class="preview-pane">
+        <div class="preview-content" v-html="renderedHTML" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
-import { fromAsyncCodeToHtml } from '@shikijs/markdown-it/async';
-import MarkdownItAsync from 'markdown-it-async';
-import { codeToHtml } from 'shiki';
-import '~/assets/css/post.scss';
-import markdownItSanitizer from 'markdown-it-sanitizer';
-import { useForumApi } from '~/api/forum';
+import {
+  ref,
+  reactive,
+  computed,
+  watch,
+  onMounted,
+  onUnmounted,
+  nextTick,
+} from 'vue'
+import { fromAsyncCodeToHtml } from '@shikijs/markdown-it/async'
+import MarkdownItAsync from 'markdown-it-async'
+import { codeToHtml } from 'shiki'
+import '~/assets/css/post.scss'
+import markdownItSanitizer from 'markdown-it-sanitizer'
+import { useForumApi } from '~/api/forum'
 
-const postTitle = ref('');
-const markdownText = ref('');
-const viewMode = ref('split'); // 'edit', 'preview', or 'split'
-const editor = ref(null);
-const textareaHeight = ref(500); // 初始高度
-const isMenuExpanded = ref(false);
+const postTitle = ref('')
+const markdownText = ref('')
+const viewMode = ref('split') // 'edit', 'preview', or 'split'
+const editor = ref(null)
+const textareaHeight = ref(500) // 初始高度
+const isMenuExpanded = ref(false)
 
 // 标签相关
 const tags = ref([])
@@ -192,59 +245,64 @@ onMounted(() => {
   getAllTags()
 })
 
-const selectedTags = ref([]);
+const selectedTags = ref([])
 
-const getTagIndex = (tag) => selectedTags.value.findIndex(item => item.tagId === parseInt(tag.tagId));
+const getTagIndex = tag =>
+  selectedTags.value.findIndex(
+    item => item.tagId === Number.parseInt(tag.tagId)
+  )
 
-const toggleTag = (tag) => {
-  const tagIndex = getTagIndex(tag);
+const toggleTag = tag => {
+  const tagIndex = getTagIndex(tag)
   if (tagIndex === -1) {
     // 没找到标签，添加
     selectedTags.value.push({
-      tagId: parseInt(tag.tagId),
-      tagName: tag.title
-    });
+      tagId: Number.parseInt(tag.tagId),
+      tagName: tag.title,
+    })
   } else {
     // 找到标签，删除
-    selectedTags.value.splice(tagIndex, 1);
+    selectedTags.value.splice(tagIndex, 1)
   }
 }
 
 // 响应式设计相关状态
-const windowWidth = ref(window.innerWidth);
-const isMobileView = computed(() => windowWidth.value < 768);
-const isTabletView = computed(() => windowWidth.value >= 768 && windowWidth.value < 1200);
+const windowWidth = ref(window.innerWidth)
+const isMobileView = computed(() => windowWidth.value < 768)
+const isTabletView = computed(
+  () => windowWidth.value >= 768 && windowWidth.value < 1200
+)
 
 // 滑块相关引用和状态
-const editBtn = ref(null);
-const previewBtn = ref(null);
-const splitBtn = ref(null);
+const editBtn = ref(null)
+const previewBtn = ref(null)
+const splitBtn = ref(null)
 const sliderStyle = reactive({
   width: '33.33%',
   left: '0%',
-});
+})
 
 // 监听窗口大小变化
 const handleResize = () => {
-  windowWidth.value = window.innerWidth;
-  updateSliderPosition();
+  windowWidth.value = window.innerWidth
+  updateSliderPosition()
 
   // 在移动视图下自动切换到编辑模式
   if (isMobileView.value && viewMode.value === 'split') {
-    setViewMode('edit');
+    setViewMode('edit')
   }
-};
+}
 
 // 设置视图模式并更新滑块位置
-const setViewMode = (mode) => {
+const setViewMode = mode => {
   // 在移动视图下，禁用双栏模式
   if (isMobileView.value && mode === 'split') {
-    return;
+    return
   }
 
-  viewMode.value = mode;
-  updateSliderPosition();
-};
+  viewMode.value = mode
+  updateSliderPosition()
+}
 
 // 更新滑块位置
 const updateSliderPosition = () => {
@@ -252,195 +310,202 @@ const updateSliderPosition = () => {
     if (isMobileView.value) {
       // 移动设备只有两个按钮，调整滑块
       if (viewMode.value === 'edit' && editBtn.value) {
-        const width = editBtn.value.offsetWidth;
-        sliderStyle.width = `${width}px`;
-        sliderStyle.left = '2px';
+        const width = editBtn.value.offsetWidth
+        sliderStyle.width = `${width}px`
+        sliderStyle.left = '2px'
       } else if (viewMode.value === 'preview' && previewBtn.value) {
-        const width = previewBtn.value.offsetWidth;
-        const left = editBtn.value ? editBtn.value.offsetWidth : 0;
-        sliderStyle.width = `${width}px`;
-        sliderStyle.left = `${left - 2}px`;
+        const width = previewBtn.value.offsetWidth
+        const left = editBtn.value ? editBtn.value.offsetWidth : 0
+        sliderStyle.width = `${width}px`
+        sliderStyle.left = `${left - 2}px`
       }
     } else {
       // 桌面视图有三个按钮
       if (viewMode.value === 'split' && splitBtn.value) {
-        const width = splitBtn.value.offsetWidth;
-        sliderStyle.width = `${width}px`;
-        sliderStyle.left = '2px';
+        const width = splitBtn.value.offsetWidth
+        sliderStyle.width = `${width}px`
+        sliderStyle.left = '2px'
       } else if (viewMode.value === 'edit' && editBtn.value) {
-        const width = editBtn.value.offsetWidth;
-        const left = splitBtn.value ? splitBtn.value.offsetWidth : 0;
-        sliderStyle.width = `${width}px`;
-        sliderStyle.left = `${left}px`;
+        const width = editBtn.value.offsetWidth
+        const left = splitBtn.value ? splitBtn.value.offsetWidth : 0
+        sliderStyle.width = `${width}px`
+        sliderStyle.left = `${left}px`
       } else if (viewMode.value === 'preview' && previewBtn.value) {
-        const width = previewBtn.value.offsetWidth;
-        const left = (splitBtn.value ? splitBtn.value.offsetWidth : 0) +
-          (editBtn.value ? editBtn.value.offsetWidth : 0);
-        sliderStyle.width = `${width}px`;
-        sliderStyle.left = `${left - 2}px`;
+        const width = previewBtn.value.offsetWidth
+        const left =
+          (splitBtn.value ? splitBtn.value.offsetWidth : 0) +
+          (editBtn.value ? editBtn.value.offsetWidth : 0)
+        sliderStyle.width = `${width}px`
+        sliderStyle.left = `${left - 2}px`
       }
     }
-  });
-};
+  })
+}
 
 // 自动调整textarea高度
 const autoResize = () => {
-  const textarea = editor.value;
-  if (!textarea) return;
+  const textarea = editor.value
+  if (!textarea) return
 
   // 保存当前滚动位置
-  const scrollPos = window.scrollY;
+  const scrollPos = window.scrollY
 
   // 重置高度以获取正确的scrollHeight
-  textarea.style.height = 'auto';
+  textarea.style.height = 'auto'
 
   // 设置新的高度
-  const newHeight = Math.max(500, textarea.scrollHeight);
-  textareaHeight.value = newHeight;
+  const newHeight = Math.max(500, textarea.scrollHeight)
+  textareaHeight.value = newHeight
 
   // 恢复滚动位置
-  window.scrollTo(0, scrollPos);
-};
+  window.scrollTo(0, scrollPos)
+}
 
 // Computed property for rendered HTML
-const md = MarkdownItAsync();
+const md = MarkdownItAsync()
 
 md.use(
   fromAsyncCodeToHtml(
     // Pass the codeToHtml function
     codeToHtml,
     {
-      theme: 'material-theme-lighter'
+      theme: 'material-theme-lighter',
     }
   ),
   markdownItSanitizer
-);
+)
 
-const codeColor = computed(() => useColorMode().preference === 'light' ? '#F8FAFC' : '#1E293B');
+const codeColor = computed(() =>
+  useColorMode().preference === 'light' ? '#F8FAFC' : '#1E293B'
+)
 
-const renderedHTML = ref(null);
+const renderedHTML = ref(null)
 
-watch([markdownText, postTitle], async (newText) => {
-  const html = await md.renderAsync(`# ${newText[1]}\n${newText[0]}`);
-  renderedHTML.value = html.replace(/#FAFAFA/g, codeColor.value); // 替换代码区背景色
+watch([markdownText, postTitle], async newText => {
+  const html = await md.renderAsync(`# ${newText[1]}\n${newText[0]}`)
+  renderedHTML.value = html.replace(/#FAFAFA/g, codeColor.value) // 替换代码区背景色
 
   // 内容变化时调整高度
   nextTick(() => {
-    autoResize();
-  });
-});
+    autoResize()
+  })
+})
 
 // 监听视图模式变化，在切换时调整高度
 watch(viewMode, () => {
   nextTick(() => {
-    autoResize();
-  });
-});
+    autoResize()
+  })
+})
 
 // Methods
 const insertFormat = (prefix, suffix = '') => {
-  const textarea = editor.value;
-  if (!textarea) return;
+  const textarea = editor.value
+  if (!textarea) return
 
-  const start = textarea.selectionStart;
-  const end = textarea.selectionEnd;
-  const selectedText = markdownText.value.substring(start, end);
+  const start = textarea.selectionStart
+  const end = textarea.selectionEnd
+  const selectedText = markdownText.value.substring(start, end)
 
   // Insert the formatting
-  const replacement = prefix + selectedText + suffix;
+  const replacement = prefix + selectedText + suffix
   markdownText.value =
     markdownText.value.substring(0, start) +
     replacement +
-    markdownText.value.substring(end);
+    markdownText.value.substring(end)
 
   // Set cursor position
   setTimeout(() => {
-    textarea.focus();
+    textarea.focus()
     if (selectedText.length > 0) {
-      textarea.selectionStart = start + prefix.length;
-      textarea.selectionEnd = start + prefix.length + selectedText.length;
+      textarea.selectionStart = start + prefix.length
+      textarea.selectionEnd = start + prefix.length + selectedText.length
     } else {
-      const newCursorPos = start + prefix.length;
-      textarea.selectionStart = newCursorPos;
-      textarea.selectionEnd = newCursorPos;
+      const newCursorPos = start + prefix.length
+      textarea.selectionStart = newCursorPos
+      textarea.selectionEnd = newCursorPos
     }
 
     // 调整高度
-    autoResize();
-  }, 0);
+    autoResize()
+  }, 0)
 
   // 在移动视图下，点击格式按钮后关闭菜单
   if (isMobileView.value || isTabletView.value) {
-    isMenuExpanded.value = false;
+    isMenuExpanded.value = false
   }
-};
+}
 
-const handleTabKey = (e) => {
+const handleTabKey = e => {
   if (e.key === 'Tab') {
-    e.preventDefault();
+    e.preventDefault()
 
-    const textarea = editor.value;
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
+    const textarea = editor.value
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
 
     // Insert tab
     markdownText.value =
       markdownText.value.substring(0, start) +
       '  ' +
-      markdownText.value.substring(end);
+      markdownText.value.substring(end)
 
     // Set cursor position after the tab
     setTimeout(() => {
-      textarea.selectionStart = start + 2;
-      textarea.selectionEnd = start + 2;
+      textarea.selectionStart = start + 2
+      textarea.selectionEnd = start + 2
 
       // 调整高度
-      autoResize();
-    }, 0);
+      autoResize()
+    }, 0)
   }
-};
+}
 
-const router = useRouter();
+const router = useRouter()
 
 // 发表文章
 const handleSubmit = async () => {
   if (postTitle.value.length <= 0) {
-    ElMessage({ type: 'error', message: '请输入标题！', plain: true });
-    return;
+    ElMessage({ type: 'error', message: '请输入标题！', plain: true })
+    return
   }
   if (markdownText.value.length <= 0) {
-    ElMessage({ type: 'error', message: '请输入正文！', plain: true });
-    return;
+    ElMessage({ type: 'error', message: '请输入正文！', plain: true })
+    return
   }
-  const res = await useForumApi().createNewPost(postTitle.value, markdownText.value, selectedTags.value);
-  if (res.status === "success") router.push(`/forum/${res.postMeta.postId}`);
+  const res = await useForumApi().createNewPost(
+    postTitle.value,
+    markdownText.value,
+    selectedTags.value
+  )
+  if (res.status === 'success') router.push(`/forum/${res.postMeta.postId}`)
 }
 
 // Lifecycle hooks
 onMounted(() => {
   if (editor.value) {
-    editor.value.focus();
+    editor.value.focus()
   }
 
   // 初始化滑块位置
-  updateSliderPosition();
+  updateSliderPosition()
 
   // 监听窗口大小变化
-  window.addEventListener('resize', handleResize);
+  window.addEventListener('resize', handleResize)
 
   // 初始化自动高度调整
-  autoResize();
+  autoResize()
 
   // 如果是移动设备，默认设置为编辑模式
   if (isMobileView.value) {
-    setViewMode('edit');
+    setViewMode('edit')
   }
-});
+})
 
 // 在组件卸载时移除事件监听
 onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
-});
+  window.removeEventListener('resize', handleResize)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -454,7 +519,9 @@ onUnmounted(() => {
   width: 90%;
   margin: auto;
   overflow: visible;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   position: relative;
 }
 
@@ -585,7 +652,7 @@ onUnmounted(() => {
 .menu-bar .submit-btn-inner {
   display: flex;
   align-content: center;
-  gap: 0.3rem
+  gap: 0.3rem;
 }
 
 /* 滑动按钮样式 */
@@ -913,10 +980,10 @@ input {
     width: 100%;
   }
   .tag-title.selected {
-  background-color: var(--btn-regular-bg-active, rgba(0, 110, 255, 0.1));
-  border-radius: 4px;
-  border-left: 3px solid var(--primary, #006eff);
-}
+    background-color: var(--btn-regular-bg-active, rgba(0, 110, 255, 0.1));
+    border-radius: 4px;
+    border-left: 3px solid var(--primary, #006eff);
+  }
   /* textarea, .preview-pane {
     min-height: 60vh;
   } */

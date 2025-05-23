@@ -9,26 +9,30 @@ const props = defineProps({
   contentWidth: {
     type: String,
     default: '800px',
-  }
+  },
 })
 </script>
 
 <template>
   <div class="banner" :style="{ '--hue': props.hue }">
-    <div class="bg-layer bg-layer-1"></div>
-    <div class="bg-layer bg-layer-2"></div>
+    <div class="bg-layer bg-layer-1" />
+    <div class="bg-layer bg-layer-2" />
 
-    <div class="large-element large-book-left"></div>
-    <div class="large-element large-page-right"></div>
+    <div class="large-element large-book-left" />
+    <div class="large-element large-page-right" />
 
     <div class="decoration decoration-left">
-      <div class="book"></div>
-      <div class="page"></div>
+      <div class="book" />
+      <div class="page" />
     </div>
 
     <div class="banner-content" :style="{ 'max-width': props.contentWidth }">
-      <h1 class="banner-title">{{ props.title }}</h1>
-      <p class="banner-subtitle">{{ props.subTitle }}</p>
+      <h1 class="banner-title">
+        {{ props.title }}
+      </h1>
+      <p class="banner-subtitle">
+        {{ props.subTitle }}
+      </p>
       <slot />
     </div>
   </div>
@@ -36,25 +40,25 @@ const props = defineProps({
 
 <style scoped>
 .light-mode .banner {
-  --banner-color: oklch(.97 .01 var(--hue));
+  --banner-color: oklch(0.97 0.01 var(--hue));
   --title: #374151;
   --sub-title: #6b7280;
-  --decoration-color: oklch(.85 .03 var(--hue));
-  --decoration-accent: oklch(.75 .05 var(--hue));
-  --layer-color-1: oklch(.92 .02 var(--hue));
-  --layer-color-2: oklch(.94 .015 var(--hue));
-  --floating-color: oklch(.88 .025 var(--hue));
+  --decoration-color: oklch(0.85 0.03 var(--hue));
+  --decoration-accent: oklch(0.75 0.05 var(--hue));
+  --layer-color-1: oklch(0.92 0.02 var(--hue));
+  --layer-color-2: oklch(0.94 0.015 var(--hue));
+  --floating-color: oklch(0.88 0.025 var(--hue));
 }
 
 .dark-mode .banner {
-  --banner-color: oklch(.20 .014 var(--hue));
+  --banner-color: oklch(0.2 0.014 var(--hue));
   --title: rgb(248, 250, 252);
   --sub-title: rgb(231, 236, 243);
-  --decoration-color: oklch(.25 .03 var(--hue));
-  --decoration-accent: oklch(.30 .05 var(--hue));
-  --layer-color-1: oklch(.18 .02 var(--hue));
-  --layer-color-2: oklch(.22 .015 var(--hue));
-  --floating-color: oklch(.28 .025 var(--hue));
+  --decoration-color: oklch(0.25 0.03 var(--hue));
+  --decoration-accent: oklch(0.3 0.05 var(--hue));
+  --layer-color-1: oklch(0.18 0.02 var(--hue));
+  --layer-color-2: oklch(0.22 0.015 var(--hue));
+  --floating-color: oklch(0.28 0.025 var(--hue));
 }
 
 .banner {
@@ -116,8 +120,11 @@ const props = defineProps({
   width: 140px;
   height: 8px;
   background-color: var(--decoration-accent);
-  box-shadow: 0 30px 0 var(--decoration-accent), 0 60px 0 var(--decoration-accent),
-    0 90px 0 var(--decoration-accent), 0 120px 0 var(--decoration-accent),
+  box-shadow:
+    0 30px 0 var(--decoration-accent),
+    0 60px 0 var(--decoration-accent),
+    0 90px 0 var(--decoration-accent),
+    0 120px 0 var(--decoration-accent),
     0 150px 0 var(--decoration-accent);
 }
 
@@ -140,11 +147,17 @@ const props = defineProps({
   width: 140px;
   height: 6px;
   background-color: var(--decoration-accent);
-  box-shadow: 0 15px 0 var(--decoration-accent), 0 30px 0 var(--decoration-accent),
-    0 45px 0 var(--decoration-accent), 0 60px 0 var(--decoration-accent),
-    0 75px 0 var(--decoration-accent), 0 90px 0 var(--decoration-accent),
-    0 105px 0 var(--decoration-accent), 0 120px 0 var(--decoration-accent),
-    0 135px 0 var(--decoration-accent), 0 150px 0 var(--decoration-accent);
+  box-shadow:
+    0 15px 0 var(--decoration-accent),
+    0 30px 0 var(--decoration-accent),
+    0 45px 0 var(--decoration-accent),
+    0 60px 0 var(--decoration-accent),
+    0 75px 0 var(--decoration-accent),
+    0 90px 0 var(--decoration-accent),
+    0 105px 0 var(--decoration-accent),
+    0 120px 0 var(--decoration-accent),
+    0 135px 0 var(--decoration-accent),
+    0 150px 0 var(--decoration-accent);
 }
 
 /* Floating elements for additional depth */
@@ -217,7 +230,10 @@ const props = defineProps({
   width: 40px;
   height: 5px;
   background-color: var(--decoration-accent);
-  box-shadow: 0 15px 0 var(--decoration-accent), 0 30px 0 var(--decoration-accent), 0 45px 0 var(--decoration-accent);
+  box-shadow:
+    0 15px 0 var(--decoration-accent),
+    0 30px 0 var(--decoration-accent),
+    0 45px 0 var(--decoration-accent);
 }
 
 .page {
@@ -238,8 +254,12 @@ const props = defineProps({
   width: 35px;
   height: 3px;
   background-color: var(--decoration-accent);
-  box-shadow: 0 8px 0 var(--decoration-accent), 0 16px 0 var(--decoration-accent),
-    0 24px 0 var(--decoration-accent), 0 32px 0 var(--decoration-accent),
-    0 40px 0 var(--decoration-accent), 0 48px 0 var(--decoration-accent);
+  box-shadow:
+    0 8px 0 var(--decoration-accent),
+    0 16px 0 var(--decoration-accent),
+    0 24px 0 var(--decoration-accent),
+    0 32px 0 var(--decoration-accent),
+    0 40px 0 var(--decoration-accent),
+    0 48px 0 var(--decoration-accent);
 }
 </style>

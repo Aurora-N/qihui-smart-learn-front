@@ -1,8 +1,12 @@
 <template>
   <!-- 学习方向板块 -->
-  <Navbar/>
+  <Navbar />
   <div class="learn">
-    <ForumBanner title="学习方向" sub-title="选择你感兴趣的知识进行学习吧！" content-width="1100px">
+    <ForumBanner
+      title="学习方向"
+      sub-title="选择你感兴趣的知识进行学习吧！"
+      content-width="1100px"
+    >
       <div class="graph">
         <AsyncGraphComp title="总览" :max-depth="3" />
         <AsyncGraphComp title="前端" graph-id="前端" />
@@ -11,17 +15,24 @@
       <!-- 学习路线 -->
       <div class="my-path">
         <div class="get-my-path">
-          <el-button class="get-my-path-btn" type="primary" size="large" @click="$router.push('/quiz')">获取我的学习路线</el-button>
+          <el-button
+            class="get-my-path-btn"
+            type="primary"
+            size="large"
+            @click="$router.push('/quiz')"
+          >
+            获取我的学习路线
+          </el-button>
         </div>
       </div>
     </ForumBanner>
   </div>
-  <Footer/>
+  <Footer />
 </template>
 
 <script setup>
 definePageMeta({
-  layout:false
+  layout: false,
 })
 
 const AsyncGraphComp = defineAsyncComponent({

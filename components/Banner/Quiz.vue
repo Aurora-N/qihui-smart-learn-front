@@ -11,17 +11,17 @@ const props = defineProps({
 
 <template>
   <div class="banner" :style="{ '--hue': props.hue }">
-    <div class="bg-layer bg-layer-1"></div>
-    <div class="bg-layer bg-layer-2"></div>
+    <div class="bg-layer bg-layer-1" />
+    <div class="bg-layer bg-layer-2" />
 
-    <div class="large-element large-book-left"></div>
-    <div class="large-element large-page-right"></div>
-    
-    <div class="quiz-element pencil-left"></div>
-    <div class="quiz-element checkmark-right"></div>
-    <div class="quiz-element quiz-paper-bottom"></div>
+    <div class="large-element large-book-left" />
+    <div class="large-element large-page-right" />
 
-    <div class="banner-content" >
+    <div class="quiz-element pencil-left" />
+    <div class="quiz-element checkmark-right" />
+    <div class="quiz-element quiz-paper-bottom" />
+
+    <div class="banner-content">
       <slot />
     </div>
   </div>
@@ -29,30 +29,30 @@ const props = defineProps({
 
 <style scoped>
 .light-mode .banner {
-  --banner-color: oklch(.97 .01 var(--hue));
+  --banner-color: oklch(0.97 0.01 var(--hue));
   --title: #374151;
   --sub-title: #6b7280;
-  --decoration-color: oklch(.85 .03 var(--hue));
-  --decoration-accent: oklch(.75 .05 var(--hue));
-  --layer-color-1: oklch(.92 .02 var(--hue));
-  --layer-color-2: oklch(.94 .015 var(--hue));
-  --floating-color: oklch(.88 .025 var(--hue));
-  --quiz-element-color: oklch(.80 .04 var(--hue));
-  --quiz-element-accent: oklch(.70 .06 var(--hue));
+  --decoration-color: oklch(0.85 0.03 var(--hue));
+  --decoration-accent: oklch(0.75 0.05 var(--hue));
+  --layer-color-1: oklch(0.92 0.02 var(--hue));
+  --layer-color-2: oklch(0.94 0.015 var(--hue));
+  --floating-color: oklch(0.88 0.025 var(--hue));
+  --quiz-element-color: oklch(0.8 0.04 var(--hue));
+  --quiz-element-accent: oklch(0.7 0.06 var(--hue));
   --floating-text-color: #4b5563;
 }
 
 .dark-mode .banner {
-  --banner-color: oklch(.20 .014 var(--hue));
+  --banner-color: oklch(0.2 0.014 var(--hue));
   --title: rgb(248, 250, 252);
   --sub-title: rgb(231, 236, 243);
-  --decoration-color: oklch(.25 .03 var(--hue));
-  --decoration-accent: oklch(.30 .05 var(--hue));
-  --layer-color-1: oklch(.18 .02 var(--hue));
-  --layer-color-2: oklch(.22 .015 var(--hue));
-  --floating-color: oklch(.28 .025 var(--hue));
-  --quiz-element-color: oklch(.35 .04 var(--hue));
-  --quiz-element-accent: oklch(.40 .06 var(--hue));
+  --decoration-color: oklch(0.25 0.03 var(--hue));
+  --decoration-accent: oklch(0.3 0.05 var(--hue));
+  --layer-color-1: oklch(0.18 0.02 var(--hue));
+  --layer-color-2: oklch(0.22 0.015 var(--hue));
+  --floating-color: oklch(0.28 0.025 var(--hue));
+  --quiz-element-color: oklch(0.35 0.04 var(--hue));
+  --quiz-element-accent: oklch(0.4 0.06 var(--hue));
   --floating-text-color: #e5e7eb;
 }
 
@@ -114,8 +114,11 @@ const props = defineProps({
   width: 140px;
   height: 8px;
   background-color: var(--decoration-accent);
-  box-shadow: 0 30px 0 var(--decoration-accent), 0 60px 0 var(--decoration-accent),
-    0 90px 0 var(--decoration-accent), 0 120px 0 var(--decoration-accent),
+  box-shadow:
+    0 30px 0 var(--decoration-accent),
+    0 60px 0 var(--decoration-accent),
+    0 90px 0 var(--decoration-accent),
+    0 120px 0 var(--decoration-accent),
     0 150px 0 var(--decoration-accent);
 }
 
@@ -138,11 +141,17 @@ const props = defineProps({
   width: 140px;
   height: 6px;
   background-color: var(--decoration-accent);
-  box-shadow: 0 15px 0 var(--decoration-accent), 0 30px 0 var(--decoration-accent),
-    0 45px 0 var(--decoration-accent), 0 60px 0 var(--decoration-accent),
-    0 75px 0 var(--decoration-accent), 0 90px 0 var(--decoration-accent),
-    0 105px 0 var(--decoration-accent), 0 120px 0 var(--decoration-accent),
-    0 135px 0 var(--decoration-accent), 0 150px 0 var(--decoration-accent);
+  box-shadow:
+    0 15px 0 var(--decoration-accent),
+    0 30px 0 var(--decoration-accent),
+    0 45px 0 var(--decoration-accent),
+    0 60px 0 var(--decoration-accent),
+    0 75px 0 var(--decoration-accent),
+    0 90px 0 var(--decoration-accent),
+    0 105px 0 var(--decoration-accent),
+    0 120px 0 var(--decoration-accent),
+    0 135px 0 var(--decoration-accent),
+    0 150px 0 var(--decoration-accent);
 }
 
 /* Quiz-related decorative elements */
@@ -160,7 +169,15 @@ const props = defineProps({
   top: 20%;
   transform: rotate(-35deg);
   border-radius: 2px;
-  background: linear-gradient(to bottom, var(--quiz-element-accent) 0%, var(--quiz-element-accent) 10%, var(--quiz-element-color) 10%, var(--quiz-element-color) 90%, #f59e0b 90%, #f59e0b 100%);
+  background: linear-gradient(
+    to bottom,
+    var(--quiz-element-accent) 0%,
+    var(--quiz-element-accent) 10%,
+    var(--quiz-element-color) 10%,
+    var(--quiz-element-color) 90%,
+    #f59e0b 90%,
+    #f59e0b 100%
+  );
 }
 
 .pencil-left::after {
@@ -215,8 +232,11 @@ const props = defineProps({
   width: 70px;
   height: 4px;
   background-color: var(--quiz-element-accent);
-  box-shadow: 0 15px 0 var(--quiz-element-accent), 0 30px 0 var(--quiz-element-accent),
-    0 45px 0 var(--quiz-element-accent), 0 60px 0 var(--quiz-element-accent);
+  box-shadow:
+    0 15px 0 var(--quiz-element-accent),
+    0 30px 0 var(--quiz-element-accent),
+    0 45px 0 var(--quiz-element-accent),
+    0 60px 0 var(--quiz-element-accent);
 }
 
 /* Banner content */
@@ -263,6 +283,9 @@ const props = defineProps({
   width: 40px;
   height: 5px;
   background-color: var(--decoration-accent);
-  box-shadow: 0 15px 0 var(--decoration-accent), 0 30px 0 var(--decoration-accent), 0 45px 0 var(--decoration-accent);
+  box-shadow:
+    0 15px 0 var(--decoration-accent),
+    0 30px 0 var(--decoration-accent),
+    0 45px 0 var(--decoration-accent);
 }
 </style>

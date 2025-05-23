@@ -2,22 +2,25 @@
 const props = defineProps({
   title: {
     type: String,
-    default: ''
+    default: '',
   },
   lists: {
     type: Array,
-    default: [{ id: '', title: '', link: '', type: '理论' }]
+    default: () => [{ id: '', title: '', link: '', type: '理论' }],
   },
 })
 </script>
 
 <template>
   <div class="container">
-    <h3 class="header"><el-icon>
+    <h3 class="header">
+      <el-icon>
         <Reading />
-      </el-icon> {{ props.title }}</h3>
+      </el-icon>
+      {{ props.title }}
+    </h3>
     <ul class="lists">
-      <li v-for="item of props.lists">
+      <li v-for="item of props.lists" :key="item.link">
         <NuxtLink :to="item.link">{{ item.title }}</NuxtLink>
       </li>
     </ul>

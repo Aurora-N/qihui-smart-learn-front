@@ -1,142 +1,169 @@
 <script setup>
-import { useForumApi } from '~/api/forum';
+import { useForumApi } from '~/api/forum'
 
-const userStore = useUserStore();
-const router = useRouter();
-const route = useRoute();
+const userStore = useUserStore()
+const router = useRouter()
+const route = useRoute()
 
 const userInfo = ref({})
 const post = ref({
   postId: route.params.id,
-  title: "",
+  title: '',
   author: {
-      attributes: {
-          avatarUrl: "",
-          userName: "",
-          type: "user"
-      }
+    attributes: {
+      avatarUrl: '',
+      userName: '',
+      type: 'user',
+    },
   },
 })
 
 const comments = ref([])
 
-const initialized = ref(false);
+const initialized = ref(false)
 
 const initPostContent = async () => {
-  const isLogin = Object.keys(userStore.userInfo).length !== 0;
-  const res = await useForumApi().getPostContent(route.params.id, isLogin ? userStore.userInfo.data.userId : null);
-  post.value = res.data.posts;
-  comments.value = res.data.posts.comments;
-  initialized.value = true;
+  const isLogin = Object.keys(userStore.userInfo).length !== 0
+  const res = await useForumApi().getPostContent(
+    route.params.id,
+    isLogin ? userStore.userInfo.data.userId : null
+  )
+  post.value = res.data.posts
+  comments.value = res.data.posts.comments
+  initialized.value = true
 }
 
-const editorRef = ref(null);
+const editorRef = ref(null)
 
 const scrollToReplyEditor = () => {
   if (Object.keys(userStore.userInfo).length === 0) {
-    ElMessage({type: 'warning', message: '请先登录', plain: true});
-    router.push('/login');
-    return;
+    ElMessage({ type: 'warning', message: '请先登录', plain: true })
+    router.push('/login')
+    return
   }
-  editorRef.value?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  const editorElement = editorRef.value?.querySelector('#reply-editor .ProseMirror');
+  editorRef.value?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  const editorElement = editorRef.value?.querySelector(
+    '#reply-editor .ProseMirror'
+  )
   if (editorElement) {
-    editorElement.focus();
+    editorElement.focus()
   }
 }
 
 // 父组件接收清空前的内容
-const handleBeforeSubmit = async (content) => {
+const handleBeforeSubmit = async content => {
   if (!userInfo.value) {
-    ElMessage({type:'warning', message:'用户未登录,请先登录!', plain:true});
-    router.push('/login');
-    return;
+    ElMessage({ type: 'warning', message: '用户未登录,请先登录!', plain: true })
+    router.push('/login')
+    return
   }
   // 接入评论API
-  const res = await useForumApi().replyPost(route.params.id, content);
-  await initPostContent();
-};
+  const res = await useForumApi().replyPost(route.params.id, content)
+  await initPostContent()
+}
 
 // 标签相关
 const tags = ref([])
 
 const getTagsAttributes = async () => {
-  const allTags = await (await useForumApi().getAllTags()).data;
-  
-  for (let tag of post.value.tags) {
-    const tagWithAttr = allTags.filter(item => item.tagId === tag.tagId);
+  const allTags = await (await useForumApi().getAllTags()).data
+
+  for (const tag of post.value.tags) {
+    const tagWithAttr = allTags.filter(item => item.tagId === tag.tagId)
     tags.value.push({
       tagId: tagWithAttr[0].tagId,
       title: tagWithAttr[0].title,
       hueColor: tagWithAttr[0].hueColor,
-    });
+    })
   }
 }
 
-onMounted(async ()=>{
-  await initPostContent();
-  userInfo.value = userStore.userInfo.data;
+onMounted(async () => {
+  await initPostContent()
+  userInfo.value = userStore.userInfo.data
   useSeoMeta({
-    title: `${post.value.title} —— 启慧论坛`
+    title: `${post.value.title} —— 启慧论坛`,
   })
-  await getTagsAttributes();
+  await getTagsAttributes()
 })
 
 const handleLike = async (commentId = null) => {
   if (Object.keys(userStore.userInfo).length === 0) {
-    ElMessage({type: 'warning', message: '请先登录', plain: true});
-    router.push('/login');
-    return;
+    ElMessage({ type: 'warning', message: '请先登录', plain: true })
+    router.push('/login')
+    return
   }
 
-  const res = await useForumApi().doLike(post.value.postId, commentId);
+  const res = await useForumApi().doLike(post.value.postId, commentId)
 }
 
 const handleFavorite = async () => {
   if (Object.keys(userStore.userInfo).length === 0) {
-    ElMessage({type: 'warning', message: '请先登录', plain: true});
-    router.push('/login');
-    return;
+    ElMessage({ type: 'warning', message: '请先登录', plain: true })
+    router.push('/login')
+    return
   }
-  
+
   try {
-    const res = await useForumApi().doFavor(post.value.postId);
-    if (res.msg === "收藏成功") {
-      post.value.isFavorite = true;
-    } else if (res.msg === "取消收藏成功") {
-      post.value.isFavorite = false;
+    const res = await useForumApi().doFavor(post.value.postId)
+    if (res.msg === '收藏成功') {
+      post.value.isFavorite = true
+    } else if (res.msg === '取消收藏成功') {
+      post.value.isFavorite = false
     }
-    
+
     ElMessage({
-      type: 'success', 
-      message: post.value.isFavorite ? '收藏成功' : '已取消收藏', 
-      plain: true
-    });
-    
+      type: 'success',
+      message: post.value.isFavorite ? '收藏成功' : '已取消收藏',
+      plain: true,
+    })
   } catch (error) {
-    ElMessage({type: 'error', message: '操作失败，请重试', plain: true});
-    console.error(error);
+    ElMessage({ type: 'error', message: '操作失败，请重试', plain: true })
+    console.error(error)
   }
 }
 </script>
 
 <template>
-  <div class="container"  v-if="initialized">
-    <ForumBanner :title="post.title" :sub-title="post.author.attributes.userName"></ForumBanner>
+  <div v-if="initialized" class="container">
+    <ForumBanner
+      :title="post.title"
+      :sub-title="post.author.attributes.userName"
+    />
     <!-- 内容区域 -->
     <div class="post-content">
       <!-- 帖子内容 -->
       <article class="main-content">
-        <ForumComment :id="post.postId" :author="post.author" :content="post.content" :time="post.createdAt" :tags="tags"
-          :likes-count="post.likesCount" @like="handleLike()" :is-content="true" :is-liked="post.isLiked" />
+        <ForumComment
+          :id="post.postId"
+          :author="post.author"
+          :content="post.content"
+          :time="post.createdAt"
+          :tags="tags"
+          :likes-count="post.likesCount"
+          :is-content="true"
+          :is-liked="post.isLiked"
+          @like="handleLike()"
+        />
         <!-- 评论区内容 -->
         <div v-for="item of comments" :key="item.commentId">
-          <ForumComment :id="item.commentId" :author="item.author" :content="item.content" :time="item.createdAt"
-            :likes-count="item.likesCount" :replied-id="item.repliedID" @like="handleLike(item.commentId)" :is-liked="item.isLiked" />
-          <hr>
+          <ForumComment
+            :id="item.commentId"
+            :author="item.author"
+            :content="item.content"
+            :time="item.createdAt"
+            :likes-count="item.likesCount"
+            :replied-id="item.repliedID"
+            :is-liked="item.isLiked"
+            @like="handleLike(item.commentId)"
+          />
+          <hr />
         </div>
         <div ref="editorRef" class="editor">
-          <MiniMarkdownEditor id="reply-editor" @beforeSubmit="handleBeforeSubmit" />
+          <MiniMarkdownEditor
+            id="reply-editor"
+            @before-submit="handleBeforeSubmit"
+          />
         </div>
       </article>
 
@@ -145,16 +172,22 @@ const handleFavorite = async () => {
         <aside class="sidebar">
           <!-- position: sticky的外面还需包裹一层div才能生效 -->
           <div>
-            <el-button type="primary" size="large" class="reply-btn" @click="scrollToReplyEditor">
+            <el-button
+              type="primary"
+              size="large"
+              class="reply-btn"
+              @click="scrollToReplyEditor"
+            >
               回复
             </el-button>
           </div>
           <div>
-            <el-button 
-              :type="post.isFavorite ? 'success' : 'primary'" 
-              size="large" 
-              class="other-btn" 
-              @click="handleFavorite">
+            <el-button
+              :type="post.isFavorite ? 'success' : 'primary'"
+              size="large"
+              class="other-btn"
+              @click="handleFavorite"
+            >
               {{ post.isFavorite ? '已收藏' : '收藏' }}
             </el-button>
           </div>
@@ -206,8 +239,8 @@ html {
   margin-top: 1rem;
   height: 48px;
   font-size: 1rem;
-  background-color: #0060DF;
-  border-color: #0060DF;
+  background-color: #0060df;
+  border-color: #0060df;
 }
 
 .sidebar .reply-btn:hover {

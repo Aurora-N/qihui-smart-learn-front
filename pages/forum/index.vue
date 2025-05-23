@@ -6,25 +6,25 @@ const dropdowns = ref({
   study: false,
   about: false,
   lang: false,
-  sort: false
+  sort: false,
 })
 
-const toggleDropdown = (name) => {
+const toggleDropdown = name => {
   dropdowns.value[name] = !dropdowns.value[name]
 }
 
 const topics = ref([])
 
 definePageMeta({
-  layout: 'forum'
+  layout: 'forum',
 })
 
-const bannerConfig = inject('bannerConfig');
+const bannerConfig = inject('bannerConfig')
 
 const getPostsList = async (method = 0, start = 0, limit = 20) => {
-  const res = await useForumApi().getPostsList(method, start, limit);
+  const res = await useForumApi().getPostsList(method, start, limit)
   if (res.status === 'success') {
-    topics.value = res.data.posts;
+    topics.value = res.data.posts
   }
 }
 
@@ -32,10 +32,10 @@ onMounted(async () => {
   bannerConfig.value = {
     title: '启慧论坛',
     subTitle: '来一场思想上的碰撞',
-    hueColor: '250'
+    hueColor: '250',
   }
 
-  await getPostsList(0, 0, 20);
+  await getPostsList(0, 0, 20)
 })
 </script>
 
@@ -57,25 +57,44 @@ onMounted(async () => {
 
     <!-- Forum Topics -->
     <div class="topics-list">
-      <NuxtLink :to="`/forum/${topic.postId}`" class="topic-card" v-for="topic in topics" :key="topic.postId">
+      <NuxtLink
+        v-for="topic in topics"
+        :key="topic.postId"
+        :to="`/forum/${topic.postId}`"
+        class="topic-card"
+      >
         <div class="topic-left">
-          <img :src="topic.author.attributes.avatarUrl" class="avatar" :alt="topic.author.attributes.userName + '的头像'">
+          <img
+            :src="topic.author.attributes.avatarUrl"
+            class="avatar"
+            :alt="topic.author.attributes.userName + '的头像'"
+          />
           <div class="topic-info">
             <h3 class="topic-title">{{ topic.title }}</h3>
             <div class="topic-meta">
-              <User style="width: 1em; height: 1em;" />
+              <User style="width: 1em; height: 1em" />
               <span> {{ topic.lastCommentedUser.userName }} </span>
-              <TopRight v-if="topic.lastCommentedAt" style="width: 1em; height: 1em;" />
-              <span v-if="topic.lastCommentedAt"> 最新回复于 {{ topic.lastCommentedAt }}</span>
+              <TopRight
+                v-if="topic.lastCommentedAt"
+                style="width: 1em; height: 1em"
+              />
+              <span v-if="topic.lastCommentedAt">
+                最新回复于 {{ topic.lastCommentedAt }}</span
+              >
             </div>
           </div>
         </div>
         <div class="topic-right">
-          <span v-for="tag in topic.tags" :key="tag.tagId" class="tag" :class="'tag' + tag.tagId">
+          <span
+            v-for="tag in topic.tags"
+            :key="tag.tagId"
+            class="tag"
+            :class="'tag' + tag.tagId"
+          >
             {{ tag.tagName }}
           </span>
           <div class="reply-count">
-            <ChatSquare style="width: 1em; height: 1em; margin-right: 8px;" />
+            <ChatSquare style="width: 1em; height: 1em; margin-right: 8px" />
             <span>{{ topic.commentsCount }}</span>
           </div>
         </div>
