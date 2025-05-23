@@ -12,6 +12,8 @@ npm install
 
 # pnpm
 pnpm install
+pnpm approve-builds
+  - choose better-sqlite3
 
 # yarn
 yarn install

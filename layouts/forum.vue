@@ -23,6 +23,7 @@ const switchToNav = item => {
   selectedNav.value = item
   if (item !== 'all') router.push(`/forum/${item}`)
   else router.push(`/forum`)
+  closeMobileMenu()
 }
 
 const bannerConfig = ref({
@@ -85,10 +86,7 @@ provide('bannerConfig', bannerConfig)
                 <div
                   class="nav-item"
                   :class="{ active: selectedNav === 'all' }"
-                  @click="
-                    switchToNav('all')
-                    closeMobileMenu()
-                  "
+                  @click="switchToNav('all')"
                 >
                   <el-icon>
                     <ChatDotRound />
@@ -98,10 +96,7 @@ provide('bannerConfig', bannerConfig)
                 <div
                   class="nav-item"
                   :class="{ active: selectedNav === 'favorite' }"
-                  @click="
-                    switchToNav('favorite')
-                    closeMobileMenu()
-                  "
+                  @click="switchToNav('favorite')"
                 >
                   <el-icon>
                     <Star />
@@ -111,10 +106,7 @@ provide('bannerConfig', bannerConfig)
                 <div
                   class="nav-item"
                   :class="{ active: selectedNav === 'tags' }"
-                  @click="
-                    switchToNav('tags')
-                    closeMobileMenu()
-                  "
+                  @click="switchToNav('tags')"
                 >
                   <el-icon>
                     <Menu />
@@ -130,10 +122,7 @@ provide('bannerConfig', bannerConfig)
                     class="nav-item-tag"
                     :class="{ 'active-tag': selectedNav === tag.tagId }"
                     :style="{ '--hue': tag.hueColor }"
-                    @click="
-                      switchToNav(`tags/${tag.tagId}`)
-                      closeMobileMenu()
-                    "
+                    @click="switchToNav(`tags/${tag.tagId}`)"
                   >
                     <el-icon>
                       <CollectionTag />
