@@ -222,7 +222,7 @@ import {
 import { fromAsyncCodeToHtml } from '@shikijs/markdown-it/async'
 import MarkdownItAsync from 'markdown-it-async'
 import { codeToHtml } from 'shiki'
-import '~/assets/css/post.scss'
+import '~/assets/style/post.scss'
 import markdownItSanitizer from 'markdown-it-sanitizer'
 import { useForumApi } from '~/api/forum'
 
@@ -509,7 +509,7 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import url(~/assets/css/tag_color.scss);
+@import url(~/assets/style/tag_color.scss);
 
 .markdown-editor {
   display: flex;

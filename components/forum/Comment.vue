@@ -2,7 +2,7 @@
 import { fromAsyncCodeToHtml } from '@shikijs/markdown-it/async'
 import MarkdownItAsync from 'markdown-it-async'
 import { codeToHtml } from 'shiki'
-import '~/assets/css/post.scss'
+import '~/assets/style/post.scss'
 
 const props = defineProps({
   id: { type: String, required: true }, // 评论的ID CommitId
@@ -82,11 +82,14 @@ const finalContent = renderedContent.replace(/#FAFAFA/g, codeColor) // 替换代
     </div>
     <div class="comment-right">
       <div class="comment-info">
-        <div class="author-name">
-          {{ authors.attributes.userName }}
-        </div>
-        <div class="comment-date">
-          <span>{{ props.time }}</span>
+        <img :src="authors.attributes.avatarUrl" class="avatar-mobile" alt="" />
+        <div class="head-meta">
+          <div class="author-name">
+            {{ authors.attributes.userName }}
+          </div>
+          <div class="comment-date">
+            <span>{{ props.time }}</span>
+          </div>
         </div>
         <div class="tag-container">
           <div
@@ -116,7 +119,7 @@ const finalContent = renderedContent.replace(/#FAFAFA/g, codeColor) // 替换代
 </template>
 
 <style lang="scss" scoped>
-@import url(~/assets/css/tag_color.scss);
+@import url(~/assets/style/tag_color.scss);
 
 .comment-container {
   display: flex;
@@ -142,6 +145,7 @@ const finalContent = renderedContent.replace(/#FAFAFA/g, codeColor) // 替换代
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .comment-info {
@@ -149,6 +153,11 @@ const finalContent = renderedContent.replace(/#FAFAFA/g, codeColor) // 替换代
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 1rem;
+}
+
+.head-meta {
+  display: flex;
+  margin-right: 1rem;
 }
 
 .author-name {
@@ -165,6 +174,11 @@ const finalContent = renderedContent.replace(/#FAFAFA/g, codeColor) // 替换代
 
 .comment-content {
   margin-bottom: 1rem;
+  width: 100%;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .comment-meta {
@@ -174,6 +188,7 @@ const finalContent = renderedContent.replace(/#FAFAFA/g, codeColor) // 替换代
 }
 
 .comment-right {
+  width: 100%;
   gap: 0.5rem;
 }
 
@@ -218,5 +233,70 @@ const finalContent = renderedContent.replace(/#FAFAFA/g, codeColor) // 替换代
   color: var(--primary);
   text-align: center;
   margin: 0;
+}
+
+.avatar-mobile {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .comment-container {
+    display: flex;
+    margin: 0.5rem 0;
+    padding: 0 0.5rem;
+    width: 100%;
+  }
+
+  .comment-left,
+  .avatar {
+    display: none;
+    margin-right: 0;
+  }
+
+  .avatar-mobile {
+    display: block;
+    min-width: 2.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 0.5rem;
+  }
+
+  .head-meta {
+    display: block;
+  }
+
+  .comment-date {
+    white-space: nowrap;
+    margin-left: 0;
+  }
+
+  .tag-container {
+    margin-left: 0.5rem;
+    display: flex;
+    overflow-x: auto; /* 启用横向滚动 */
+    white-space: nowrap; /* 保证 tag 不换行 */
+    gap: 0.5rem;
+  }
+
+  .comment-container {
+    margin: 0.5rem 0;
+    padding: 0 0.5rem;
+  }
+
+  .is-content {
+    border: 1px solid var(--color-devider);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    max-width: 2.5rem;
+    min-width: 2.5rem;
+  }
 }
 </style>

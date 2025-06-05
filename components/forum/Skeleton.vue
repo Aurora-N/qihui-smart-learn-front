@@ -235,4 +235,34 @@
   gap: 0.5rem;
   width: 100%;
 }
+
+@media (max-width: 768px) {
+  .post-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .side {
+    margin: 0;
+    width: 100%;
+  }
+
+  .sidebar {
+    position: static;
+    top: 0;
+    order: 0;
+    width: 100%;
+    margin: 0;
+  }
+
+  .sidebar .btn {
+    width: 100%;
+  }
+
+  .main-content {
+    order: 1;
+  }
+}
 </style>

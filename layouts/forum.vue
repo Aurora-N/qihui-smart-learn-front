@@ -202,7 +202,7 @@ provide('bannerConfig', bannerConfig)
 </template>
 
 <style lang="scss" scoped>
-@import url(~/assets/css/tag_color.scss);
+@import url(~/assets/style/tag_color.scss);
 
 .container {
   min-height: 100vh;

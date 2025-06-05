@@ -21,7 +21,7 @@ const props = defineProps({
       <h3 v-if="title.length !== 0" style="margin-top: 0">
         {{ props.title }}
       </h3>
-      <el-scrollbar :height="props.height">
+      <el-scrollbar :height="auto">
         <slot />
       </el-scrollbar>
     </div>
@@ -31,14 +31,22 @@ const props = defineProps({
 <style scoped>
 .sidebar {
   /* min-width: 4rem; */
-  margin-right: 3rem;
   position: sticky;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
 }
 
 .lists {
   padding: 1rem;
-  border-radius: 6px;
-  border: 1px solid var(--color-border);
-  background-color: var(--color-background);
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+    margin: 0;
+    max-height: 10rem;
+    overflow: auto;
+  }
 }
 </style>

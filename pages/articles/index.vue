@@ -134,6 +134,18 @@ useSeoMeta({
   margin-right: 3rem;
 }
 
+@media (max-width: 480px) {
+  .container {
+    display: block;
+    margin: 2rem 2rem;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+}
+
 .articles-category {
   background-color: var(--color-background);
   margin-top: 0.5rem;

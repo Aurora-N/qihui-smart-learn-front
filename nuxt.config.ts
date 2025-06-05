@@ -27,7 +27,7 @@ export default defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/logo_light.png' }],
     },
   },
-  css: ['~/assets/css/main.scss'],
+  css: ['~/assets/style/main.scss'],
   router: {
     options: {
       // scrollBehaviorType: 'smooth'

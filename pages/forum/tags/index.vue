@@ -70,7 +70,7 @@ definePageMeta({
 </template>
 
 <style lang="scss" scoped>
-@import url(~/assets/css/tag_color.scss);
+@import url(~/assets/style/tag_color.scss);
 
 .tags-container {
   width: 100%;
@@ -84,10 +84,11 @@ definePageMeta({
   display: flex;
   gap: 1rem;
   flex-flow: row wrap;
+  justify-content: space-between;
 }
 
 .tag-card {
-  width: 49%;
+  width: 48%;
   border-radius: 12px;
   background-color: var(--color-background);
   padding: 20px;
@@ -188,5 +189,11 @@ definePageMeta({
 
 .link-btn:hover {
   background-color: var(--color-background-hover);
+}
+
+@media (max-width: 480px) {
+  .tag-card {
+    width: 100%;
+  }
 }
 </style>

@@ -141,5 +141,5 @@ useSeoMeta({
 </script>
 
 <style lang="scss" scoped>
-@import url(~/assets/css/login_page.scss);
+@import url(~/assets/style/login_page.scss);
 </style>

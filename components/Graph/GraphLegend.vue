@@ -41,7 +41,7 @@ const legendItems = [
 </script>
 
 <style lang="scss" scoped>
-@import url(~/assets/css/knowledge_graph.scss);
+@import url(~/assets/style/knowledge_graph.scss);
 
 /* 补充knowledge_graph.scss中没有定义的过渡动画 */
 .legend-slide-enter-active,

@@ -99,5 +99,5 @@ onMounted(async () => {
 </template>
 
 <style lang="scss" scoped>
-@import url(~/assets/css/forum_interface.scss);
+@import url(~/assets/style/forum_interface.scss);
 </style>

@@ -32,3 +32,7 @@ public/
 
 # Test coverage
 coverage/ 
+
+# Assets files
+assets/quiz/
+assets/*.json

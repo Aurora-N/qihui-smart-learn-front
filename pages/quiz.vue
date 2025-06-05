@@ -23,7 +23,7 @@
               <div
                 class="question-text"
                 v-html="formatQuestionText(currentQuestion.text)"
-              />
+              ></div>
             </div>
 
             <div class="answer-section">
@@ -49,12 +49,8 @@
                   @click="selectAnswer(option.label)"
                 >
                   <div class="option-content">
-                    <div class="option-label">
-                      {{ option.label }}
-                    </div>
-                    <div class="option-text">
-                      {{ option.text }}
-                    </div>
+                    <div class="option-label">{{ option.label }}</div>
+                    <div class="option-text">{{ option.text }}</div>
                   </div>
                 </el-button>
               </div>
@@ -98,7 +94,9 @@
               <el-table-column prop="questionNumber" label="题号" width="70" />
               <el-table-column prop="questionText" label="题目">
                 <template #default="scope">
-                  <div v-html="formatQuestionText(scope.row.questionText)" />
+                  <div
+                    v-html="formatQuestionText(scope.row.questionText)"
+                  ></div>
                 </template>
               </el-table-column>
               <el-table-column
@@ -118,7 +116,7 @@
                   >
                     {{ scope.row.selectedAnswer }}
                   </el-tag>
-                  <el-tag v-else type="danger"> 未答 </el-tag>
+                  <el-tag v-else type="danger">未答</el-tag>
                 </template>
               </el-table-column>
               <el-table-column label="操作" width="100">
@@ -145,7 +143,7 @@
               />
 
               <div class="submit-buttons">
-                <el-button @click="reviewMode = false"> 返回答题 </el-button>
+                <el-button @click="reviewMode = false">返回答题</el-button>
                 <el-button
                   type="primary"
                   :disabled="hasUnansweredQuestions && requireAllAnswered"
@@ -168,7 +166,8 @@
                 icon="success"
                 :title="`得分: ${score}/${questions.length}`"
                 :sub-title="`正确率: ${Math.round((score / questions.length) * 100)}%`"
-              />
+              >
+              </el-result>
             </div>
 
             <div class="questions-review">
@@ -188,7 +187,7 @@
                         <div
                           class="question-text"
                           v-html="formatQuestionText(question.text)"
-                        />
+                        ></div>
                         <div class="options-review">
                           <div
                             v-for="option in question.options"
@@ -213,9 +212,9 @@
                         </div>
                         <div class="explanation">
                           <div class="correct-answer-label">
-                            <el-tag type="success">
-                              正确答案: {{ question.answer }}
-                            </el-tag>
+                            <el-tag type="success"
+                              >正确答案: {{ question.answer }}</el-tag
+                            >
                             <el-tag
                               v-if="
                                 userAnswers[index] &&

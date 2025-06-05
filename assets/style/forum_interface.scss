@@ -47,17 +47,22 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  width: 100%;
 }
 
 .avatar {
   width: 2.5rem;
   height: 2.5rem;
+  max-width: 2.5rem;
+  min-width: 2.5rem;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .topic-info {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .topic-title {
@@ -73,10 +78,22 @@
   gap: 8px;
 }
 
+.last-commented-time {
+  display: flex;
+  align-items: center;
+}
+
 .topic-right {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
+}
+
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  white-space: nowrap;
 }
 
 .tag {
@@ -130,4 +147,34 @@
 .icon-small {
   width: 1rem;
   height: 1rem;
+}
+
+@media (max-width: 480px) {
+  .topic-card {
+    padding: 0.5rem 0;
+  }
+
+  .topic-title {
+    width: 95%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .last-commented-time {
+    display: none;
+  }
+
+  .tags {
+    max-width: 4.5rem;
+    overflow-x: auto; /* 启用横向滚动 */
+    white-space: nowrap; /* 保证 tag 不换行 */
+    gap: 0.25rem;
+  }
+
+  .tag {
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+  }
 }

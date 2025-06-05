@@ -189,7 +189,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url(~/assets/css/post.scss);
+@import url(~/assets/style/post.scss);
 
 .container {
   display: flex;
@@ -369,6 +369,12 @@ export default {
 
 /* 响应式设计 */
 @media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    padding-bottom: 40px;
+    padding-top: 85px;
+  }
+
   .tech-stack,
   .team-members {
     grid-template-columns: 1fr;

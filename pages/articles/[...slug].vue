@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import '~/assets/style/post.scss'
+
 const route = useRoute()
 const router = useRouter()
 
@@ -87,6 +89,7 @@ const recommendPostsList = ref([
     <div class="content">
       <article v-if="page">
         <Breadcrumb
+          class="breadcrumb"
           :current-title="page?.title"
           :parents="page?.id.split('/').slice(1, -1)"
         />
@@ -105,8 +108,6 @@ const recommendPostsList = ref([
 </template>
 
 <style lang="scss" scoped>
-@import url('~/assets/css/post.scss');
-
 .main-container {
   display: flex;
   justify-content: center;
@@ -121,7 +122,9 @@ const recommendPostsList = ref([
 
 .side {
   margin-top: 0.5rem;
+  margin-right: 3rem;
   width: 15rem;
+  min-width: 8rem;
 }
 
 .posts-category-menu {
@@ -144,15 +147,49 @@ const recommendPostsList = ref([
   border-radius: 6px;
 }
 
-/* .content article a::before {
-  content: "";
-  display: block;
-  height: 80px;
-  margin-top: -80px;
-  pointer-events: none;
-} */
-
 .arrow {
   margin: 0 -5px 2px -5px;
+}
+
+@media (max-width: 1200px) {
+  .main-container {
+    margin: 1.5rem;
+  }
+
+  .content {
+    display: block;
+    width: 80%;
+  }
+
+  .side {
+    width: 20%;
+    margin-right: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-container {
+    display: block;
+    margin: 0 1.5rem 1.5rem 1.5rem;
+  }
+
+  .breadcrumb {
+    width: 100%;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+
+  .breadcrumb :deep(.el-breadcrumb__item) {
+    margin-bottom: 0.5rem;
+  }
+
+  .content {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .side {
+    width: 100%;
+  }
 }
 </style>

@@ -140,5 +140,5 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-@import url(~/assets/css/knowledge_graph.scss);
+@import url(~/assets/style/knowledge_graph.scss);
 </style>

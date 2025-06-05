@@ -359,7 +359,7 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-@import url(~/assets/css/knowledge_graph.scss);
+@import url(~/assets/style/knowledge_graph.scss);
 
 .light-mode .sidebar-details {
   --primary-color: #2563eb;
