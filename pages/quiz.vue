@@ -212,9 +212,9 @@
                         </div>
                         <div class="explanation">
                           <div class="correct-answer-label">
-                            <el-tag type="success"
-                              >正确答案: {{ question.answer }}</el-tag
-                            >
+                            <el-tag type="success">
+                              正确答案: {{ question.answer }}
+                            </el-tag>
                             <el-tag
                               v-if="
                                 userAnswers[index] &&
@@ -269,6 +269,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { routerKey } from 'vue-router'
 import localQuizData from '~/assets/quiz/test.md?raw'
 import { useQuizApi } from '~/api/quiz'
 
@@ -418,7 +419,10 @@ const editAnswer = index => {
 }
 
 const getUserLearningPath = async () => {
-  const res = await useQuizApi().getLearningPath(userAnswersList.value)
+  const res = await useQuizApi().getLearningPath(
+    userInfo.value.id,
+    userAnswersList.value
+  )
   recommendLearningPath.value = res
 }
 
@@ -455,8 +459,21 @@ const restartQuiz = () => {
   score.value = 0
 }
 
+const userStore = useUserStore()
+
+const userInfo = ref({})
+
+definePageMeta({
+  middleware: 'auth', // 'auth' 是中间件的文件名 (auth.js)
+})
+
 onMounted(() => {
   questions.value = parseQuestions(localQuizData)
+  userInfo.value = userStore.userInfo
+})
+
+useHead({
+  title: '获取专属学习路线',
 })
 </script>
 

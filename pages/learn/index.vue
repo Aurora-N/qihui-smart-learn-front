@@ -39,6 +39,10 @@ const AsyncGraphComp = defineAsyncComponent({
   loader: () => import('@/components/Graph/index.vue'),
   delay: 100,
 })
+
+useHead({
+  title: '学习方向',
+})
 </script>
 
 <style scoped>

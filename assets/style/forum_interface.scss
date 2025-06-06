@@ -21,6 +21,10 @@
   cursor: pointer;
 }
 
+.sort-button:hover {
+  background-color: var(--color-background-hover);
+}
+
 /* 论坛主题 */
 .topics-list {
   display: flex;
@@ -142,6 +146,11 @@
   display: flex;
   align-items: center;
   color: var(--color-meta-text);
+
+  span {
+    display: flex;
+    white-space: nowrap;
+  }
 }
 
 .icon-small {

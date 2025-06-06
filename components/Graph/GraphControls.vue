@@ -27,11 +27,6 @@
           class="search-input"
           @input="handleSearchInput"
         />
-        <div v-if="isSearching" class="search-loading">搜索中...</div>
-        <div v-if="isFiltered" class="search-result">
-          找到 {{ filteredNodeCount }} 个相关节点
-          <span class="filter-node">（{{ currentFilterNode }}）</span>
-        </div>
       </div>
 
       <div

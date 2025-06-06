@@ -41,19 +41,6 @@ onMounted(async () => {
 <template>
   <!-- Content Section -->
   <main class="main-content">
-    <div class="content-header">
-      <Dropdown>
-        <template #trigger>
-          <button class="sort-button" @click="toggleDropdown('sort')">
-            最新回复
-            <chevron-down-icon class="icon-small" />
-          </button>
-        </template>
-        <a href="#">最新回复</a>
-        <a href="#">最新发布</a>
-      </Dropdown>
-    </div>
-
     <!-- Forum Topics -->
     <div class="topics-list">
       <NuxtLink
@@ -73,21 +60,29 @@ onMounted(async () => {
             <div class="topic-meta">
               <User style="width: 1em; height: 1em" />
               <span> {{ topic.lastCommentedUser.userName }} </span>
-              <span v-if="topic.lastCommentedAt">
-                最新回复于 {{ topic.lastCommentedAt }}</span
-              >
+              <div class="last-commented-time">
+                <TopRight
+                  v-if="topic.lastCommentedAt"
+                  style="width: 1em; height: 1em"
+                />
+                <span v-if="topic.lastCommentedAt">
+                  最新回复于 {{ topic.lastCommentedAt }}</span
+                >
+              </div>
             </div>
           </div>
         </div>
         <div class="topic-right">
-          <span
-            v-for="tag in topic.tags"
-            :key="tag.tagId"
-            class="tag"
-            :class="'tag' + tag.tagId"
-          >
-            {{ tag.tagName }}
-          </span>
+          <div class="tags">
+            <span
+              v-for="tag in topic.tags"
+              :key="tag.tagId"
+              class="tag"
+              :class="'tag' + tag.tagId"
+            >
+              {{ tag.tagName }}
+            </span>
+          </div>
           <div class="reply-count">
             <ChatSquare style="width: 1em; height: 1em; margin-right: 8px" />
             <span>{{ topic.commentsCount }}</span>

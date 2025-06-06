@@ -98,6 +98,14 @@ async function submitForm() {
     }
   })
 }
+
+useHead({
+  title: '个人资料设置',
+})
+
+definePageMeta({
+  middleware: 'auth', // 'auth' 是中间件的文件名 (auth.js)
+})
 </script>
 
 <template>

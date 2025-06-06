@@ -186,6 +186,10 @@ export default {
     }
   },
 }
+
+useHead({
+  title: '关于我们',
+})
 </script>
 
 <style lang="scss" scoped>

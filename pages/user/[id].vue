@@ -1,15 +1,5 @@
 <script setup>
-import {
-  Timer,
-  ChatDotRound,
-  Menu,
-  Star,
-  User,
-  Back,
-  MoreFilled,
-  DataAnalysis,
-  Plus,
-} from '@element-plus/icons-vue'
+import { Timer, ChatDotRound, Menu, Star } from '@element-plus/icons-vue'
 import { useUserApi } from '~/api/user'
 import { useForumApi } from '~/api/forum'
 
@@ -442,5 +432,31 @@ const goToPost = postId => {
   color: var(--color-meta-text);
   font-size: 1rem;
   border: 1px dashed var(--color-border);
+}
+
+@media (max-width: 480px) {
+  .profile-header .container {
+    display: block;
+  }
+
+  .subscribe-btn {
+    width: 100%;
+    height: 35px;
+    font-size: 1rem;
+    background-color: var(--main-color);
+    border-color: var(--main-color);
+    margin-top: 1rem;
+  }
+
+  .profile-content .container {
+    display: block;
+    padding: 0 1rem;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-shrink: 0;
+    margin-bottom: 1rem;
+  }
 }
 </style>

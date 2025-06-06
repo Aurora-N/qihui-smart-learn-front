@@ -48,7 +48,7 @@ useSeoMeta({
           <div class="articles-category">
             <h3 style="margin-top: 0; margin-bottom: 1rem">文章分类</h3>
             <el-menu
-              default-active="0"
+              default-active="前端"
               class="articles-category-menu"
               @select="selectCategory"
             >

@@ -77,6 +77,8 @@ const goBack = () => {
   router.push('/')
 }
 
+const route = useRoute()
+
 // 登录
 const login = async () => {
   await userStore.userLogin({
@@ -85,7 +87,13 @@ const login = async () => {
   })
   const { status, msg } = await userStore.getUserInfo()
   ElMessage({ type: status, message: msg })
-  router.replace({ path: '/' })
+  const redirectPath = route.query.redirect
+  if (redirectPath && typeof redirectPath === 'string') {
+    // 跳转回原始页面
+    router.replace({ path: redirectPath })
+  } else {
+    router.replace({ path: '/' })
+  }
 }
 
 useSeoMeta({

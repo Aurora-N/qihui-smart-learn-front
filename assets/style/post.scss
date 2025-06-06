@@ -79,6 +79,7 @@ blockquote {
 a {
   color: var(--link-color);
   text-decoration: none;
+  word-break: break-all;
 }
 
 a:hover {

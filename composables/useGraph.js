@@ -87,9 +87,19 @@ export const useGraph = (props, sidebarRef = null) => {
   // 重置筛选
   const resetFilter = () => {
     const result = graphFilter.resetFilter()
-    if (result && graphState.isFullscreen.value) {
-      graphVisualization.stopSimulation()
-      initFullGraph(result)
+    if (graphState.isFullscreen.value) {
+      if (result) {
+        graphVisualization.stopSimulation()
+        initFullGraph(result)
+      } else {
+        const data = {
+          nodes: graphData.nodes.value,
+          links: graphData.links.value,
+        }
+        setTimeout(() => {
+          graphVisualization.zoomToFit(data.nodes)
+        }, 500)
+      }
     }
   }
 

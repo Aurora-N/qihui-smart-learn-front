@@ -75,14 +75,19 @@ const onMouseLeave = () => {
 
 <style>
 /* Dropdown内部的a标签样式 */
-.dropdown-content a {
+.dropdown-content a,
+.dropdown-content button {
+  width: 100%;
   display: block;
   padding: 0.5rem 1rem;
+  background-color: var(--color-background);
   color: var(--color-text);
   text-decoration: none;
+  border: none;
 }
 
-.dropdown-content a:hover {
+.dropdown-content a:hover,
+.dropdown-content button:hover {
   background-color: var(--color-background-hover);
   border-radius: 0.375rem;
   text-decoration: none;

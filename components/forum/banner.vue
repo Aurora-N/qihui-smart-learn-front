@@ -262,4 +262,67 @@ const props = defineProps({
     0 40px 0 var(--decoration-accent),
     0 48px 0 var(--decoration-accent);
 }
+
+@media (max-width: 480px) {
+  .banner {
+    background-color: var(--banner-color);
+    padding: 1.75rem 1rem;
+    text-align: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    min-height: 200px;
+  }
+
+  .banner-content {
+    max-width: 800px;
+    width: 100%;
+    position: relative;
+    background-color: var(--banner-color);
+    padding: 2rem 1rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
+  }
+
+  .banner-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--title);
+    margin-bottom: 0.25rem;
+  }
+
+  .banner-subtitle {
+    color: var(--sub-title);
+    margin-bottom: 0;
+    font-size: 1rem;
+  }
+
+  .decoration {
+    display: none;
+  }
+
+  .large-book-left {
+    width: 200px;
+    height: 250px;
+    background-color: var(--decoration-color);
+    border-radius: 10px 30px 30px 10px;
+    left: -60px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-8deg) scale(0.8);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+    position: absolute;
+  }
+
+  .large-page-right {
+    width: 180px;
+    height: 230px;
+    background-color: var(--decoration-color);
+    border-radius: 5px;
+    right: -50px;
+    top: 50%;
+    transform: translateY(-50%) rotate(8deg) scale(0.8);
+  }
+}
 </style>

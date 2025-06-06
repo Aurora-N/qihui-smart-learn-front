@@ -43,6 +43,7 @@ export default createConfigForNuxt({
         onBeforeMount: 'readonly',
         onMounted: 'readonly',
         onBeforeUnmount: 'readonly',
+        defineNuxtRouteMiddleware: 'readonly',
         // Element Plus globals
         ElMessage: 'readonly',
         // Pinia globals

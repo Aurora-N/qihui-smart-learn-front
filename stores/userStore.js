@@ -7,6 +7,8 @@ export const useUserStore = defineStore(
   () => {
     // 定义管理用户数据的state
     const userInfo = ref({})
+    // 用户是否登录的state
+    const isLoggedIn = ref(false)
     // 定义action
     const userApi = useUserApi()
     // 登录获取token及userId
@@ -16,6 +18,7 @@ export const useUserStore = defineStore(
         id: res.data.userId,
         token: res.data.token,
       }
+      isLoggedIn.value = true
     }
     // 注册新用户，如果用户成功注册，获取token以及userId
     const userSignUp = async userData => {
@@ -34,6 +37,7 @@ export const useUserStore = defineStore(
     // 退出登录并清空数据（插件会同步清除持久化数据）
     const clearUserInfo = () => {
       userInfo.value = {}
+      isLoggedIn.value = false
     }
     return {
       userInfo,
@@ -41,6 +45,7 @@ export const useUserStore = defineStore(
       userSignUp,
       getUserInfo,
       clearUserInfo,
+      isLoggedIn,
     }
   },
   {
