@@ -318,9 +318,27 @@ export const useGraphVisualization = () => {
           .attr('text-anchor', textAnchor)
       })
 
-      linkLabels
-        .attr('x', d => (d.source.x + d.target.x) / 2)
-        .attr('y', d => (d.source.y + d.target.y) / 2)
+      linkLabels.each(function (d) {
+        const label = d3.select(this)
+        const midX = (d.source.x + d.target.x) / 2
+        const midY = (d.source.y + d.target.y) / 2
+
+        if (d.isMutual) {
+          const dx = d.target.x - d.source.x
+          const dy = d.target.y - d.source.y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+
+          if (dist > 0) {
+            const offsetX = (dy / dist) * 10
+            const offsetY = -(dx / dist) * 10
+            label.attr('x', midX + offsetX).attr('y', midY + offsetY)
+          } else {
+            label.attr('x', midX).attr('y', midY)
+          }
+        } else {
+          label.attr('x', midX).attr('y', midY)
+        }
+      })
     })
 
     // 点击空白处的回调

@@ -5,8 +5,8 @@
     aria-label="Toggle theme"
     @click="toggleColorMode"
   >
-    <SunIcon v-if="colorMode.value === 'dark'" class="icon" />
-    <MoonIcon v-else class="icon" />
+    <SunIcon v-show="colorMode.value === 'dark'" class="icon" />
+    <MoonIcon v-show="colorMode.value === 'light'" class="icon" />
   </button>
 </template>
 

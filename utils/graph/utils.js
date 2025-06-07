@@ -95,6 +95,14 @@ export const createLabel = (g, nodes, color) => {
 
 // 创建连接标签
 export const createLinkLabel = (g, links, isShow = true) => {
+  const linkPaths = new Set(links.map(l => `${l.source}-${l.target}`))
+
+  links.forEach(link => {
+    if (linkPaths.has(`${link.target}-${link.source}`)) {
+      link.isMutual = true
+    }
+  })
+
   const linkLabels = g
     .append('g')
     .selectAll('text')

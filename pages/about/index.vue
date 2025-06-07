@@ -67,125 +67,115 @@
   <Footer />
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      techCategories: [
-        {
-          name: '前端技术',
-          techs: [
-            {
-              name: 'Nuxt.js & Vue.js',
-              description:
-                '基于Vue.js的SSR框架，提供高性能的用户界面和良好的SEO支持。',
-              icon: '/icons/nuxt.svg',
-            },
-            {
-              name: 'D3.js',
-              description:
-                '强大的数据可视化库，用于构建交互式图表和知识图谱展示。',
-              icon: '/icons/d3.svg',
-            },
-            {
-              name: 'Pinia',
-              description:
-                '新一代Vue状态管理库，提供简洁直观的API和出色的TypeScript支持。',
-              icon: '/icons/pinia.svg',
-            },
-            {
-              name: 'Element Plus',
-              description:
-                '基于Vue 3的组件库，帮助我们快速构建一致的用户界面。',
-              icon: '/icons/element.png',
-            },
-            {
-              name: 'Axios',
-              description: '基于Promise的HTTP客户端，用于浏览器和Node.js环境。',
-              icon: '/icons/axios.png',
-            },
-          ],
-        },
-        {
-          name: '后端技术',
-          techs: [
-            {
-              name: 'Flask & Python',
-              description:
-                '轻量级的Python Web框架，灵活且易于扩展，支持快速开发。',
-              icon: '/icons/flask.png',
-            },
-            {
-              name: 'MySQL',
-              description: '关系型数据库，用于存储结构化数据和用户信息。',
-              icon: '/icons/mysql.svg',
-            },
-            {
-              name: 'Neo4j',
-              description: '图数据库，专为存储和查询复杂的知识图谱关系而设计。',
-              icon: '/icons/neo4j.png',
-            },
-            {
-              name: 'JWT',
-              description: '用于用户身份验证与鉴权。',
-              icon: '/icons/jwt.svg',
-            },
-            {
-              name: 'RSA',
-              description:
-                '一种非对称加密算法，基于大质数分解的困难性。提高系统安全性。',
-              icon: '/icons/rsa.svg',
-            },
-          ],
-        },
-        {
-          name: 'AI技术',
-          techs: [
-            {
-              name: 'MaxKB',
-              description: '多模态知识库技术，整合文本、图像和视频等多源信息。',
-              icon: '/icons/maxkb.png',
-            },
-            {
-              name: 'RAG技术',
-              description:
-                '检索增强生成技术，提供精准的知识检索和内容生成能力。',
-              icon: '/icons/rag.svg',
-            },
-            {
-              name: 'AI智能问答',
-              description:
-                '基于大型语言模型的智能问答系统，为学习者提供实时帮助。',
-              icon: '/icons/ai.svg',
-            },
-          ],
-        },
-      ],
-      teamMembers: [
-        {
-          name: 'Ho.GiGi',
-          avatar: '/team/hgg.jpg',
-        },
-        {
-          name: 'ST',
-          avatar: '/team/st.png',
-        },
-        {
-          name: 'Sinkhorn',
-          avatar: '/team/sinkhorn.png',
-        },
-        {
-          name: 'R-y-o',
-          avatar: '/team/ryo.png',
-        },
-        {
-          name: 'Aurorallz',
-          avatar: '/team/aurorallz.png',
-        },
-      ],
-    }
+<script setup>
+const techCategories = [
+  {
+    name: '前端技术',
+    techs: [
+      {
+        name: 'Nuxt.js & Vue.js',
+        description:
+          '基于Vue.js的SSR框架，提供高性能的用户界面和良好的SEO支持。',
+        icon: '/icons/nuxt.svg',
+      },
+      {
+        name: 'D3.js',
+        description: '强大的数据可视化库，用于构建交互式图表和知识图谱展示。',
+        icon: '/icons/d3.svg',
+      },
+      {
+        name: 'Pinia',
+        description:
+          '新一代Vue状态管理库，提供简洁直观的API和出色的TypeScript支持。',
+        icon: '/icons/pinia.svg',
+      },
+      {
+        name: 'Element Plus',
+        description: '基于Vue 3的组件库，帮助我们快速构建一致的用户界面。',
+        icon: '/icons/element.png',
+      },
+      {
+        name: 'Axios',
+        description: '基于Promise的HTTP客户端，用于浏览器和Node.js环境。',
+        icon: '/icons/axios.png',
+      },
+    ],
   },
-}
+  {
+    name: '后端技术',
+    techs: [
+      {
+        name: 'Flask & Python',
+        description: '轻量级的Python Web框架，灵活且易于扩展，支持快速开发。',
+        icon: '/icons/flask.png',
+      },
+      {
+        name: 'MySQL',
+        description: '关系型数据库，用于存储结构化数据和用户信息。',
+        icon: '/icons/mysql.svg',
+      },
+      {
+        name: 'Neo4j',
+        description: '图数据库，专为存储和查询复杂的知识图谱关系而设计。',
+        icon: '/icons/neo4j.png',
+      },
+      {
+        name: 'JWT',
+        description: '用于用户身份验证与鉴权。',
+        icon: '/icons/jwt.svg',
+      },
+      {
+        name: 'RSA',
+        description:
+          '一种非对称加密算法，基于大质数分解的困难性。提高系统安全性。',
+        icon: '/icons/rsa.svg',
+      },
+    ],
+  },
+  {
+    name: 'AI技术',
+    techs: [
+      {
+        name: 'MaxKB',
+        description: '多模态知识库技术，整合文本、图像和视频等多源信息。',
+        icon: '/icons/maxkb.png',
+      },
+      {
+        name: 'RAG技术',
+        description: '检索增强生成技术，提供精准的知识检索和内容生成能力。',
+        icon: '/icons/rag.svg',
+      },
+      {
+        name: 'AI智能问答',
+        description: '基于大型语言模型的智能问答系统，为学习者提供实时帮助。',
+        icon: '/icons/ai.svg',
+      },
+    ],
+  },
+]
+
+const teamMembers = [
+  {
+    name: 'Ho.GiGi',
+    avatar: '/team/hgg.jpg',
+  },
+  {
+    name: 'ST',
+    avatar: '/team/st.png',
+  },
+  {
+    name: 'Sinkhorn',
+    avatar: '/team/sinkhorn.png',
+  },
+  {
+    name: 'R-y-o',
+    avatar: '/team/ryo.png',
+  },
+  {
+    name: 'Aurorallz',
+    avatar: '/team/aurorallz.png',
+  },
+]
 
 useHead({
   title: '关于我们',

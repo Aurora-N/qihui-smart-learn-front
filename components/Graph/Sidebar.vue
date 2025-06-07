@@ -132,9 +132,9 @@ defineExpose({
 </script>
 
 <template>
-  <div v-if="showSidebar && selectedNode" class="sidebar-details">
+  <div v-show="showSidebar && selectedNode" class="sidebar-details">
     <div class="sidebar-header">
-      <h3>{{ selectedNode.id }}</h3>
+      <h3>{{ selectedNode?.id }}</h3>
       <button class="close-sidebar-btn" @click="closeSidebar">
         <IconsClose />
       </button>
@@ -162,7 +162,7 @@ defineExpose({
           <h4>基本信息</h4>
         </div>
         <div class="sidebar-section-content">
-          <div v-if="selectedNode.level" class="info-item">
+          <div v-if="selectedNode?.level" class="info-item">
             <span class="info-label">难度:</span>
             <span
               class="info-badge"
@@ -171,7 +171,7 @@ defineExpose({
               {{ selectedNode.level }}
             </span>
           </div>
-          <div v-if="selectedNode.content" class="info-item">
+          <div v-if="selectedNode?.content" class="info-item">
             <p>{{ selectedNode.content }}</p>
           </div>
         </div>

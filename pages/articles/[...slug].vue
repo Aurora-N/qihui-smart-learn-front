@@ -75,7 +75,7 @@ const recommendPostsList = ref([
             @mouseenter="showArrow[item.id] = true"
             @mouseleave="showArrow[item.id] = false"
           >
-            <div v-if="showArrow[item.id]" class="arrow">
+            <div v-show="showArrow[item.id]" class="arrow">
               <el-icon>
                 <ArrowRight />
               </el-icon>

@@ -8,7 +8,7 @@
       content-width="1100px"
     >
       <div class="graph">
-        <AsyncGraphComp title="总览" :max-depth="3" />
+        <AsyncGraphComp title="总览" />
         <AsyncGraphComp title="前端" graph-id="前端" />
         <AsyncGraphComp title="后端" graph-id="后端" />
       </div>

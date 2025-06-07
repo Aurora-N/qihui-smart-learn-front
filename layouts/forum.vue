@@ -77,7 +77,7 @@ useHead({
 
           <!-- Mobile Menu (between banner and content) -->
           <Transition name="slide-down">
-            <div v-if="isMobileMenuOpen" class="mobile-menu">
+            <div v-show="isMobileMenuOpen" class="mobile-menu">
               <button
                 class="publish-button mobile-publish"
                 :style="{ '--hue': bannerConfig?.hueColor }"

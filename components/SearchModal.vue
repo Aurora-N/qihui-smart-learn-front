@@ -228,16 +228,14 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  opacity: 0;
-  visibility: hidden;
+  transform: scale(0);
   transition:
     opacity 0.3s ease,
     visibility 0.3s ease;
 }
 
 .search-modal.active {
-  opacity: 1;
-  visibility: visible;
+  transform: scale(1);
 }
 
 /* Overlay background */

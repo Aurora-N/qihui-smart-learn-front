@@ -8,7 +8,7 @@
     <div class="trigger">
       <slot name="trigger" />
     </div>
-    <div v-if="isOpen" class="dropdown-wrapper">
+    <div v-show="isOpen" class="dropdown-wrapper">
       <div class="dropdown-content">
         <slot />
       </div>
