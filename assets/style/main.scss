@@ -11,6 +11,9 @@
 @use 'themes/light';
 @use 'themes/dark';
 
+// Replace style of default ElMessage
+@use 'el_message.scss' as *;
+
 // =================================
 // Root Theme Variables
 // =================================

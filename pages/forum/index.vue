@@ -24,7 +24,7 @@ const bannerConfig = inject('bannerConfig')
 const getPostsList = async (method = 0, start = 0, limit = 20) => {
   const res = await useForumApi().getPostsList(method, start, limit)
   if (res.status === 'success') {
-    topics.value = res.data.posts
+    topics.value = res.data.posts.reverse()
   }
 }
 

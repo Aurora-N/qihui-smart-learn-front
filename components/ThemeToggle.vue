@@ -39,7 +39,6 @@ const toggleColorMode = () => {
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  padding: 0;
 }
 
 .theme-toggle .icon {

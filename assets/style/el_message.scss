@@ -1,0 +1,9 @@
+.el-message {
+  border-radius: 8px !important;
+
+  &.is-plain {
+    $message-bg-color: var(--color-background-toast);
+    background-color: $message-bg-color !important;
+    border: 1px solid $message-bg-color !important;
+  }
+}

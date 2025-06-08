@@ -40,6 +40,12 @@ const props = defineProps({
   },
 })
 
+const userInfo = ref({})
+
+onMounted(() => {
+  userInfo.value = userStore.userInfo.data
+})
+
 const activeItem = ref('')
 </script>
 
@@ -85,17 +91,10 @@ const activeItem = ref('')
       <SearchModal class="nav-button" />
       <ThemeToggle class="nav-button" />
       <div class="desktop-controls">
-        <div v-if="userStore.userInfo.data" class="user">
+        <div v-if="userInfo" class="user">
           <el-dropdown class="dropdown">
-            <NuxtLink
-              :to="`/user/${userStore.userInfo.data.userId}`"
-              class="avatar-link"
-            >
-              <el-avatar
-                :size="35"
-                :src="userStore.userInfo.data.avatar"
-                class="avatar"
-              />
+            <NuxtLink :to="`/user/${userInfo.userId}`" class="avatar-link">
+              <el-avatar :size="35" :src="userInfo.avatar" class="avatar" />
             </NuxtLink>
             <template #dropdown>
               <el-dropdown-menu class="dropdown-menu">
@@ -132,7 +131,7 @@ const activeItem = ref('')
   />
   <div class="mobile-menu" :class="{ active: isMobileMenuOpen }">
     <div class="mobile-menu-header">
-      <!-- <a href="/" class="logo">LOGO</a> -->
+      <h1>导航栏</h1>
       <button class="close-menu-button" @click="toggleMobileMenu">
         <x-icon class="icon-small" />
       </button>
@@ -162,28 +161,26 @@ const activeItem = ref('')
 
       <div class="mobile-menu-divider" />
 
-      <!-- <div class="mobile-menu-divider"></div> -->
-
       <!-- User area in mobile menu -->
       <div class="mobile-user-area">
         <div class="mobile-section-title">用户</div>
-        <template v-if="userStore.userInfo.data">
+        <div v-if="userInfo">
           <div class="mobile-user-info">
             <div
               class="mobile-user-profile"
-              @click="routerTo(`/user/${userStore.userInfo.data.userId}`)"
+              @click="routerTo(`/user/${userInfo.userId}`)"
             >
               <el-avatar
                 :size="50"
-                :src="userStore.userInfo.data.avatar"
+                :src="userInfo.avatar"
                 class="mobile-avatar"
               />
               <div class="mobile-user-details">
                 <div class="mobile-username">
-                  {{ userStore.userInfo.data.userName }}
+                  {{ userInfo.userName }}
                 </div>
                 <div class="mobile-user-description">
-                  {{ userStore.userInfo.data.selfDescription }}
+                  {{ userInfo.selfDescription }}
                 </div>
               </div>
             </div>
@@ -201,8 +198,8 @@ const activeItem = ref('')
               </button>
             </div>
           </div>
-        </template>
-        <template v-else>
+        </div>
+        <div v-else>
           <div class="mobile-auth-buttons">
             <div class="mobile-login-button" @click="routerTo('/login')">
               登录
@@ -211,7 +208,7 @@ const activeItem = ref('')
               注册
             </div>
           </div>
-        </template>
+        </div>
       </div>
     </div>
   </div>
@@ -305,6 +302,14 @@ const activeItem = ref('')
 .nav-button:hover {
   background-color: var(--color-background-hover);
   border-radius: 0.375rem;
+}
+
+.mobile-nav-button {
+  width: 100%;
+}
+
+.mobile-nav-button:hover {
+  background-color: var(--color-background-hover);
 }
 
 .nav-button .nav-icon,
@@ -412,19 +417,30 @@ const activeItem = ref('')
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--color-border);
+  padding-top: 70px;
 }
 
 .close-menu-button {
   background: none;
   border: none;
+  width: 2rem;
+  height: 2rem;
   cursor: pointer;
-  padding: 0.5rem;
+  color: var(--color-text);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-menu-button:hover {
+  background-color: var(--color-background-hover);
 }
 
 .mobile-menu-content {
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .mobile-nav-links {
@@ -440,7 +456,8 @@ const activeItem = ref('')
   font-size: 1rem;
   color: var(--color-text);
   text-decoration: none;
-  border-bottom: 1px solid var(--color-border);
+  padding-left: 0.5rem;
+  border-radius: 0.5rem;
 }
 
 .mobile-submenu {
@@ -463,11 +480,15 @@ const activeItem = ref('')
   margin: 1rem 0;
 }
 
+.mobile-user-area {
+  padding: 0 0.5rem;
+}
+
 .mobile-section-title {
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: #6b7280;
-  margin-bottom: 0.5rem;
+  color: var(--color-text-2);
+  margin-bottom: 0.75rem;
 }
 
 .mobile-language-options {
@@ -528,15 +549,15 @@ const activeItem = ref('')
   margin-top: 1rem;
   padding: 0.5rem;
   background: none;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
   border-radius: 0.375rem;
   width: 100%;
   cursor: pointer;
-  color: #4b5563;
+  color: var(--color-text);
 }
 
 .mobile-settings-button:hover {
-  background-color: #f3f4f6;
+  background-color: var(--color-background-hover);
 }
 
 .mobile-auth-buttons {
@@ -549,23 +570,31 @@ const activeItem = ref('')
   width: 100%;
   display: block;
   padding: 0.5rem;
-  background-color: #2563eb;
+  background-color: var(--main-color);
   color: white;
   text-align: center;
   border-radius: 0.375rem;
   text-decoration: none;
 }
 
+.mobile-login-button:hover {
+  background-color: var(--main-color-hover-darker);
+}
+
 .mobile-signup-button {
   width: 100%;
   display: block;
   padding: 0.5rem;
-  background-color: white;
-  color: #2563eb;
+  background-color: var(--color-background);
+  color: var(--color-text);
   text-align: center;
-  border: 1px solid #2563eb;
+  border: 1px solid var(--color-border);
   border-radius: 0.375rem;
   text-decoration: none;
+}
+
+.mobile-signup-button:hover {
+  background-color: var(--color-background-hover);
 }
 
 /* Desktop controls (language and user area) */

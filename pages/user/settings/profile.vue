@@ -93,7 +93,7 @@ async function submitForm() {
       if (res.status === 'success') {
         await getUserInfo()
         isLoading.value = false
-        ElMessage.success(res.message)
+        ElMessage({ type: 'success', message: res.message, plain: true })
       }
     }
   })

@@ -86,7 +86,7 @@ const login = async () => {
     password: password.value,
   })
   const { status, msg } = await userStore.getUserInfo()
-  ElMessage({ type: status, message: msg })
+  ElMessage({ type: status, message: msg, plain: true })
   const redirectPath = route.query.redirect
   if (redirectPath && typeof redirectPath === 'string') {
     // 跳转回原始页面

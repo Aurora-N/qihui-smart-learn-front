@@ -126,7 +126,7 @@ const signUp = async () => {
   if (validateFields()) {
     await userStore.userSignUp(userData.value)
     const { status, msg } = await userStore.getUserInfo()
-    ElMessage({ type: status, message: msg })
+    ElMessage({ type: status, message: msg, plain: true })
     router.replace({ path: '/' })
   }
 }
