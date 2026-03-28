@@ -174,7 +174,7 @@ const {
         opacity: 0;
         transition: opacity $transition-fast;
         .action-btn {
-          padding: 4px;
+          padding: 6px;
           margin: 0;
           height: auto;
         }

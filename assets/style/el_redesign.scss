@@ -1,0 +1,69 @@
+// Element Plus 样式覆盖
+:root {
+  --el-color-primary: var(--primary-color) !important;
+  --el-color-primary-light-3: color-mix(
+    in srgb,
+    var(--primary-color) 70%,
+    white
+  ) !important;
+  --el-color-primary-light-5: color-mix(
+    in srgb,
+    var(--primary-color) 50%,
+    white
+  ) !important;
+  --el-color-primary-light-7: color-mix(
+    in srgb,
+    var(--primary-color) 30%,
+    white
+  ) !important;
+  --el-color-primary-light-9: color-mix(
+    in srgb,
+    var(--primary-color) 10%,
+    white
+  ) !important;
+  --el-color-primary-dark-2: color-mix(
+    in srgb,
+    var(--primary-color) 80%,
+    black
+  ) !important;
+
+  --el-text-color-primary: var(--color-heading) !important;
+  --el-text-color-regular: var(--color-text) !important;
+  --el-text-color-secondary: var(--color-text-2) !important;
+
+  // background colors
+  --el-bg-color-overlay: var(--color-background) !important;
+
+  // Border Colors
+  --el-border-color-light: var(--color-border) !important;
+  --el-border-color: var(--color-border) !important;
+
+  --el-fill-color: var(--color-background-soft) !important;
+  --el-fill-color-light: var(--color-background-mute) !important;
+}
+
+.el-message {
+  border-radius: 8px !important;
+
+  &.is-plain {
+    $message-bg-color: var(--color-background-overlay);
+    background-color: $message-bg-color !important;
+    border: 1px solid $message-bg-color !important;
+  }
+}
+
+.el-popover {
+  --el-popover-bg-color: var(--color-background) !important;
+  --el-popover-border-color: var(--color-border) !important;
+  --el-popover-title-text-color: var(--color-text) !important;
+  --el-popover-border-radius: 8px !important;
+
+  &.el-popper {
+    color: var(--color-text) !important;
+    background: var(--color-background) !important;
+  }
+}
+
+.el-button {
+  border-radius: 6px !important;
+}
