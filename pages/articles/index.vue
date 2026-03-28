@@ -1,8 +1,11 @@
 <script setup>
+import { ref, resolveComponent, computed } from 'vue'
 import articleLinkLists from '~/assets/article_links.json'
+import { useArticleSearch } from '~/composables/useArticleSearch'
 
 const FrontendIcon = resolveComponent('IconsFrontend')
 const BackendIcon = resolveComponent('IconsBackend')
+const SearchIcon = resolveComponent('Search')
 
 const articlesList = ref([
   {
@@ -20,10 +23,15 @@ const articlesList = ref([
 ])
 
 const currentCateIndex = ref(0)
+const activeArticles = computed(
+  () => articlesList.value[currentCateIndex.value].articles
+)
+const { searchQuery, filteredArticles } = useArticleSearch(activeArticles)
 
 /* 选中分类相应模块 */
 const selectCategory = id => {
   currentCateIndex.value = articlesList.value.findIndex(item => item.id === id)
+  searchQuery.value = '' // 切换分类时清空搜索
 }
 
 useSeoMeta({
@@ -45,6 +53,15 @@ useSeoMeta({
       <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
+          <div class="articles-search">
+            <el-input
+              v-model="searchQuery"
+              placeholder="搜索当前类目文章..."
+              clearable
+              :prefix-icon="SearchIcon"
+            />
+          </div>
+
           <div class="articles-category">
             <h3 style="margin-top: 0; margin-bottom: 1rem">文章分类</h3>
             <el-menu
@@ -71,8 +88,10 @@ useSeoMeta({
         <!-- Content Section -->
         <main class="main-content">
           <!-- articles -->
-          <ArticleList
-            :article-list="articlesList[currentCateIndex].articles"
+          <ArticleCardList :article-list="filteredArticles" />
+          <el-empty
+            v-if="filteredArticles.length === 0"
+            description="未找到匹配的文章"
           />
         </main>
       </div>
@@ -144,6 +163,11 @@ useSeoMeta({
     width: 100%;
     margin-bottom: 2rem;
   }
+}
+
+.articles-search {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .articles-category {
