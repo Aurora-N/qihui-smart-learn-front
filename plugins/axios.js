@@ -3,9 +3,10 @@ import { useUserStore } from '~/stores/userStore'
 
 export default defineNuxtPlugin(nuxtApp => {
   const router = useRouter()
+  const config = useRuntimeConfig()
 
   const apiClient = axios.create({
-    baseURL: 'http://120.76.138.103:5050/', // 服务器地址
+    baseURL: config.public.apiBase, // 统一服务器地址配置
     timeout: 20000,
   })
 

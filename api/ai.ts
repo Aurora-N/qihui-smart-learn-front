@@ -1,45 +1,7 @@
-import type { ModelInfo } from './type/ai'
+import type { ChatMessage, ChatSession, ModelInfo } from './type/ai'
 import { get, post, put, del, fetchStream } from '@/utils/apiClient'
 
-// export interface ChatHistory {
-//   chatId: number; // 聊天室id
-//   chatName: string; // 聊天名称
-//   lastUpdateTime: string; // 最新更新时间
-// }
-
 const BASE_API = '/api/ai'
-
-export interface ChatMessage {
-  messageId: number // 消息id
-  content: string // 消息内容
-  role: 'system' | 'user' | 'assistant' // 角色名
-  createdAt: string // 消息发送时间
-}
-
-export interface StreamChoice {
-  delta: {
-    content?: string
-    role?: string
-  }
-  index: number
-}
-
-export type StreamResponse = {
-  choices: StreamChoice[]
-  created: number
-  id: string
-  model: string
-  service_tier?: string
-  object: string
-  usage?: unknown
-} | { emotion: string }
-
-export interface ChatSession {
-  sessionId: number // 会话id
-  sessionName: string // 会话名称
-  modelName: string // 模型名称
-  createdAt: string // 会话创建时间
-}
 
 // 获取AI角色回复的消息,在发送消息后调用
 export const receiveMessageResponse = async (
@@ -58,7 +20,7 @@ export const fetchChatMessages = async (sessionId: number) => {
 
 // 获取当前用户的所有聊天会话
 export const fetchChatHistoryList = async (userId: number) => {
-  return await get<ChatSession[]>('${BASE_API}/session/list', { userId })
+  return await get<ChatSession[]>(`${BASE_API}/session/list`, { userId })
 }
 
 // 获取大模型列表

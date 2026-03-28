@@ -55,6 +55,13 @@ export default defineNuxtConfig({
     },
   },
 
+  runtimeConfig: {
+    public: {
+      apiBase:
+        process.env.NUXT_PUBLIC_API_BASE || 'http://120.76.138.103:5050/', // 统一的后端接口基础路径
+    },
+  },
+
   alias: {
     assets: '/<rootDir>/assets',
   },
@@ -72,7 +79,8 @@ export default defineNuxtConfig({
     server: {
       proxy: {
         '/api': {
-          target: 'http://120.76.138.103:5050/', // 目标服务器地址
+          target:
+            process.env.NUXT_PUBLIC_API_BASE || 'http://120.76.138.103:5050/', // 统一的后端接口基础路径
           changeOrigin: true,
           rewrite: path => path.replace(/^\/api/, ''),
         },

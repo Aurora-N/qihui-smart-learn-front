@@ -87,7 +87,7 @@ export async function fetchStream(
     headers.set('Content-Type', 'application/json')
   }
 
-  const API_BASE_URL = 'http://120.76.138.103:5050/'
+  const API_BASE_URL = useRuntimeConfig().public.apiBase
   const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`
 
   const response = await fetch(fullUrl, {
