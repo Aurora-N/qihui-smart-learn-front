@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // onMounted(() => {
 //   // const script = document.createElement('script');
 //   // script.src = 'http://hekabi.a1.luyouxia.net:25333/api/application/embed?protocol=http&host=hekabi.a1.luyouxia.net:25333&token=5bfb22ba0d4da3ed';

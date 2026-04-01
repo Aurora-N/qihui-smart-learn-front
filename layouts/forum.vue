@@ -1,5 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { useForumApi } from '~/api/forum'
+import type { TagWithConfig } from '~/api/type/forum'
 
 const router = useRouter()
 const route = useRoute()
@@ -19,8 +20,7 @@ const selectedNav = computed(() => {
   return nav !== 'forum' ? nav : 'all'
 })
 
-const switchToNav = item => {
-  selectedNav.value = item
+const switchToNav = (item: string) => {
   if (item !== 'all') router.push(`/forum/${item}`)
   else router.push(`/forum`)
   closeMobileMenu()
@@ -32,7 +32,7 @@ const bannerConfig = ref({
   hueColor: '250',
 })
 
-const tags = ref([])
+const tags = ref<TagWithConfig[]>([])
 
 const getAllTags = async () => {
   const res = await useForumApi().getAllTags()
@@ -55,7 +55,7 @@ useHead({
       <ForumBanner
         :title="bannerConfig.title"
         :sub-title="bannerConfig.subTitle"
-        :hue="bannerConfig.hueColor"
+        :hue="Number(bannerConfig.hueColor)"
       />
 
       <!-- 内容区域 -->
@@ -124,14 +124,14 @@ useHead({
                     v-for="tag of tags"
                     :key="tag.tagId"
                     class="nav-item-tag"
-                    :class="{ 'active-tag': selectedNav === tag.tagId }"
+                    :class="{ 'active-tag': selectedNav === String(tag.tagId) }"
                     :style="{ '--hue': tag.hueColor }"
                     @click="switchToNav(`tags/${tag.tagId}`)"
                   >
                     <el-icon>
                       <CollectionTag />
                     </el-icon>
-                    <span>{{ tag.title }}</span>
+                    <span>{{ tag.tagName }}</span>
                   </div>
                 </div>
               </div>
@@ -184,14 +184,14 @@ useHead({
                 v-for="tag of tags"
                 :key="tag.tagId"
                 class="nav-item-tag"
-                :class="{ 'active-tag': selectedNav === tag.tagId }"
+                :class="{ 'active-tag': selectedNav === String(tag.tagId) }"
                 :style="{ '--hue': tag.hueColor }"
                 @click="switchToNav(`tags/${tag.tagId}`)"
               >
                 <el-icon>
                   <CollectionTag />
                 </el-icon>
-                <span>{{ tag.title }}</span>
+                <span>{{ tag.tagName }}</span>
               </div>
             </Sidebar>
           </div>

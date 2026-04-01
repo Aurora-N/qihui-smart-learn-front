@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useUserStore } from '~/stores/userStore'
 
-export default defineNuxtPlugin(nuxtApp => {
+export default defineNuxtPlugin(() => {
   const router = useRouter()
   const config = useRuntimeConfig()
 
@@ -20,6 +20,9 @@ export default defineNuxtPlugin(nuxtApp => {
       if (token) {
         config.headers.Authorization = `${token}`
       }
+      // ngrok特有的请求头，避免浏览器警告
+      config.headers['ngrok-skip-browser-warning'] = 'true'
+
       return config
     },
     error => {
@@ -64,7 +67,9 @@ export default defineNuxtPlugin(nuxtApp => {
         case 404:
           ElMessage({
             type: 'error',
-            message: error.response.data.msg + ' 内容未找到！',
+            message:
+              (error.response.data.msg ? error.response.data.msg : '') +
+              '内容未找到！',
             plain: true,
           })
           break

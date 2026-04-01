@@ -1,24 +1,26 @@
-<script setup>
-import { ref, resolveComponent, computed } from 'vue'
-import articleLinkLists from '~/assets/article_links.json'
+<script setup lang="ts">
+import { ref, resolveComponent, computed, onMounted } from 'vue'
+import { useArticleApi } from '~/api/article'
 import { useArticleSearch } from '~/composables/useArticleSearch'
 
 const FrontendIcon = resolveComponent('IconsFrontend')
 const BackendIcon = resolveComponent('IconsBackend')
 const SearchIcon = resolveComponent('Search')
 
+const { getArticleList } = useArticleApi()
+
 const articlesList = ref([
   {
     id: '前端',
     name: '前端',
     icon: FrontendIcon,
-    articles: articleLinkLists[0].links[1].links,
+    articles: [],
   },
   {
     id: '后端',
     name: '后端',
     icon: BackendIcon,
-    articles: articleLinkLists[0].links[0].links,
+    articles: [],
   },
 ])
 
@@ -28,11 +30,66 @@ const activeArticles = computed(
 )
 const { searchQuery, filteredArticles } = useArticleSearch(activeArticles)
 
-/* 选中分类相应模块 */
-const selectCategory = id => {
-  currentCateIndex.value = articlesList.value.findIndex(item => item.id === id)
-  searchQuery.value = '' // 切换分类时清空搜索
+const selectCategory = (id: string) => {
+  currentCateIndex.value = articlesList.value.findIndex(
+    (item: any) => item.id === id
+  )
+  searchQuery.value = ''
 }
+
+onMounted(async () => {
+  try {
+    const response = await getArticleList()
+    const rawData = response.data || []
+    console.log('Raw Article List:', rawData)
+
+    const buildTree = links => {
+      const tree = { 前端: [], 后端: [] }
+
+      links.forEach(({ articleName, articlePath }) => {
+        let cleanPath = articlePath
+          .replace(/\\/g, '/')
+          .replace(/^\/+/, '')
+          .replace(/\.md$/, '')
+
+        if (cleanPath.startsWith('节点文章/')) {
+          cleanPath = cleanPath.slice('节点文章/'.length)
+        }
+
+        const parts = cleanPath.split('/')
+
+        const topCat = parts[0]
+        if (topCat !== '前端' && topCat !== '后端') return
+
+        let currentLevel = tree[topCat]
+
+        for (let i = 1; i < parts.length - 1; i++) {
+          const categoryName = parts[i]
+          let existingCat = currentLevel.find(c => c.category === categoryName)
+          if (!existingCat) {
+            existingCat = { category: categoryName, links: [] }
+            currentLevel.push(existingCat)
+          }
+          currentLevel = existingCat.links
+        }
+
+        currentLevel.push({
+          title: articleName || parts[parts.length - 1],
+          link: '节点文章/' + cleanPath,
+        })
+      })
+
+      return tree
+    }
+
+    const builtTree = buildTree(rawData)
+    console.log('Built Article Tree:', builtTree)
+    articlesList.value[0].articles = builtTree['前端'] || []
+    articlesList.value[1].articles = builtTree['后端'] || []
+  } catch (error) {
+    console.error('Failed to load articles:', error)
+  }
+})
 
 useSeoMeta({
   title: () =>

@@ -267,15 +267,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { routerKey } from 'vue-router'
 import localQuizData from '~/assets/quiz/test.md?raw'
 import { useQuizApi } from '~/api/quiz'
 
-const graphEmbeded = ref(null) // 通过 `ref` 获取 GraphEmbeded 组件的实例
+const graphEmbeded = ref<any>(null) // 通过 `ref` 获取 GraphEmbeded 组件的实例
 
-const handleCollapseChange = value => {
+const handleCollapseChange = (value: any) => {
   if (Object.values(value).includes('roadmap')) {
     nextTick(() => {
       if (graphEmbeded.value) {
@@ -289,11 +289,11 @@ const handleCollapseChange = value => {
 const primaryColor = ref('#0060DF')
 
 // 解析题目数据
-const parseQuestions = markdownText => {
-  const questions = []
+const parseQuestions = (markdownText: string) => {
+  const questions: any[] = []
   const lines = markdownText.split('\n')
 
-  let currentQuestion = null
+  let currentQuestion: any = null
 
   for (const line of lines) {
     const questionMatch = line.match(/^\d+\.\s+\[([^\]]+)\]\s+(.*)/)

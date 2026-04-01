@@ -53,6 +53,22 @@
           show-password
         />
 
+        <div class="captcha-container">
+          <el-input
+            v-model="captcha"
+            placeholder="请输入验证码"
+            size="large"
+            class="input-bar captcha-input"
+          />
+          <img
+            v-if="captchaImage"
+            :src="captchaImage"
+            class="captcha-img"
+            alt="验证码"
+            @click="refreshCaptcha"
+          />
+        </div>
+
         <el-button
           type="primary"
           size="large"
@@ -76,26 +92,47 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Close } from '@element-plus/icons-vue'
 import { useUserStore } from '~/stores/userStore'
+import { useAuthApi } from '~/api/auth'
 
 const passwordCheck = ref('')
+const captcha = ref('')
+const captchaKey = ref('')
+const captchaImage = ref('')
 
-const userData = ref({
+const userData = ref<Record<string, string>>({
   userName: '',
   email: '',
   password: '',
 })
 
 // 字段名与中文提示的映射
-const fieldLabels = {
+const fieldLabels: Record<string, string> = {
   userName: '用户名',
   email: '邮箱',
   password: '密码',
 }
 
 const router = useRouter()
+const authApi = useAuthApi()
+
+const refreshCaptcha = async () => {
+  try {
+    const data = await authApi.getCaptcha()
+    if (data && data.base64Image) {
+      captchaImage.value = data.base64Image
+      captchaKey.value = data.key
+    }
+  } catch {
+    ElMessage({ type: 'error', message: '获取验证码失败，请重试', plain: true })
+  }
+}
+
+onMounted(() => {
+  refreshCaptcha()
+})
 
 const validateFields = () => {
   // 校验信息是否合法
@@ -108,6 +145,14 @@ const validateFields = () => {
       })
       return false
     }
+  }
+  if (!captcha.value) {
+    ElMessage({
+      type: 'warning',
+      message: '请输入验证码',
+      plain: true,
+    })
+    return false
   }
   if (userData.value.password !== passwordCheck.value) {
     ElMessage({
@@ -124,9 +169,13 @@ const userStore = useUserStore()
 
 const signUp = async () => {
   if (validateFields()) {
-    await userStore.userSignUp(userData.value)
+    await userStore.userSignUp({
+      ...userData.value,
+      captcha: captcha.value,
+      captchaKey: captchaKey.value,
+    } as any)
     const { status, msg } = await userStore.getUserInfo()
-    ElMessage({ type: status, message: msg, plain: true })
+    ElMessage({ type: status as any, message: msg, plain: true })
     router.replace({ path: '/' })
   }
 }

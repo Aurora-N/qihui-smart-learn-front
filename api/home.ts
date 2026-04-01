@@ -6,8 +6,10 @@ export const useHomeApi = () => {
 
   return {
     // 获取推荐学习文章列表
-    getRecommendedArticles: () =>
-      nuxtApp.$axios.get('/api/article/recommend/list') as Promise<{
+    getRecommendedArticles: (userId: number) =>
+      nuxtApp.$axios.get('/api/article/recommend/list', {
+        params: { userId },
+      }) as Promise<{
         articles: ArticleLink[]
       }>,
 

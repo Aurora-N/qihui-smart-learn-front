@@ -57,8 +57,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBase:
-        process.env.NUXT_PUBLIC_API_BASE || 'http://120.76.138.103:5050/', // 统一的后端接口基础路径
+      apiBase: '/BASE_API',
     },
   },
 
@@ -78,11 +77,12 @@ export default defineNuxtConfig({
   vite: {
     server: {
       proxy: {
-        '/api': {
+        '/BASE_API': {
           target:
-            process.env.NUXT_PUBLIC_API_BASE || 'http://120.76.138.103:5050/', // 统一的后端接口基础路径
+            process.env.NUXT_PUBLIC_API_BASE ||
+            'https://nonrotatable-chara-laterally.ngrok-free.dev/', // 统一的后端接口基础路径
           changeOrigin: true,
-          rewrite: path => path.replace(/^\/api/, ''),
+          rewrite: path => path.replace(/^\/BASE_API/, ''),
         },
       },
     },

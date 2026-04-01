@@ -1,11 +1,6 @@
 import type { BaseResponse } from './base'
 
-export type GetPublicKeyResponse = BaseResponse<{
-  /**
-   * 公钥内容（失败则为空）
-   */
-  key?: null | string
-}>
+export type GetPublicKeyResponse = BaseResponse<string>
 
 export interface GetCaptchaResponseData {
   key: string // 验证码标识

@@ -1,7 +1,6 @@
 <script setup>
-import { fromAsyncCodeToHtml } from '@shikijs/markdown-it/async'
-import MarkdownItAsync from 'markdown-it-async'
-import { codeToHtml } from 'shiki'
+import { ref, onMounted } from 'vue'
+import { useMarkdownText } from '~/composables/useMarkdownText'
 import '~/assets/style/post.scss'
 
 const props = defineProps({
@@ -49,30 +48,15 @@ const toggleLike = () => {
   })
 }
 
-onMounted(() => {
+onMounted(async () => {
   authors.value = props.author
   if (props.tags) console.log(props.tags)
+  finalContent.value = await renderMarkdown(props.content || '')
 })
 
-const md = MarkdownItAsync()
+const { renderMarkdown } = useMarkdownText()
 
-md.use(
-  fromAsyncCodeToHtml(
-    // Pass the codeToHtml function
-    codeToHtml,
-    {
-      theme: 'material-theme-lighter',
-    }
-  )
-)
-
-const renderedContent = await md.renderAsync(props.content)
-
-const codeColor = computed(() =>
-  useColorMode().preference === 'light' ? '#F8FAFC' : '#1E293B'
-)
-
-const finalContent = renderedContent.replace(/#FAFAFA/g, codeColor) // 替换代码区背景色
+const finalContent = ref('')
 </script>
 
 <template>

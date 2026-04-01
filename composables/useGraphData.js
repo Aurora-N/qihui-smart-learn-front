@@ -1,11 +1,6 @@
 import { ref, computed } from 'vue'
 import { transformData, transformRelationData } from '~/utils/transformData'
-import { useGraphApi } from '~/api/graph'
-
-// 引入数据 mock
-import fullData from '~/assets/data.json'
-import frontData from '~/assets/data_front_end.json'
-import backData from '~/assets/data_back_end.json'
+import { getAllKnowledgeNodes, getKnowledgeRelationships } from '~/api/learn'
 
 /**
  * 图表数据管理 Composable
@@ -20,25 +15,18 @@ export const useGraphData = () => {
   const embededGraphData = ref({})
 
   /**
-   * 根据标题获取数据源
-   */
-  const getGraphDataSource = title => {
-    if (title === '前端') return frontData
-    else if (title === '后端') return backData
-    else return fullData
-  }
-
-  /**
    * 初始化图表数据
    */
   const initializeGraphData = async props => {
     let graphData
 
     if (!props.isRelationship) {
-      const dataSource = getGraphDataSource(props.title)
-      graphData = transformData(dataSource, props.maxDepth)
+      const res = await getAllKnowledgeNodes()
+      console.log('节点数据原始响应:', res) // 调试日志
+      graphData = transformData(res, props.maxDepth)
     } else {
-      const res = await useGraphApi().getNodeRelationship(props.graphId)
+      const res = await getKnowledgeRelationships()
+      console.log('关系数据原始响应:', res) // 调试日志
       graphData = transformRelationData(res)
     }
 
@@ -54,9 +42,9 @@ export const useGraphData = () => {
   /**
    * 初始化嵌入式图表数据
    */
-  const initializeEmbeddedData = async graphId => {
-    const res = await useGraphApi().getNodeRelationship(graphId)
-    embededGraphData.value = transformRelationData(res)
+  const initializeEmbeddedData = async (graphId, nodeName) => {
+    const res = await getKnowledgeRelationships(nodeName || graphId)
+    embededGraphData.value = transformRelationData(res.data || res)
     return embededGraphData.value
   }
 
@@ -154,7 +142,6 @@ export const useGraphData = () => {
     isDataLoaded,
 
     // 方法
-    getGraphDataSource,
     initializeGraphData,
     initializeEmbeddedData,
     resetToOriginalData,

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 const content = ref('<h1></h1>')
 
 definePageMeta({

@@ -1,15 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import { ClockIcon, FolderIcon } from 'lucide-vue-next'
 import { useForumApi } from '~/api/forum'
 
-const tags = ref([])
+const tags = ref<any>([])
 
 const getAllTags = async () => {
   const res = await useForumApi().getAllTags()
   tags.value = res.data
 }
 
-const bannerConfig = inject('bannerConfig')
+const bannerConfig = inject<any>('bannerConfig')
 
 onMounted(() => {
   getAllTags()

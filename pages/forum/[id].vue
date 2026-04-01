@@ -1,12 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import { useForumApi } from '~/api/forum'
 
 const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
 
-const userInfo = ref({})
-const post = ref({
+const userInfo = ref<any>({})
+const post = ref<any>({
   postId: route.params.id,
   title: '',
   author: {
@@ -18,22 +18,22 @@ const post = ref({
   },
 })
 
-const comments = ref([])
+const comments = ref<any>([])
 
 const initialized = ref(false)
 
 const initPostContent = async () => {
   const isLogin = Object.keys(userStore.userInfo).length !== 0
   const res = await useForumApi().getPostContent(
-    route.params.id,
-    isLogin ? userStore.userInfo.data.userId : null
+    Number(route.params.id),
+    isLogin ? userStore.userInfo.data?.userId : undefined
   )
-  post.value = res.data.posts
-  comments.value = res.data.posts.comments
+  post.value = (res.data as any).posts || res.data
+  comments.value = post.value?.comments || []
   initialized.value = true
 }
 
-const editorRef = ref(null)
+const editorRef = ref<any>(null)
 
 const scrollToReplyEditor = () => {
   if (Object.keys(userStore.userInfo).length === 0) {
@@ -51,30 +51,38 @@ const scrollToReplyEditor = () => {
 }
 
 // 父组件接收清空前的内容
-const handleBeforeSubmit = async content => {
+const handleBeforeSubmit = async (content: string) => {
   if (!userInfo.value) {
     ElMessage({ type: 'warning', message: '用户未登录,请先登录!', plain: true })
     router.push('/login')
     return
   }
   // 接入评论API
-  const res = await useForumApi().replyPost(route.params.id, content)
+  const res = await useForumApi().replyPost({
+    userId: userStore.userInfo.data!.userId,
+    postId: Number(route.params.id),
+    repliedId: null, // 或对应需要回复的ID
+    comment: content,
+  } as any)
   await initPostContent()
 }
 
 // 标签相关
-const tags = ref([])
+const tags = ref<any[]>([])
 
 const getTagsAttributes = async () => {
+  if (!post.value.tags) return
   const allTags = await (await useForumApi().getAllTags()).data
 
   for (const tag of post.value.tags) {
-    const tagWithAttr = allTags.filter(item => item.tagId === tag.tagId)
-    tags.value.push({
-      tagId: tagWithAttr[0].tagId,
-      title: tagWithAttr[0].title,
-      hueColor: tagWithAttr[0].hueColor,
-    })
+    const tagWithAttr = allTags.filter((item: any) => item.tagId === tag.tagId)
+    if (tagWithAttr.length > 0) {
+      tags.value.push({
+        tagId: tagWithAttr[0].tagId,
+        title: tagWithAttr[0].title,
+        hueColor: tagWithAttr[0].hueColor,
+      })
+    }
   }
 }
 
@@ -82,19 +90,23 @@ onMounted(async () => {
   await initPostContent()
   userInfo.value = userStore.userInfo.data
   useSeoMeta({
-    title: `${post.value.title} —— 启慧论坛`,
+    title: `${post.value?.title || '帖子'} —— 启慧论坛`,
   })
   await getTagsAttributes()
 })
 
-const handleLike = async (commentId = null) => {
+const handleLike = async (commentId: number | null = null) => {
   if (Object.keys(userStore.userInfo).length === 0) {
     ElMessage({ type: 'warning', message: '请先登录', plain: true })
     router.push('/login')
     return
   }
 
-  const res = await useForumApi().doLike(post.value.postId, commentId)
+  await useForumApi().doLike(
+    userStore.userInfo.data!.userId,
+    post.value.postId,
+    commentId || undefined
+  )
 }
 
 const handleFavorite = async () => {
@@ -105,16 +117,15 @@ const handleFavorite = async () => {
   }
 
   try {
-    const res = await useForumApi().doFavor(post.value.postId)
-    if (res.msg === '收藏成功') {
-      post.value.isFavorite = true
-    } else if (res.msg === '取消收藏成功') {
-      post.value.isFavorite = false
-    }
+    const res = await useForumApi().doFavor(
+      post.value.postId,
+      userStore.userInfo.data!.userId
+    )
+    post.value.favorite = res.data.favorite
 
     ElMessage({
       type: 'success',
-      message: post.value.isFavorite ? '收藏成功' : '已取消收藏',
+      message: post.value.favorite ? '收藏成功' : '已取消收藏',
       plain: true,
     })
   } catch (error) {
@@ -142,7 +153,7 @@ const handleFavorite = async () => {
           :tags="tags"
           :likes-count="post.likesCount"
           :is-content="true"
-          :is-liked="post.isLiked"
+          :is-liked="post.liked"
           @like="handleLike()"
         />
         <!-- 评论区内容 -->
@@ -154,7 +165,7 @@ const handleFavorite = async () => {
             :time="item.createdAt"
             :likes-count="item.likesCount"
             :replied-id="item.repliedID"
-            :is-liked="item.isLiked"
+            :is-liked="item.liked"
             @like="handleLike(item.commentId)"
           />
           <hr />
@@ -183,12 +194,12 @@ const handleFavorite = async () => {
           </div>
           <div>
             <el-button
-              :type="post.isFavorite ? 'success' : 'primary'"
+              :type="post.favorite ? 'success' : 'primary'"
               size="large"
               class="other-btn"
               @click="handleFavorite"
             >
-              {{ post.isFavorite ? '已收藏' : '收藏' }}
+              {{ post.favorite ? '已收藏' : '收藏' }}
             </el-button>
           </div>
         </aside>

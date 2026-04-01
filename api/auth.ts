@@ -4,10 +4,11 @@ import type {
   GetPublicKeyResponse,
   LoginRequestBody,
   UserLoginOrRegisterData,
+  GetCaptchaResponseData,
 } from './type/auth'
 import { encryptWithRSA } from '~/utils/rsaEncrypt'
 
-export const useUserApi = () => {
+export const useAuthApi = () => {
   const nuxtApp = useNuxtApp()
   const tokenCookie = useCookie('token') // 处理 Token
   const API_BASE = '/api/auth'
@@ -20,7 +21,7 @@ export const useUserApi = () => {
         ...rest,
         password: encryptedPassword, // 发送加密后的密码
       })) as { data: UserLoginOrRegisterData }
-      tokenCookie.value = response.data.token // 登录成功后保存 token
+      tokenCookie.value = `Bearer ${response.data.token}` // 登录成功后保存 token
       return response
     },
 
@@ -44,9 +45,16 @@ export const useUserApi = () => {
       const response = (await nuxtApp.$axios.get(
         `${API_BASE}/publicKey`
       )) as GetPublicKeyResponse // 获取公钥
-      if (response.msg === 'success') {
-        return response.data!.key || null
+      if (response.status === 'success') {
+        return response.data
       }
+    },
+
+    getCaptcha: async () => {
+      const response = (await nuxtApp.$axios.get(`${API_BASE}/captcha`)) as {
+        data: GetCaptchaResponseData
+      } // 获取验证码
+      return response.data
     },
   }
 }

@@ -29,6 +29,21 @@
           class="input-bar"
           show-password
         />
+        <div class="captcha-container">
+          <el-input
+            v-model="captcha"
+            placeholder="请输入验证码"
+            size="large"
+            class="input-bar captcha-input"
+          />
+          <img
+            v-if="captchaImage"
+            :src="captchaImage"
+            class="captcha-img"
+            alt="验证码"
+            @click="refreshCaptcha"
+          />
+        </div>
         <el-button
           type="primary"
           size="large"
@@ -56,18 +71,38 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Close } from '@element-plus/icons-vue'
 import { useUserStore } from '~/stores/userStore'
+import { useAuthApi } from '~/api/auth'
 
 const router = useRouter()
 
 // 定义用户变量存储
 const userStore = useUserStore()
+const authApi = useAuthApi()
 
 const account = ref('')
-
 const password = ref('')
+const captcha = ref('')
+const captchaKey = ref('')
+const captchaImage = ref('')
+
+const refreshCaptcha = async () => {
+  try {
+    const data = await authApi.getCaptcha()
+    if (data && data.base64Image) {
+      captchaImage.value = data.base64Image
+      captchaKey.value = data.key
+    }
+  } catch {
+    ElMessage({ type: 'error', message: '获取验证码失败，请重试', plain: true })
+  }
+}
+
+onMounted(() => {
+  refreshCaptcha()
+})
 
 definePageMeta({
   layout: false,
@@ -81,12 +116,27 @@ const route = useRoute()
 
 // 登录
 const login = async () => {
+  if (!account.value || !password.value || !captcha.value) {
+    ElMessage({
+      type: 'warning',
+      message: '请填写账号、密码和验证码',
+      plain: true,
+    })
+    return
+  }
+
   await userStore.userLogin({
     account: account.value,
     password: password.value,
+    captcha: captcha.value,
+    captchaKey: captchaKey.value,
   })
   const { status, msg } = await userStore.getUserInfo()
-  ElMessage({ type: status, message: msg, plain: true })
+  ElMessage({
+    type: status as 'success' | 'warning' | 'info' | 'error',
+    message: msg,
+    plain: true,
+  })
   const redirectPath = route.query.redirect
   if (redirectPath && typeof redirectPath === 'string') {
     // 跳转回原始页面

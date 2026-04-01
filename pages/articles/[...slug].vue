@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import '~/assets/style/post.scss'
+import { useArticleApi } from '~/api/article'
+import { useMarkdownText } from '~/composables/useMarkdownText'
 
 const route = useRoute()
 const router = useRouter()
@@ -9,40 +11,46 @@ const slug = Array.isArray(route.params.slug)
   : route.params.slug || ''
 
 const isLoading = ref(true)
+const page = ref(null)
+const renderedHtml = ref('')
 
-const { data: page, error } = await useAsyncData(
-  `content-${slug}`,
-  async () => {
-    const articles = await queryCollection('content').all()
-    const result = articles.find(article => article.stem === slug)
-    return result
+const { getArticleDetail } = useArticleApi()
+const { renderMarkdown } = useMarkdownText()
+
+onMounted(async () => {
+  try {
+    // slug format example: "前端/微前端/1.介绍"
+    // The API expects ArticleLink which expects articleName and articlePath.
+    // We derive articlePath from slug and articleName from the last segment.
+    const parts = slug.split('/')
+    const articleName = parts[parts.length - 1] + '.md' // Assuming articleName is the last segment with .md extension
+    const articlePath = slug // Assuming slug is the exact path without .md
+
+    const res = await getArticleDetail({ articleName, articlePath })
+    if (res.data) {
+      page.value = res.data
+      renderedHtml.value = await renderMarkdown(res.data.articleContent || '')
+    }
+  } catch (error) {
+    console.error('Failed to fetch article details', error)
+  } finally {
+    isLoading.value = false
   }
-)
-
-const showMenu = computed(() => {
-  const links = page.value?.body.toc?.links
-  return links && links.length > 0
 })
 
-onMounted(() => {
-  if (page.value) isLoading.value = false
-})
+// Since no TOC is returned by getArticleDetail, hide menu for now.
+const showMenu = ref(false)
 
 useSeoMeta({
-  title: page.value?.title,
-  description: page.value?.description,
+  title: () => page.value?.articleName || '',
+  description: () => page.value?.articleName || '',
 })
 
 definePageMeta({
   layout: 'default',
 })
 
-const selectedItem = computed(() => {
-  const firstId = page.value?.body.toc?.links?.[0]?.id
-  const fullPath = route.fullPath
-  const index = fullPath.indexOf('#') + 1
-  return decodeURI(fullPath.substring(index)) || firstId
-})
+const selectedItem = computed(() => '')
 
 const selectTocItem = (id: string) => {
   router.push(route.path + `#${id}`)
@@ -68,7 +76,7 @@ const recommendPostsList = ref([
           @select="selectTocItem"
         >
           <el-menu-item
-            v-for="item of page?.body.toc?.links"
+            v-for="item of []"
             :key="item.id"
             :index="item.id"
             class="posts-category-item"
@@ -90,12 +98,12 @@ const recommendPostsList = ref([
       <article v-if="page">
         <Breadcrumb
           class="breadcrumb"
-          :current-title="page?.title"
-          :parents="page?.id.split('/').slice(1, -1)"
+          :current-title="page?.articleName"
+          :parents="route.params.slug.slice(0, -1)"
         />
-        <ContentRenderer :value="page" />
+        <div class="article-html-content" v-html="renderedHtml"></div>
       </article>
-      <div v-else>page not found</div>
+      <div v-else-if="!isLoading">page not found</div>
       <Recommend
         title="推荐阅读"
         :lists="recommendPostsList"

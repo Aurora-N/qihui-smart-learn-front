@@ -67,7 +67,7 @@
   <Footer />
 </template>
 
-<script setup>
+<script setup lang="ts">
 const techCategories = [
   {
     name: '前端技术',

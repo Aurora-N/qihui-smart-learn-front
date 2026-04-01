@@ -142,64 +142,54 @@ export const creatArrow = svg => {
 export const useGraphAttribute = () => {
   // 根据节点类型获取半径
   const getNodeRadius = node => {
-    switch (node.type) {
-      case 'all':
-        return 20
-      case 'category':
-        return 15
-      case 'part':
-        return 12
-      case 'depart':
-        return 10
-      default:
-        return 8 // course1 和 course2
+    // 根据一级目录和二级目录的区分设置大小
+    // 如果只有 type1 没有 type2，则是一级节点，大一些
+    if (node.type1 && !node.type2) {
+      return 20
     }
+    // 如果有 type2，则是二级（或更小级别）节点，小一些
+    if (node.type2) {
+      return 12
+    }
+    // 默认兜底大小
+    return 15
   }
 
   // 根据难度级别获取颜色
   const getNodeColor = node => {
-    // 对于没有难度级别的节点（如根节点和分类节点），保持原有颜色
-    if (!node.level) {
-      switch (node.type) {
-        case 'all':
-          return '#ff7675' // 红色
-        case 'category':
-          return '#74b9ff' // 蓝色
-        default:
-          return '#a8a8a8' // 灰色（默认）
-      }
+    // 直接使用 transformData 中已经绑定到节点上的 color
+    if (node.color) {
+      return node.color
     }
 
-    // 根据难度级别设置颜色
-    switch (node.level) {
-      case '入门':
-        return '#55efc4' // 绿色
-      case '基础':
-        return '#ffeaa7' // 黄色
-      case '进阶':
-        return '#fd79a8' // 粉色
-      case '深入':
-        return '#a29bfe' // 紫色
-      case '高级':
-        return '#e17055' // 橙色
+    // 如果未绑定，回退逻辑 (对应 transformData 的颜色映射)
+    const levelNum = Number(node.level)
+    switch (levelNum) {
+      case 1:
+        return '#55efc4' // 基础 - 绿色
+      case 2:
+        return '#ffeaa7' // 进阶 - 黄色
+      case 3:
+        return '#fd79a8' // 深入 - 粉色
+      case 4:
+        return '#a29bfe' // 高级 - 紫色
       default:
-        return '#a8a8a8' // 灰色（默认）
+        return '#a8a8a8' // 默认 - 灰色
     }
   }
 
   // 获取难度级别的CSS类名
   const getLevelClass = level => {
-    switch (level) {
-      case '入门':
-        return 'beginner'
-      case '基础':
-        return 'basic'
-      case '进阶':
-        return 'intermediate'
-      case '深入':
-        return 'advanced'
-      case '高级':
-        return 'expert'
+    const levelNum = Number(level)
+    switch (levelNum) {
+      case 1:
+        return 'basic' // 基础
+      case 2:
+        return 'intermediate' // 进阶
+      case 3:
+        return 'advanced' // 深入
+      case 4:
+        return 'expert' // 高级
       default:
         return 'default'
     }

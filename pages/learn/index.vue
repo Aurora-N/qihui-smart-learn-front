@@ -9,8 +9,8 @@
     >
       <div class="graph">
         <AsyncGraphComp title="总览" />
-        <AsyncGraphComp title="前端" graph-id="前端" />
-        <AsyncGraphComp title="后端" graph-id="后端" />
+        <!-- <AsyncGraphComp title="前端" graph-id="前端" />
+        <AsyncGraphComp title="后端" graph-id="后端" /> -->
       </div>
       <!-- 学习路线 -->
       <div class="my-path">
@@ -30,7 +30,7 @@
   <Footer />
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   layout: false,
 })

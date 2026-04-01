@@ -1,5 +1,5 @@
-<script setup>
-import { ref, reactive, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { ChatDotRound, User } from '@element-plus/icons-vue'
 import { useUserApi } from '~/api/user'
@@ -9,19 +9,18 @@ import { encryptWithRSA } from '~/utils/rsaEncrypt'
 const router = useRouter()
 
 // 用户信息
-const userInfo = ref({})
+const userInfo = ref<any>({})
 const userStore = useUserStore()
 
 const getUserInfo = async () => {
   if (userStore.userInfo.token) {
-    await userStore.getUserInfo(userStore.userInfo.id)
+    await userStore.getUserInfo()
     userInfo.value = userStore.userInfo.data
-    form.userName = userInfo.value.userName
-    form.email = userInfo.value.email
-    form.selfDescription = userInfo.value.selfDescription
+    form.userName = userInfo.value.userName || ''
+    form.email = userInfo.value.email || ''
+    form.selfDescription = userInfo.value.selfDescription || ''
     form.password = ''
     form.confirmPassword = ''
-    avatarUrl.value = userStore.userInfo.data.avatar
   } else {
     ElMessage({ type: 'warning', message: '用户未登录', plain: true })
     router.replace({ path: '/login' })
@@ -29,7 +28,7 @@ const getUserInfo = async () => {
 }
 
 // 表单数据
-const form = reactive({
+const form = reactive<any>({
   userName: '',
   email: '',
   avatar: '',
@@ -46,10 +45,10 @@ const rules = {
   confirmPassword: [{ validator: validateConfirmPassword, trigger: 'blur' }],
 }
 
-const formRef = ref(null)
+const formRef = ref<any>(null)
 const selectedNav = ref('profile')
 const isLoading = ref(false)
-const avatarUrl = computed(() => userStore.userInfo.data.avatar)
+const avatarUrl = computed(() => userStore.userInfo.data?.avatar)
 
 // 初始化表单数据
 onMounted(() => {
@@ -57,7 +56,7 @@ onMounted(() => {
 })
 
 // 密码验证
-function validatePassword(rule, value, callback) {
+function validatePassword(rule: any, value: any, callback: any) {
   if (value && value.length < 6) {
     callback(new Error('密码长度不能小于6位'))
   } else {
@@ -66,7 +65,7 @@ function validatePassword(rule, value, callback) {
 }
 
 // 确认密码验证
-function validateConfirmPassword(rule, value, callback) {
+function validateConfirmPassword(rule: any, value: any, callback: any) {
   if (value !== form.password) {
     callback(new Error('两次输入的密码不一致'))
   } else {
@@ -75,7 +74,7 @@ function validateConfirmPassword(rule, value, callback) {
 }
 
 // 处理头像上传
-const handleAvatarUpload = file => {
+const handleAvatarUpload = (file: any) => {
   form.avatar = file
 }
 
@@ -83,17 +82,33 @@ const handleAvatarUpload = file => {
 async function submitForm() {
   if (!formRef.value) return
 
-  formRef.value.validate(async valid => {
+  formRef.value.validate(async (valid: boolean) => {
     if (valid) {
       isLoading.value = true
-      if (form.password) form.password = await encryptWithRSA(form.password)
-      const { confirmPassword, ...rest } = form
+      let finalPassword = form.password
+      if (finalPassword) finalPassword = await encryptWithRSA(finalPassword)
+      const { confirmPassword, password, ...rest } = form
+
+      const payload = { ...rest }
+      if (finalPassword) {
+        payload.password = finalPassword
+      }
+
       // 调用API保存用户信息
-      const res = await useUserApi().updateUserInfo(rest)
+      const res = await useUserApi().updateUserInfo(
+        userStore.userInfo.id!,
+        payload
+      )
       if (res.status === 'success') {
         await getUserInfo()
         isLoading.value = false
-        ElMessage({ type: 'success', message: res.message, plain: true })
+        ElMessage({
+          type: 'success',
+          message: res.msg || '修改成功',
+          plain: true,
+        })
+      } else {
+        isLoading.value = false
       }
     }
   })

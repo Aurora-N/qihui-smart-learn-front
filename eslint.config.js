@@ -22,6 +22,7 @@ export default createConfigForNuxt({
       globals: {
         // Nuxt globals
         useNuxtApp: 'readonly',
+        useRuntimeConfig: 'readonly',
         useCookie: 'readonly',
         useRouter: 'readonly',
         useRoute: 'readonly',

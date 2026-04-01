@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Timer, ChatDotRound, Menu, Star } from '@element-plus/icons-vue'
 import { useUserApi } from '~/api/user'
 import { useForumApi } from '~/api/forum'
@@ -23,8 +23,8 @@ const userInfo = ref({
   },
 })
 
-const getUserProfile = async userId => {
-  const res = await userApi.getUserInfo(userId)
+const getUserProfile = async (id: number) => {
+  const res = await userApi.getUserInfo(id)
   userInfo.value = res.data
 
   // 动态更新标题
@@ -37,7 +37,7 @@ const posts = ref([])
 const isLoading = ref(false)
 
 onMounted(async () => {
-  await getUserProfile(userId)
+  await getUserProfile(Number(userId))
   await fetchUserPosts()
 })
 
@@ -62,7 +62,7 @@ watch(selectedNav, async newValue => {
 const fetchUserPosts = async () => {
   try {
     isLoading.value = true
-    const res = await forumApi.getUserPostedList(userId)
+    const res = await userApi.getUserPostedList(Number(userId))
     posts.value = res.data.posts || []
   } catch (error) {
     ElMessage({
@@ -79,8 +79,8 @@ const fetchUserPosts = async () => {
 const fetchUserFavorites = async () => {
   try {
     isLoading.value = true
-    const res = await forumApi.getFavoritePostsList(userId)
-    posts.value = res.favorites || []
+    const res = await userApi.getFavoritePostsList(Number(userId))
+    posts.value = res.data.posts || []
   } catch (error) {
     console.error('获取用户收藏失败:', error)
     ElMessage({

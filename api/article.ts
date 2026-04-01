@@ -7,7 +7,7 @@ export const useArticleApi = () => {
   return {
     // 获取文章内容
     getArticleDetail: (articleQuery: ArticleLink) =>
-      nuxtApp.$axios.get(`${BASE_API}/detail`, {
+      nuxtApp.$axios.get(`${BASE_API}/details`, {
         params: {
           ...articleQuery,
         },

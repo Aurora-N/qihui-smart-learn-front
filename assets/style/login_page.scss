@@ -188,3 +188,24 @@
     display: none;
   }
 }
+
+.captcha-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+
+  .captcha-input {
+    flex: 1;
+    margin-right: 10px;
+    margin-bottom: 0;
+  }
+
+  .captcha-img {
+    height: 40px;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+  }
+}

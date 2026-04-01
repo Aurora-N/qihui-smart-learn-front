@@ -26,7 +26,7 @@ export const useForumApi = () => {
     // 获取具体帖子内容
     getPostContent: (postId: number, userId?: number) =>
       nuxtApp.$axios.get(
-        `${BASE_API}/posts/${postId}${userId ? `?userId=${userId}` : ''}`
+        `${BASE_API}/${postId}${userId ? `?userId=${userId}` : ''}`
       ) as Promise<{
         data: Post
       }>,
@@ -39,7 +39,7 @@ export const useForumApi = () => {
 
     // 获取指定标签对应的帖子列表
     getTagPostsList: (tagId: number) =>
-      nuxtApp.$axios.get(`/tags/${tagId}/postlist`) as Promise<{
+      nuxtApp.$axios.get(`${BASE_API}/tags/${tagId}/posts`) as Promise<{
         data: BasePost[]
       }>,
 
@@ -70,11 +70,9 @@ export const useForumApi = () => {
 
     // 点赞
     doLike: (userId: number, postId?: number, commentId?: number) =>
-      nuxtApp.$axios.put(`/forum/${postId}/likes`, {
-        type: commentId ? 'comment' : 'post',
-        likeId: commentId || postId,
-        userId,
-      }) as Promise<{ data: LikeResponseData }>,
+      nuxtApp.$axios.put(
+        `${BASE_API}/${commentId ? 'comment' : 'post'}/like?userId=${userId}&likeId=${commentId || postId}`
+      ) as Promise<{ data: LikeResponseData }>,
 
     // 收藏
     doFavor: (postId: number, userId?: number) =>
