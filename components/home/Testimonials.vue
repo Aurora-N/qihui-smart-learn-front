@@ -4,8 +4,8 @@
       <!-- Popular Articles Section -->
       <div class="section-container">
         <div class="testimonials-header">
-          <h2 class="testimonials-title">热门文章</h2>
-          <p class="testimonials-description">来看看大家都在看哪些文章</p>
+          <h2 class="testimonials-title">推荐文章</h2>
+          <p class="testimonials-description">为你精心挑选的学习文章</p>
         </div>
 
         <div v-if="isLoadingArticles" class="loading-indicator">加载中...</div>
@@ -17,7 +17,7 @@
             v-for="article in displayedArticles"
             :key="article.name"
             class="testimonial-card"
-            @click="$router.push(formatArticleLink(article.article))"
+            @click="$router.push(formatArticleLink(article.articlePath))"
           >
             <div class="testimonial-header">
               <IconsLearn
@@ -27,13 +27,13 @@
               />
               <div class="testimonial-meta">
                 <div class="testimonial-name">
-                  {{ article.name }}
+                  {{ article.articleName }}
                 </div>
                 <div class="testimonial-role">学习资料</div>
               </div>
             </div>
             <p class="testimonial-quote">
-              {{ article.name }}
+              {{ article.articlePath.split('/').slice(1, -1).join(' - ') }}
             </p>
           </div>
         </div>
@@ -97,6 +97,7 @@ import { useHomeApi } from '~/api/home'
 
 // API
 const homeApi = useHomeApi()
+const userStore = useUserStore()
 
 // State management
 const popularArticles = ref([])
@@ -169,7 +170,7 @@ const stopRotation = () => {
 // Format article link
 const formatArticleLink = articlePath => {
   // Replace backslashes with forward slashes, remove first two path segments, add /articles prefix
-  const formatted = '/articles/' + articlePath.split('\\').slice(2).join('/')
+  const formatted = '/articles/' + articlePath
   return formatted
 }
 
@@ -184,13 +185,14 @@ onMounted(async () => {
   // Fetch popular articles
   try {
     isLoadingArticles.value = true
-    const response = await homeApi.getPopularArticles()
-    if (response.articles) {
-      popularArticles.value = response.articles
+    const userId = userStore.userInfo?.id || 1
+    const response = await homeApi.getRecommendedArticles(userId)
+    if (response.data) {
+      popularArticles.value = response.data
     }
   } catch (error) {
-    articlesError.value = '获取热门文章失败'
-    console.error('Error fetching popular articles:', error)
+    articlesError.value = '获取推荐文章失败'
+    console.error('Error fetching recommended articles:', error)
   } finally {
     isLoadingArticles.value = false
   }

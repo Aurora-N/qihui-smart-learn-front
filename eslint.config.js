@@ -76,6 +76,7 @@ export default createConfigForNuxt({
       'vue/html-indent': 'off',
       '@stylistic/quotes': 'off',
       '@stylistic/indent-binary-ops': 'off',
+      '@stylistic/member-delimiter-style': 'off',
       'vue/operator-linebreak': 'off',
       'vue/comma-dangle': 'off',
       'regexp/no-super-linear-backtracking': 'warn',

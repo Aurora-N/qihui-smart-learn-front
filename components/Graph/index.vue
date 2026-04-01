@@ -92,7 +92,13 @@ const props = defineProps({
     type: Boolean,
     default: false, // 是否为关系图谱
   },
+  initialData: {
+    type: Array, // 如果有传入数据，则不请求接口直接渲染
+    default: () => [],
+  },
 })
+
+const emit = defineEmits(['node-click', 'graph-ready'])
 
 // 侧边栏引用
 const sidebarRef = ref(null)
@@ -132,6 +138,8 @@ const {
 // 组件生命周期
 onMounted(async () => {
   await graphOnMounted()
+  // 把转换好的 nodes 发射出去，供外部渲染 keywords 时提取真实的 node 信息使用
+  emit('graph-ready', { nodes: nodes.value, links: links.value })
 })
 
 onBeforeUnmount(() => {

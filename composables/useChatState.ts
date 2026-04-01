@@ -11,9 +11,9 @@ import {
 } from '~/api/ai'
 import type { ChatSession, ChatMessage, ModelInfo } from '~/api/type/ai'
 import { useUserStore } from '~/stores/userStore'
+import { useArticleApi } from '~/api/article'
 
 // 将状态提取到外部作为共享状态
-const isMock = ref(true) // 是否开启本地Mock模式
 const sessions = ref<ChatSession[]>([])
 const currentSessionId = ref<number | null>(null)
 const messages = ref<ChatMessage[]>([])
@@ -27,16 +27,14 @@ export function useChatState() {
   const userInfo = userStore.userInfo as { id?: number }
   const userId = ref<number | null>(userInfo?.id || null)
 
+  const { getArticleLinkById } = useArticleApi()
+
   const triggerScrollToBottom = () => {
     scrollToBottomTrigger.value++
   }
 
   // 加载模型列表
   const loadModels = async () => {
-    if (isMock.value) {
-      models.value = [{ modelName: 'gpt-3.5-turbo', modelVersion: '1.0' }]
-      return
-    }
     try {
       const res = await fetchApiModelList()
       models.value = res || []
@@ -49,30 +47,6 @@ export function useChatState() {
   // 选择会话
   const selectSession = async (sessionId: number) => {
     currentSessionId.value = sessionId
-    if (isMock.value) {
-      if (sessionId === 1) {
-        messages.value = [
-          {
-            messageId: 101,
-            content: '请问什么是计算机科学？',
-            role: 'user',
-            createdAt: new Date().toISOString(),
-          },
-          {
-            messageId: 102,
-            content:
-              '计算机科学(Computer Science，简称CS)，是系统性研究信息与计算的理论基础以及它们在计算机系统中如何实现与应用的实用技术的学科。',
-            role: 'assistant',
-            createdAt: new Date().toISOString(),
-          },
-        ]
-      } else {
-        messages.value = []
-      }
-      triggerScrollToBottom()
-      return
-    }
-
     try {
       const res = await fetchChatMessages(sessionId)
       messages.value = res || []
@@ -85,27 +59,6 @@ export function useChatState() {
 
   // 加载历史会话
   const loadSessions = async () => {
-    if (isMock.value) {
-      sessions.value = [
-        {
-          sessionId: 1,
-          sessionName: '什么是计算机科学',
-          modelName: 'gpt-3.5-turbo',
-          createdAt: new Date().toISOString(),
-        },
-        {
-          sessionId: 2,
-          sessionName: '学习Vue框架',
-          modelName: 'gpt-3.5-turbo',
-          createdAt: new Date().toISOString(),
-        },
-      ]
-      if (sessions.value.length > 0 && !currentSessionId.value) {
-        await selectSession(sessions.value[0].sessionId)
-      }
-      return
-    }
-
     if (!userId.value) return
     try {
       const res = await fetchChatHistoryList(userId.value)
@@ -121,22 +74,10 @@ export function useChatState() {
 
   // 新建会话
   const handleNewSession = async () => {
-    if (!userId.value && !isMock.value) {
+    if (!userId.value) {
       ElMessage.warning('请先登录再新建对话')
       navigateTo('/login')
-      return
-    }
-
-    if (isMock.value) {
-      const newSession = {
-        sessionId: Date.now(),
-        sessionName: '新对话', // MOCK ID
-        modelName: 'gpt-3.5-turbo',
-        createdAt: new Date().toISOString(),
-      }
-      sessions.value.unshift(newSession)
-      await selectSession(newSession.sessionId)
-      return
+      return false
     }
 
     try {
@@ -145,29 +86,19 @@ export function useChatState() {
       if (res) {
         sessions.value.unshift(res)
         await selectSession(res.sessionId)
+        return true
       }
+      return false
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to create session:', error)
       ElMessage.error('创建会话失败')
+      return false
     }
   }
 
   // 删除会话
   const handleDeleteSession = async (sessionId: number) => {
-    if (isMock.value) {
-      sessions.value = sessions.value.filter(s => s.sessionId !== sessionId)
-      if (currentSessionId.value === sessionId) {
-        currentSessionId.value = null
-        messages.value = []
-        if (sessions.value.length > 0) {
-          await selectSession(sessions.value[0].sessionId)
-        }
-      }
-      ElMessage.success('会话已删除')
-      return
-    }
-
     try {
       await deleteChatSession(sessionId)
       sessions.value = sessions.value.filter(s => s.sessionId !== sessionId)
@@ -187,14 +118,6 @@ export function useChatState() {
 
   // 清空会话
   const handleClearSession = async (sessionId: number) => {
-    if (isMock.value) {
-      if (currentSessionId.value === sessionId) {
-        messages.value = []
-      }
-      ElMessage.success('聊天记录已清空')
-      return
-    }
-
     try {
       await clearChatSession(sessionId)
       if (currentSessionId.value === sessionId) {
@@ -213,15 +136,15 @@ export function useChatState() {
       return
     }
 
-    if (!userId.value && !isMock.value) {
+    if (!userId.value) {
       ElMessage.warning('请先登录再使用AI问答功能')
       navigateTo('/login')
       return
     }
 
-    if (!currentSessionId.value && !isMock.value) {
-      ElMessage.warning('请先选择或新建一个会话')
-      return
+    if (!currentSessionId.value) {
+      const success = await handleNewSession()
+      if (!success || !currentSessionId.value) return
     }
 
     const userText = inputMessage.value.trim()
@@ -242,27 +165,10 @@ export function useChatState() {
       content: '',
       role: 'assistant',
       createdAt: new Date().toISOString(),
+      references: [],
     }
     messages.value.push(assistantMessage)
     const targetMsg = messages.value[messages.value.length - 1]
-
-    if (isMock.value) {
-      const mockReply =
-        '这是一个Mock的流式回复内容。支持未登录用户浏览和体验。\n下面我们演示一下打字机效果。这里是更多一些的文字...'
-      let i = 0
-      const timer = setInterval(() => {
-        if (i < mockReply.length) {
-          targetMsg.content += mockReply[i]
-          i++
-          triggerScrollToBottom()
-        } else {
-          clearInterval(timer)
-          isGenerating.value = false
-          triggerScrollToBottom()
-        }
-      }, 50)
-      return
-    }
 
     try {
       const response = await sendMessageStream(
@@ -275,6 +181,8 @@ export function useChatState() {
 
       if (!reader) throw new Error('流数据提取失败')
 
+      let isReferenceEvent = false
+
       while (!done) {
         const { value, done: readerDone } = await reader.read()
         done = readerDone
@@ -282,19 +190,74 @@ export function useChatState() {
           const chunk = decoder.decode(value, { stream: true })
           const lines = chunk.split('\n')
           for (const line of lines) {
-            if (line.startsWith('data:')) {
+            if (line.startsWith('event:')) {
+              const eventName = line.replace(/^event:/, '').trim()
+              if (eventName === 'references') {
+                isReferenceEvent = true
+              } else {
+                isReferenceEvent = false
+              }
+            } else if (line.startsWith('data:')) {
               const dataStr = line.slice(5).trim()
               if (dataStr === '[DONE]') break
-              try {
-                const data = JSON.parse(dataStr)
-                if (data.choices?.[0]?.delta?.content) {
-                  targetMsg.content += data.choices[0].delta.content
-                  triggerScrollToBottom()
+
+              if (isReferenceEvent) {
+                try {
+                  const data = JSON.parse(dataStr)
+                  if (
+                    data.type === 'references' &&
+                    data.references &&
+                    Array.isArray(data.references)
+                  ) {
+                    // 收集去重后的 documentId
+                    const docIds = new Set<number>()
+                    for (const refItem of data.references) {
+                      if (refItem.metadata && refItem.metadata.documentId) {
+                        docIds.add(refItem.metadata.documentId)
+                      }
+                    }
+                    // 异步请求文献链接
+                    for (const docId of docIds) {
+                      getArticleLinkById(docId)
+                        .then(articleLink => {
+                          if (articleLink) {
+                            if (!targetMsg.references) targetMsg.references = []
+                            // 防复查
+                            if (
+                              !targetMsg.references.some(
+                                (r: any) =>
+                                  r.articlePath === articleLink.articlePath
+                              )
+                            ) {
+                              targetMsg.references.push(articleLink)
+                              triggerScrollToBottom()
+                            }
+                          }
+                        })
+                        .catch(err => {
+                          console.error('Failed to fetch article ref:', err)
+                        })
+                    }
+                  }
+                } catch (e) {
+                  // ignore parse error if stream split
                 }
-              } catch {
-                targetMsg.content += dataStr
+              } else {
+                try {
+                  const data = JSON.parse(dataStr)
+                  if (data.choices?.[0]?.delta?.content) {
+                    targetMsg.content += data.choices[0].delta.content
+                    triggerScrollToBottom()
+                  }
+                } catch {
+                  targetMsg.content += dataStr
+                }
               }
-            } else if (line.trim()) {
+            } else if (
+              line.trim() &&
+              !isReferenceEvent &&
+              !line.startsWith('event:')
+            ) {
               targetMsg.content += line.replace(/^data:/, '').trim()
             }
           }
@@ -312,7 +275,6 @@ export function useChatState() {
 
   return {
     userId,
-    isMock,
     sessions,
     currentSessionId,
     messages,

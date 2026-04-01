@@ -1,5 +1,6 @@
 import * as d3 from 'd3'
 import { useGraphDataStore } from '~/stores/graphDataStore'
+import { getLevelColor } from '~/constants/graph'
 
 // 创建SVG
 export const createSvg = (graphContainer, width, height, isFull = false) => {
@@ -162,20 +163,8 @@ export const useGraphAttribute = () => {
       return node.color
     }
 
-    // 如果未绑定，回退逻辑 (对应 transformData 的颜色映射)
-    const levelNum = Number(node.level)
-    switch (levelNum) {
-      case 1:
-        return '#55efc4' // 基础 - 绿色
-      case 2:
-        return '#ffeaa7' // 进阶 - 黄色
-      case 3:
-        return '#fd79a8' // 深入 - 粉色
-      case 4:
-        return '#a29bfe' // 高级 - 紫色
-      default:
-        return '#a8a8a8' // 默认 - 灰色
-    }
+    // 如果未绑定，回退逻辑 (统一收敛到常量控制)
+    return getLevelColor(node.level)
   }
 
   // 获取难度级别的CSS类名
@@ -208,24 +197,32 @@ export const useGraphAttribute = () => {
       const response = await graphDataStore.getResources(node.id)
 
       // 处理返回的 article 数据
-      response.article.map(article => {
-        const url = article.article.split('/').slice(2).join('/')
-        article.url = url
-      })
-      // 按名称排序 article
-      response.article.sort((a, b) => a.name.localeCompare(b.name))
-      // 处理 video 数据
-      response.video.map(video => {
-        // 处理bilibili视频成为内嵌格式
-        if (video.url.includes('www.bilibili.com')) {
-          const embedUrl = `//player.bilibili.com/player.html?bvid=${video.url.split('/').at(-2)}&page=1&danmaku=0&autoplay=0`
-          video.url = embedUrl
+      const mappedArticles = response.articles.map(article => {
+        const url = article.articlePath.split('/').slice(2).join('/')
+        return {
+          ...article,
+          name: article.articleName,
+          url: url,
         }
       })
+      // 按名称排序 article
+      mappedArticles.sort((a, b) => a.name.localeCompare(b.name))
+
+      // 处理 video 数据
+      const mappedVideos = response.videos.map(video => {
+        const mappedVideo = { ...video }
+        // 处理bilibili视频成为内嵌格式
+        if (mappedVideo.url.includes('www.bilibili.com')) {
+          const embedUrl = `//player.bilibili.com/player.html?bvid=${mappedVideo.url.split('/').at(-2)}&page=1&danmaku=0&autoplay=0`
+          mappedVideo.url = embedUrl
+        }
+        return mappedVideo
+      })
+
       // 将处理后的数据加入资源列表
-      resources.articles.push(...response.article)
-      resources.videos.push(...response.video)
-    } catch (error) {
+      resources.articles.push(...mappedArticles)
+      resources.videos.push(...mappedVideos)
+    } catch {
       resources.articles = []
       resources.videos = []
       throw new Error('请求资源失败！')

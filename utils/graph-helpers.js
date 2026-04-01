@@ -1,3 +1,5 @@
+import { NODE_COLORS, getLevelColor } from '~/constants/graph'
+
 /**
  * 根据节点类型获取半径
  * @param {object} node - 节点对象
@@ -28,28 +30,33 @@ export const getNodeColor = node => {
   if (!node.level) {
     switch (node.type) {
       case 'all':
-        return '#ff7675' // 红色
+        return NODE_COLORS.ROOT
       case 'category':
-        return '#74b9ff' // 蓝色
+        return NODE_COLORS.CATEGORY
       default:
-        return '#a8a8a8' // 灰色（默认）
+        return NODE_COLORS.DEFAULT
     }
   }
 
-  // 根据难度级别设置颜色
+  // 通过数字形式匹配新版本的难度常规范
+  if (typeof node.level === 'number' || !Number.isNaN(Number(node.level))) {
+    return getLevelColor(node.level)
+  }
+
+  // 根据旧有的字符难度级别设置颜色
   switch (node.level) {
     case '入门':
-      return '#55efc4' // 绿色
+      return NODE_COLORS.LEVEL_1
     case '基础':
-      return '#ffeaa7' // 黄色
+      return NODE_COLORS.LEVEL_2
     case '进阶':
-      return '#fd79a8' // 粉色
+      return NODE_COLORS.LEVEL_3
     case '深入':
-      return '#a29bfe' // 紫色
+      return NODE_COLORS.LEVEL_4
     case '高级':
-      return '#e17055' // 橙色
+      return NODE_COLORS.LEVEL_5
     default:
-      return '#a8a8a8' // 灰色（默认）
+      return NODE_COLORS.DEFAULT
   }
 }
 

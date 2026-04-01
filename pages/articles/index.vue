@@ -40,7 +40,7 @@ const selectCategory = (id: string) => {
 onMounted(async () => {
   try {
     const response = await getArticleList()
-    const rawData = response.data || []
+    const rawData = response || []
     console.log('Raw Article List:', rawData)
 
     const buildTree = links => {

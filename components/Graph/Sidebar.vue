@@ -73,8 +73,11 @@ const getNodeResources = useGraphAttribute().getNodeResources
 const getNodeColor = useGraphAttribute().getNodeColor
 
 const getRelatedNodes = (node: Node) => {
-  console.log(node)
+  // console.log(node)
   const relatedNodes: Node[] = []
+
+  // 如果没有链接，直接返回空
+  if (!props.links || props.links.length === 0) return relatedNodes;
 
   // 查找直接相连的节点
   props.links.forEach(link => {

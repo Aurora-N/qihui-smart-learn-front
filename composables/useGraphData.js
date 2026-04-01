@@ -20,14 +20,22 @@ export const useGraphData = () => {
   const initializeGraphData = async props => {
     let graphData
 
-    if (!props.isRelationship) {
-      const res = await getAllKnowledgeNodes()
-      console.log('节点数据原始响应:', res) // 调试日志
-      graphData = transformData(res, props.maxDepth)
+    if (props.initialData && props.initialData.length > 0) {
+      // 如果直接传入了初始化数据
+      graphData = props.isRelationship
+        ? transformRelationData(props.initialData)
+        : transformData(props.initialData, props.maxDepth)
+    } else if (!props.isRelationship) {
+      const res = await getAllKnowledgeNodes(
+        props.chatId || 0,
+        props.latestMessageId || 0
+      )
+      graphData = transformData(res.data || res, props.maxDepth)
     } else {
-      const res = await getKnowledgeRelationships()
-      console.log('关系数据原始响应:', res) // 调试日志
-      graphData = transformRelationData(res)
+      const res = await getKnowledgeRelationships(
+        props.nodeName || props.graphId
+      )
+      graphData = transformRelationData(res.data || res)
     }
 
     // 设置数据

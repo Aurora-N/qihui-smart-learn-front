@@ -1,29 +1,14 @@
 import type { GraphNodeData } from '~/api/type/learn'
-
-// 颜色映射：根据难度等级(level)配置不同颜色
-const getLevelColor = (level: number | string | null | undefined): string => {
-  const levelNum = Number(level)
-  switch (levelNum) {
-    case 1:
-      return '#55efc4' // 基础 - 绿色
-    case 2:
-      return '#ffeaa7' // 进阶 - 黄色
-    case 3:
-      return '#fd79a8' // 深入 - 粉色
-    case 4:
-      return '#a29bfe' // 高级 - 紫色
-    default:
-      return '#a8a8a8' // 默认 - 灰色
-  }
-}
+import { getLevelColor } from '~/constants/graph'
 
 // 转换数据为D3.js格式，适配新的 GraphNodeData 结构
-export const transformData = (data: GraphNodeData[] | any = []) => {
-  const nodes: any[] = []
-  const links: any[] = []
-  const nodeMap = new Map<string, any>()
+export const transformData = (data: GraphNodeData[] | unknown[] = []) => {
+  const nodes: Record<string, unknown>[] = []
+  const links: Record<string, unknown>[] = []
+  const nodeMap = new Map<string, Record<string, unknown>>()
 
   // 添加节点到Map，确保唯一性
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const addNode = (node: any) => {
     if (!node || (!node.name && !node.info)) return null
 
@@ -31,7 +16,7 @@ export const transformData = (data: GraphNodeData[] | any = []) => {
     const uniqueId = node.name || node.info
 
     if (!nodeMap.has(uniqueId)) {
-      const newNode = {
+      const newNode: Record<string, unknown> = {
         id: uniqueId,
         uniqueId: uniqueId,
         name: node.name,
@@ -63,7 +48,7 @@ export const transformData = (data: GraphNodeData[] | any = []) => {
 
     if (startId && endId) {
       // 创建链接
-      const relationship = record.nodeRelationship || {}
+      const relationship = record.nodeRelationship || record.relationship || {}
       links.push({
         source: startId,
         target: endId,
@@ -78,6 +63,7 @@ export const transformData = (data: GraphNodeData[] | any = []) => {
 }
 
 // 兼容原来针对关系数据的独立调用
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const transformRelationData = (relationData: any) => {
   return transformData(relationData)
 }

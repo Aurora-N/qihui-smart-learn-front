@@ -2,6 +2,8 @@
 import '~/assets/style/post.scss'
 import { useArticleApi } from '~/api/article'
 import { useMarkdownText } from '~/composables/useMarkdownText'
+import GraphIndex from '~/components/Graph/index.vue'
+import GraphSidebar from '~/components/Graph/Sidebar.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -11,11 +13,62 @@ const slug = Array.isArray(route.params.slug)
   : route.params.slug || ''
 
 const isLoading = ref(true)
-const page = ref(null)
+const page = ref<any>(null)
 const renderedHtml = ref('')
 
 const { getArticleDetail } = useArticleApi()
 const { renderMarkdown } = useMarkdownText()
+
+const graphSidebarRef = ref<InstanceType<typeof GraphSidebar> | null>(null)
+const keywordNodeMap = new Map<string, any>()
+const currentGraphNodes = ref<any[]>([])
+
+const handleGraphReady = ({ nodes }: { nodes: any[] }) => {
+  currentGraphNodes.value = nodes
+
+  if (nodes && nodes.length > 0) {
+    keywordNodeMap.clear()
+    const keywords = new Set<string>()
+    nodes.forEach(node => {
+      // 记录真实节点属性
+      keywordNodeMap.set(node.name || node.id, node)
+      keywords.add(node.name || node.id)
+    })
+
+    // 如果已经有页面内容了，立刻再次渲染 markdown
+    if (page.value?.articleContent) {
+      renderMarkdown(page.value.articleContent, Array.from(keywords)).then(
+        html => {
+          renderedHtml.value = html
+        }
+      )
+    }
+  }
+}
+
+// 监听 Markdown 内容的点击，调用通过高亮生成的 keyword 项
+const onMarkdownClick = (e: MouseEvent) => {
+  const target = e.target as HTMLElement
+  if (target && target.classList.contains('markdown-keyword-trigger')) {
+    const keyword = target.dataset.keyword
+    if (keyword) {
+      // 提取出对应的节点信息
+      const nodeData = keywordNodeMap.get(keyword) || {}
+
+      const openNodeObj = {
+        id: keyword,
+        uniqueId: keyword,
+        name: keyword,
+        content: nodeData.info || '',
+        level: nodeData.level || '',
+        ...nodeData,
+      }
+
+      // 打开侧边栏组件
+      graphSidebarRef.value?.openSidebar(openNodeObj as any)
+    }
+  }
+}
 
 onMounted(async () => {
   try {
@@ -27,9 +80,40 @@ onMounted(async () => {
     const articlePath = slug // Assuming slug is the exact path without .md
 
     const res = await getArticleDetail({ articleName, articlePath })
-    if (res.data) {
-      page.value = res.data
-      renderedHtml.value = await renderMarkdown(res.data.articleContent || '')
+    if (res) {
+      page.value = res
+
+      const keywords = new Set<string>()
+
+      // 提取图谱节点的简单 keywords 用以第一轮初步高亮
+      if (
+        res.articleKnowledgeGraph &&
+        Array.isArray(res.articleKnowledgeGraph)
+      ) {
+        res.articleKnowledgeGraph.forEach((record: any) => {
+          if (record.startNode?.name) {
+            keywords.add(record.startNode.name)
+            keywordNodeMap.set(record.startNode.name, record.startNode)
+          }
+          if (record.endNode?.name) {
+            keywords.add(record.endNode.name)
+            keywordNodeMap.set(record.endNode.name, record.endNode)
+          }
+        })
+      }
+
+      // 如果 currentGraphNodes 已经载入，或者此时只用初步 keywords 渲染
+      const finalKeywords =
+        currentGraphNodes.value.length > 0
+          ? Array.from(
+              new Set(currentGraphNodes.value.map(n => n.name || n.id))
+            )
+          : Array.from(keywords)
+
+      renderedHtml.value = await renderMarkdown(
+        res.articleContent || '',
+        finalKeywords
+      )
     }
   } catch (error) {
     console.error('Failed to fetch article details', error)
@@ -65,9 +149,9 @@ const recommendPostsList = ref([
 </script>
 
 <template>
-  <!-- <ContentSkeleton v-if="isLoading" /> -->
+  <ContentSkeleton v-if="isLoading" />
 
-  <div class="main-container">
+  <div v-else class="main-container">
     <div v-if="showMenu" class="side">
       <Sidebar title="目录" height="20rem">
         <el-menu
@@ -101,7 +185,23 @@ const recommendPostsList = ref([
           :current-title="page?.articleName"
           :parents="route.params.slug.slice(0, -1)"
         />
-        <div class="article-html-content" v-html="renderedHtml"></div>
+
+        <!-- 文章对应的知识图谱 -->
+        <GraphIndex
+          v-if="
+            page.articleKnowledgeGraph && page.articleKnowledgeGraph.length > 0
+          "
+          :title="`${page.articleName}`"
+          :initial-data="page.articleKnowledgeGraph"
+          class="article-graph"
+          @graph-ready="handleGraphReady"
+        />
+
+        <div
+          class="article-html-content"
+          @click="onMarkdownClick"
+          v-html="renderedHtml"
+        ></div>
       </article>
       <div v-else-if="!isLoading">page not found</div>
       <Recommend
@@ -111,6 +211,9 @@ const recommendPostsList = ref([
       />
     </div>
   </div>
+
+  <!-- 图谱节点侧边栏 -->
+  <GraphSidebar ref="graphSidebarRef" :nodes="currentGraphNodes" :links="[]" />
 
   <Footer />
 </template>
@@ -159,6 +262,11 @@ const recommendPostsList = ref([
   margin: 0 -5px 2px -5px;
 }
 
+.article-graph {
+  margin: 1.5rem 0;
+  width: 100%;
+}
+
 @media (max-width: 1200px) {
   .main-container {
     margin: 1.5rem;
@@ -179,6 +287,14 @@ const recommendPostsList = ref([
   .main-container {
     display: block;
     margin: 0 1.5rem 1.5rem 1.5rem;
+  }
+
+  .article-graph {
+    margin: 1rem 0;
+    width: 100%;
+    min-height: 300px;
+    border-radius: 8px;
+    overflow: hidden;
   }
 
   .breadcrumb {

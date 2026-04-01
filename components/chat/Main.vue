@@ -44,6 +44,10 @@ watch(scrollToBottomTrigger, async () => {
 
 const handleKeydown = (e: KeyboardEvent | Event) => {
   const evt = e as KeyboardEvent
+
+  // 避免中文输入法(IME)组合按下回车时直接发出
+  if (evt.isComposing) return
+
   if (evt.key === 'Enter' && !evt.shiftKey) {
     evt.preventDefault()
     sendMessage()
@@ -69,7 +73,30 @@ const handleKeydown = (e: KeyboardEvent | Event) => {
             {{ msg.role === 'user' ? '我' : 'AI' }}
           </div>
           <div class="message-content">
-            <div class="text">{{ msg.content || '...' }}</div>
+            <ChatMarkdown
+              :content="msg.content || '...'"
+              :is-generating="
+                isGenerating &&
+                msg.messageId === messages[messages.length - 1].messageId
+              "
+            />
+            <div
+              v-if="msg.references && msg.references.length"
+              class="message-references"
+            >
+              <span class="ref-title">参考资料：</span>
+              <div class="ref-buttons">
+                <nuxt-link
+                  v-for="(refItem, i) in msg.references"
+                  :key="i"
+                  :to="`/articles/${refItem.articlePath}`"
+                  class="ref-btn"
+                  target="_blank"
+                >
+                  {{ refItem.articleName }}
+                </nuxt-link>
+              </div>
+            </div>
           </div>
         </div>
       </template>
@@ -140,6 +167,7 @@ const handleKeydown = (e: KeyboardEvent | Event) => {
   flex-direction: column;
   gap: $spacing-lg;
   scroll-behavior: smooth;
+  margin-bottom: 120px;
 
   .empty-state {
     margin: auto;
@@ -201,8 +229,6 @@ const handleKeydown = (e: KeyboardEvent | Event) => {
     box-shadow: $shadow-sm;
     line-height: $line-height-relaxed;
     color: var(--color-text);
-    word-wrap: break-word;
-    white-space: pre-wrap;
 
     // 针对不同角色略微调整样式
     .message-user & {
@@ -214,6 +240,42 @@ const handleKeydown = (e: KeyboardEvent | Event) => {
       background: var(--color-background-layer);
       border-top-left-radius: 4px;
       border: 1px solid var(--color-border);
+    }
+
+    .message-references {
+      margin-top: $spacing-md;
+      padding-top: $spacing-sm;
+      border-top: 1px dashed var(--divider-light-1);
+
+      .ref-title {
+        font-size: $font-size-sm;
+        color: var(--color-text-mute);
+        margin-bottom: $spacing-xs;
+        display: block;
+      }
+
+      .ref-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacing-sm;
+
+        .ref-btn {
+          font-size: $font-size-xs;
+          color: var(--primary-color);
+          background: var(--color-background-soft);
+          border: 1px solid var(--primary-color);
+          border-radius: 4px;
+          padding: 2px 8px;
+          text-decoration: none;
+          transition: all $transition-fast;
+          cursor: pointer;
+
+          &:hover {
+            background: var(--primary-color);
+            color: var(--white);
+          }
+        }
+      }
     }
   }
 }

@@ -3,11 +3,17 @@ export interface ModelInfo {
   modelVersion: string
 }
 
+export interface DocsMetaData {
+  documentId: number
+  kbId: string
+}
+
 export interface ChatMessage {
   messageId: number // 消息id
   content: string // 消息内容
   role: 'system' | 'user' | 'assistant' // 角色名
   createdAt: string // 消息发送时间
+  references?: { metadata: DocsMetaData; index: number }[] // 参考文章列表
 }
 
 export interface StreamChoice {
@@ -18,15 +24,17 @@ export interface StreamChoice {
   index: number
 }
 
-export type StreamResponse = {
-  choices: StreamChoice[]
-  created: number
-  id: string
-  model: string
-  service_tier?: string
-  object: string
-  usage?: unknown
-} | { emotion: string }
+export type StreamResponse =
+  | {
+      choices: StreamChoice[]
+      created: number
+      id: string
+      model: string
+      service_tier?: string
+      object: string
+      usage?: unknown
+    }
+  | { emotion: string }
 
 export interface ChatSession {
   sessionId: number // 会话id

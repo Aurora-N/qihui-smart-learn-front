@@ -17,8 +17,9 @@
 </template>
 
 <script setup>
+import { GRAPH_LEGEND_ITEMS } from '~/constants/graph'
 // Props
-const props = defineProps({
+defineProps({
   show: {
     type: Boolean,
     default: true,
@@ -26,18 +27,10 @@ const props = defineProps({
 })
 
 // Emits
-const emit = defineEmits(['toggle'])
+defineEmits(['toggle'])
 
 // 图例数据
-const legendItems = [
-  { color: '#ff7675', label: '根节点' },
-  { color: '#74b9ff', label: '分类' },
-  { color: '#55efc4', label: '入门难度' },
-  { color: '#ffeaa7', label: '基础难度' },
-  { color: '#fd79a8', label: '进阶难度' },
-  { color: '#a29bfe', label: '深入难度' },
-  { color: '#e17055', label: '高级难度' },
-]
+const legendItems = GRAPH_LEGEND_ITEMS
 </script>
 
 <style lang="scss" scoped>
