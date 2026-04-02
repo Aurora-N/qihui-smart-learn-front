@@ -79,6 +79,12 @@ const techCategories = [
         icon: '/icons/nuxt.svg',
       },
       {
+        name: 'TypeScript',
+        description:
+          'JavaScript 的超集，为静态类型检查与更健壮的代码智能提示提供支持。',
+        icon: '/icons/ts.png',
+      },
+      {
         name: 'D3.js',
         description: '强大的数据可视化库，用于构建交互式图表和知识图谱展示。',
         icon: '/icons/d3.svg',
@@ -105,30 +111,57 @@ const techCategories = [
     name: '后端技术',
     techs: [
       {
+        name: 'Spring Cloud & Java',
+        description:
+          '主后端微服务生态，集成了Eureka和Gateway等，负责核心业务逻辑调度与微服务自治。',
+        icon: '/icons/spring.png',
+      },
+      {
         name: 'Flask & Python',
-        description: '轻量级的Python Web框架，灵活且易于扩展，支持快速开发。',
+        description:
+          '辅助后端框架，主要负责大模型的文档分段向量化处理与查询检索重排。',
         icon: '/icons/flask.png',
       },
       {
         name: 'MySQL',
-        description: '关系型数据库，用于存储结构化数据和用户信息。',
+        description: '主要数据存储，负责结构化数据和应用核心状态的持久化。',
         icon: '/icons/mysql.svg',
       },
       {
+        name: 'Redis',
+        description:
+          '高性能内存缓存，用于缓存验证码鉴权并提升后端主服务高并发情况下的响应速度。',
+        icon: '/icons/redis.png',
+      },
+      {
         name: 'Neo4j',
-        description: '图数据库，专为存储和查询复杂的知识图谱关系而设计。',
+        description:
+          '图数据库，专为存储和查询复杂的知识图谱（节点与关系）设计。',
         icon: '/icons/neo4j.png',
       },
       {
-        name: 'JWT',
-        description: '用于用户身份验证与鉴权。',
+        name: 'Chroma',
+        description:
+          '高性能向量数据库，用于存储分段向量化后的文档数据，为大模型RAG提供支持。',
+        icon: '/icons/chroma.png',
+      },
+      {
+        name: 'RabbitMQ',
+        description:
+          '消息中间件，在主系统与辅助知识库系统间提供高可用和异步解耦的数据传输。',
+        icon: '/icons/rabbitmq.svg',
+      },
+      {
+        name: '安全与鉴权机制',
+        description:
+          '包含 JWT(Token验证)、RSA非对称加密前端敏感数据传输，及 BCrypt 后端密码保护。',
         icon: '/icons/jwt.svg',
       },
       {
-        name: 'RSA',
+        name: 'Docker',
         description:
-          '一种非对称加密算法，基于大质数分解的困难性。提高系统安全性。',
-        icon: '/icons/rsa.svg',
+          '采用容器化部署方案，隔离微服务与异构系统，保障多环境统一运行与敏捷部署。',
+        icon: '/icons/docker.png',
       },
     ],
   },
@@ -136,19 +169,22 @@ const techCategories = [
     name: 'AI技术',
     techs: [
       {
-        name: 'MaxKB',
-        description: '多模态知识库技术，整合文本、图像和视频等多源信息。',
-        icon: '/icons/maxkb.png',
-      },
-      {
         name: 'RAG技术',
-        description: '检索增强生成技术，提供精准的知识检索和内容生成能力。',
+        description:
+          '检索增强生成技术，提供基于知识库的精准检索和内容生成能力。',
         icon: '/icons/rag.svg',
       },
       {
-        name: 'AI智能问答',
-        description: '基于大型语言模型的智能问答系统，为学习者提供实时帮助。',
-        icon: '/icons/ai.svg',
+        name: '千问3模型 (Qwen3)',
+        description:
+          '本地部署千问3-Embedding-0.6B向量化与Reranker-0.6B重排模型，负责私有知识库精准搜索。',
+        icon: '/icons/qwen.png',
+      },
+      {
+        name: 'DeepSeek 3.2',
+        description:
+          '利用前沿的DeepSeek模型提供卓越的自然语言能力，为自适应学习路线及问答实现智能推理。',
+        icon: '/icons/deepseek.png',
       },
     ],
   },
@@ -156,16 +192,16 @@ const techCategories = [
 
 const teamMembers = [
   {
+    name: 'Sinkhorn',
+    avatar: '/team/sinkhorn.png',
+  },
+  {
     name: 'Ho.GiGi',
     avatar: '/team/hgg.jpg',
   },
   {
     name: 'ST',
     avatar: '/team/st.png',
-  },
-  {
-    name: 'Sinkhorn',
-    avatar: '/team/sinkhorn.png',
   },
   {
     name: 'R-y-o',

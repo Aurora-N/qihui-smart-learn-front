@@ -192,8 +192,8 @@ definePageMeta({
               <span class="value">{{ userInfo.userId }}</span>
             </div>
             <div class="info-item">
-              <span class="label">注册日期:</span>
-              <span class="value">{{ userInfo.registerDate }}</span>
+              <span class="label">最近登录日期:</span>
+              <span class="value">{{ userInfo.lastLoginDate }}</span>
             </div>
           </div>
 

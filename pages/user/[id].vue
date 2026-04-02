@@ -14,7 +14,7 @@ const userInfo = ref({
   email: '',
   avatarURL: '',
   selfDescription: '',
-  registerDate: '',
+  lastLoginDate: '',
   counts: {
     reply: 0,
     topics: 0,
@@ -119,7 +119,7 @@ const goToPost = postId => {
                 <el-icon>
                   <Timer />
                 </el-icon>
-                注册于 {{ userInfo.registerDate }}
+                最近登录于 {{ userInfo.lastLoginDate }}
               </span>
             </div>
             <div class="user-description">
