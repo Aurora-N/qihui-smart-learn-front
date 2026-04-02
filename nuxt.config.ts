@@ -59,7 +59,7 @@ export default defineNuxtConfig({
     public: {
       apiBase:
         process.env.NODE_ENV === 'production'
-          ? 'http://localhost:3456'
+          ? 'http://8.134.211.162:3456'
           : '/BASE_API',
     },
   },

@@ -1,5 +1,5 @@
-const http = require('node:http')
-const https = require('node:https')
+import http from 'node:http'
+import https from 'node:https'
 
 const TARGET_HOST = 'nonrotatable-chara-laterally.ngrok-free.dev'
 const TARGET_URL = `https://${TARGET_HOST}`
