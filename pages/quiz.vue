@@ -362,6 +362,20 @@
                   </el-collapse-item>
                 </el-collapse>
               </div>
+
+              <div style="text-align: center; margin-top: 20px">
+                <el-button
+                  type="primary"
+                  class="restart-button"
+                  :style="{
+                    backgroundColor: primaryColor,
+                    borderColor: primaryColor,
+                  }"
+                  @click="restartQuiz"
+                >
+                  重新生成学习路线
+                </el-button>
+              </div>
             </template>
           </div>
         </el-card>
@@ -732,6 +746,19 @@ const submitQuiz = async () => {
     console.error('Failed to get final path', error)
     ElMessage.error('生成最终路线失败')
   }
+}
+
+const restartQuiz = () => {
+  mode.value = 'form'
+  questions.value = []
+  currentQuestionIndex.value = 0
+  userAnswers.value = {}
+  userScores.value = {}
+  selectedAnswerSingle.value = ''
+  selectedAnswerMultiple.value = []
+  selectedAnswerFill.value = ''
+  score.value = 0
+  reviewMode.value = false
 }
 </script>
 

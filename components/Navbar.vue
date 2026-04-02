@@ -40,11 +40,7 @@ const props = defineProps({
   },
 })
 
-const userInfo = ref({})
-
-onMounted(() => {
-  userInfo.value = userStore.userInfo.data
-})
+const userInfo = computed(() => userStore.userInfo?.data)
 
 const activeItem = ref('')
 </script>
