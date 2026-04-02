@@ -59,7 +59,7 @@ export default defineNuxtConfig({
     public: {
       apiBase:
         process.env.NODE_ENV === 'production'
-          ? 'https://nonrotatable-chara-laterally.ngrok-free.dev'
+          ? 'http://localhost:3456'
           : '/BASE_API',
     },
   },
