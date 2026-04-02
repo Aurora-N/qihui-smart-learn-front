@@ -31,40 +31,45 @@ const processData = () => {
   const nodesMap = new Map()
   const links = []
 
-  pathData.value.forEach(path => {
-    if (!nodesMap.has(path.startId)) {
-      const order = 0
-      nodesMap.set(path.startId, {
-        id: path.startId,
-        order,
-        level: path.startLV,
-        content: path.startContent,
+  pathData.value.forEach((path, index) => {
+    const startNode = path.startNode
+    const endNode = path.endNode
+    const rel = path.nodeRelationship
+
+    if (!nodesMap.has(startNode.name)) {
+      nodesMap.set(startNode.name, {
+        id: startNode.name,
+        order: 0,
+        level: startNode.level,
+        content: startNode.info,
         color: '#55efc4', // 绿色
       })
     }
 
-    if (!nodesMap.has(path.endId)) {
-      const order = path.stepOrder
+    if (!nodesMap.has(endNode.name)) {
+      // 简单根据 index 决定颜色，也可以根据 level 判断
+      const order = index % 2 === 0 ? 1 : 2
       let color
       if (order === 1) {
         color = '#74b9ff' // 蓝色
-      } else if (order === 2) {
+      } else {
         color = '#ffeaa7' // 黄色
       }
-      nodesMap.set(path.endId, {
-        id: path.endId,
+      nodesMap.set(endNode.name, {
+        id: endNode.name,
         order,
-        level: path.endLV,
-        content: path.endContent,
+        level: endNode.level,
+        content: endNode.info,
         color,
       })
     }
 
     links.push({
-      source: path.startId,
-      target: path.endId,
-      type: path.relationType,
-      order: path.stepOrder,
+      source: startNode.name,
+      target: endNode.name,
+      type: rel ? rel.type : '学习路线',
+      desc: rel ? rel.info : '',
+      order: index + 1,
     })
   })
 
@@ -173,6 +178,15 @@ const renderGraph = (nodes, links) => {
     .attr('points', '0,-4 8,0 0,4')
     .style('fill', '#aaa')
 
+  link
+    .append('text')
+    .attr('class', 'link-label')
+    .style('font-size', '10px')
+    .style('fill', '#666')
+    .text(d => d.type)
+
+  link.append('title').text(d => d.desc)
+
   node
     .on('click', (event, d) => {
       selectedNode.value = d
@@ -202,6 +216,7 @@ const renderGraph = (nodes, links) => {
       const linkGroup = d3.select(this)
       const path = linkGroup.select('path')
       const arrow = linkGroup.select('polygon')
+      const label = linkGroup.select('.link-label')
 
       const sourceNode = d.source
       const targetNode = d.target
@@ -242,6 +257,10 @@ const renderGraph = (nodes, links) => {
         'transform',
         `translate(${endPoint.x}, ${endPoint.y}) rotate(${arrowAngle})`
       )
+
+      // 更新连线上的文字位置
+      const textPoint = pathNode.getPointAtLength(pathLength / 2)
+      label.attr('x', textPoint.x).attr('y', textPoint.y - 10)
     })
 
     node.attr('transform', d => `translate(${d.x},${d.y})`)
@@ -335,5 +354,10 @@ defineExpose({
 .node-label {
   font-size: 12px;
   pointer-events: none;
+}
+.link-label {
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
 }
 </style>
