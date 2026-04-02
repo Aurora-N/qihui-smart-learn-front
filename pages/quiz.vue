@@ -2,7 +2,10 @@
   <div class="container">
     <div class="quiz-container">
       <BannerQuiz>
-        <el-card class="quiz-card" v-loading="loadingQuestions || checkingStatus">
+        <el-card
+          v-loading="loadingQuestions || checkingStatus"
+          class="quiz-card"
+        >
           <template #header>
             <div class="quiz-header">
               <h1>学习路线规划测试</h1>
@@ -39,10 +42,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="学习意向路线" prop="tend" required>
-                <el-select
-                  v-model="form.tend"
-                  placeholder="请选择倾向路线"
-                >
+                <el-select v-model="form.tend" placeholder="请选择倾向路线">
                   <el-option label="Java" value="Java" />
                   <el-option label="Python" value="Python" />
                   <el-option label="HTML" value="HTML" />
@@ -78,14 +78,27 @@
               </div>
               <div
                 class="question-text"
-                v-html="formatQuestionText(currentQuestion.question || currentQuestion.text)"
+                v-html="
+                  formatQuestionText(
+                    currentQuestion.question || currentQuestion.text
+                  )
+                "
               ></div>
             </div>
 
             <div class="answer-section">
               <!-- 单选题 -->
-              <div v-if="currentQuestion.type === 'single_choice' || !currentQuestion.type" class="option-buttons">
-                <el-radio-group v-model="selectedAnswerSingle" class="vertical-radio-group">
+              <div
+                v-if="
+                  currentQuestion.type === 'single_choice' ||
+                  !currentQuestion.type
+                "
+                class="option-buttons"
+              >
+                <el-radio-group
+                  v-model="selectedAnswerSingle"
+                  class="vertical-radio-group"
+                >
                   <el-radio
                     v-for="(optionStr, index) in currentQuestion.options"
                     :key="index"
@@ -102,8 +115,14 @@
               </div>
 
               <!-- 多选题 -->
-              <div v-else-if="currentQuestion.type === 'multiple_choice'" class="option-buttons">
-                <el-checkbox-group v-model="selectedAnswerMultiple" class="vertical-checkbox-group">
+              <div
+                v-else-if="currentQuestion.type === 'multiple_choice'"
+                class="option-buttons"
+              >
+                <el-checkbox-group
+                  v-model="selectedAnswerMultiple"
+                  class="vertical-checkbox-group"
+                >
                   <el-checkbox
                     v-for="(optionStr, index) in currentQuestion.options"
                     :key="index"
@@ -208,7 +227,7 @@
             </el-table>
 
             <div class="submit-section">
-               <el-alert
+              <el-alert
                 v-if="hasUnansweredQuestions"
                 title="您有未回答的题目"
                 type="warning"
@@ -237,13 +256,12 @@
             <h2 v-if="!recommendLearningPath">正在生成您的专属学习路线...</h2>
             <template v-else>
               <h2>您的学习路线</h2>
-              
-              <div v-if="score > 0 || questions.length > 0" class="score-summary">
-                <el-result
-                  icon="success"
-                  :title="`测试完成`"
-                >
-                </el-result>
+
+              <div
+                v-if="score > 0 || questions.length > 0"
+                class="score-summary"
+              >
+                <el-result icon="success" :title="`测试完成`"> </el-result>
               </div>
 
               <div class="questions-review">
@@ -258,7 +276,11 @@
                     />
                   </el-collapse-item>
 
-                  <el-collapse-item v-if="questions.length > 0" title="答题情况" name="answer">
+                  <el-collapse-item
+                    v-if="questions.length > 0"
+                    title="答题情况"
+                    name="answer"
+                  >
                     <el-collapse class="custom-answer-collapse">
                       <el-collapse-item
                         v-for="(question, index) in questions"
@@ -269,42 +291,66 @@
                         <div class="question-review">
                           <div
                             class="question-text"
-                            v-html="formatQuestionText(question.question || question.text)"
+                            v-html="
+                              formatQuestionText(
+                                question.question || question.text
+                              )
+                            "
                           ></div>
-                          <div class="options-review" v-if="question.options">
+                          <div v-if="question.options" class="options-review">
                             <div
                               v-for="(optionStr, optIndex) in question.options"
                               :key="optIndex"
                               class="option-item"
                             >
-                              <span class="review-option-label">{{ getOptionChar(optIndex) }}</span>
-                              <span class="review-option-text">{{ optionStr }}</span>
+                              <span class="review-option-label">{{
+                                getOptionChar(optIndex)
+                              }}</span>
+                              <span class="review-option-text">{{
+                                optionStr
+                              }}</span>
                             </div>
                           </div>
                           <div class="explanation">
                             <div class="correct-answer-label">
                               <el-tag type="success">
-                                标准答案: {{ question.correct_answer || question.answer }}
+                                标准答案:
+                                {{ question.correct_answer || question.answer }}
                               </el-tag>
-                              <br/>
-                              <el-tag
-                                type="info"
-                                style="margin-top: 10px"
-                              >
-                                您的答案: {{ Array.isArray(userAnswers[index]) ? userAnswers[index].join(', ') : userAnswers[index] }}
+                              <br />
+                              <el-tag type="info" style="margin-top: 10px">
+                                您的答案:
+                                {{
+                                  Array.isArray(userAnswers[index])
+                                    ? userAnswers[index].join(', ')
+                                    : userAnswers[index]
+                                }}
                               </el-tag>
                               <el-tag
-                                :type="userScores[index] > 0 ? (userScores[index] === 1 ? 'success' : 'warning') : 'danger'"
+                                :type="
+                                  userScores[index] > 0
+                                    ? userScores[index] === 1
+                                      ? 'success'
+                                      : 'warning'
+                                    : 'danger'
+                                "
                                 style="margin-top: 10px; margin-left: 10px"
                               >
                                 得分率: {{ userScores[index] }}
                               </el-tag>
                             </div>
-                            <div class="explanation-text" v-if="question.scoring_rules || question.explanation">
+                            <div
+                              v-if="
+                                question.scoring_rules || question.explanation
+                              "
+                              class="explanation-text"
+                            >
                               <el-alert
                                 title="评分规则/解析"
                                 type="info"
-                                :description="question.scoring_rules || question.explanation"
+                                :description="
+                                  question.scoring_rules || question.explanation
+                                "
                                 :closable="false"
                                 show-icon
                               />
@@ -327,15 +373,15 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
 import type { FormInstance } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import {
   getUserLearningPath,
   checkUserHasCustomPath,
   planUserLearningPath,
-  getFinalLearningPath
+  getFinalLearningPath,
 } from '~/api/learn'
 import type { QuestionData, QuizResult } from '~/api/type/learn'
 import { useUserStore } from '~/stores/userStore'
-import { ElMessage } from 'element-plus'
 
 const mode = ref<'form' | 'quiz' | 'result'>('form')
 const checkingStatus = ref(true)
@@ -370,7 +416,7 @@ const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
 
 definePageMeta({
-  middleware: 'auth'
+  middleware: 'auth',
 })
 
 useHead({
@@ -384,9 +430,9 @@ onMounted(async () => {
       if (status === 'old') {
         const pathData = await getUserLearningPath(userInfo.value.id)
         if (pathData && pathData.finalPath) {
-           recommendLearningPath.value = pathData.finalPath
+          recommendLearningPath.value = pathData.finalPath
         } else {
-           recommendLearningPath.value = pathData
+          recommendLearningPath.value = pathData
         }
         mode.value = 'result'
       } else {
@@ -414,14 +460,18 @@ const handleCollapseChange = (value: any) => {
 
 const formatQuestionText = (text: string) => {
   if (!text) return ''
-  return text.replace(/\n/g, '<br/>').replace(/\[([^\]]+)\]/g, '<span class="tag-highlight">$1</span>')
+  return text
+    .replace(/\n/g, '<br/>')
+    .replace(/\[([^\]]+)\]/g, '<span class="tag-highlight">$1</span>')
 }
 
 const getOptionChar = (index: number) => {
   return String.fromCharCode(65 + index)
 }
 
-const currentQuestion = computed(() => questions.value[currentQuestionIndex.value] || {})
+const currentQuestion = computed(
+  () => questions.value[currentQuestionIndex.value] || {}
+)
 
 const progressPercentage = computed(() => {
   if (questions.value.length === 0) return 0
@@ -445,29 +495,29 @@ const startQuiz = async (formEl: FormInstance | undefined) => {
       try {
         const res = await planUserLearningPath({
           userId: userInfo.value.id,
-          learningTarget: form.learningTarget,
-          learningStage: form.learningStage,
-          availableTime: form.availableTime,
+          learningTarget: form.value.learningTarget,
+          learningStage: form.value.learningStage,
+          availableTime: form.value.availableTime,
         })
-        
+
         let qs: QuestionData[] = []
         if (Array.isArray(res)) {
           qs = res
         } else if (res && typeof res === 'object') {
-           if (Array.isArray((res as any).questions)) {
-              qs = (res as any).questions
-           } else if (Array.isArray((res as any).data)) {
-              qs = (res as any).data
-           } else {
-              qs = [res as unknown as QuestionData]
-           }
+          if (Array.isArray((res as any).questions)) {
+            qs = (res as any).questions
+          } else if (Array.isArray((res as any).data)) {
+            qs = (res as any).data
+          } else {
+            qs = [res as unknown as QuestionData]
+          }
         }
-        
+
         if (qs.length === 0) {
           ElMessage.warning('未能获取到测试题目，请重试')
           return
         }
-        
+
         questions.value = qs
         mode.value = 'quiz'
         currentQuestionIndex.value = 0
@@ -495,9 +545,12 @@ const saveCurrentAnswer = () => {
   if (t === 'single_choice') {
     userAnswers.value[currentQuestionIndex.value] = selectedAnswerSingle.value
   } else if (t === 'multiple_choice') {
-    userAnswers.value[currentQuestionIndex.value] = [...selectedAnswerMultiple.value].sort()
+    userAnswers.value[currentQuestionIndex.value] = [
+      ...selectedAnswerMultiple.value,
+    ].sort()
   } else if (t === 'fill_blank') {
-    userAnswers.value[currentQuestionIndex.value] = selectedAnswerFill.value.trim()
+    userAnswers.value[currentQuestionIndex.value] =
+      selectedAnswerFill.value.trim()
   }
 }
 
@@ -563,55 +616,71 @@ const hasUnansweredQuestions = computed(() => {
 
 const calculateScoreRatio = (q: QuestionData, ans: any): number => {
   if (ans === undefined || ans === null || ans === '') return 0
-  
+
   const ruleStr = (q.scoring_rules || '').toLowerCase()
   const correctAnsStr = (q.correct_answer || q.answer || '').toString().trim()
-  
+
   if (q.type === 'multiple_choice') {
     const userArray = Array.isArray(ans) ? ans : [ans]
-    let correctArray = correctAnsStr.split(/[,，\s]+/).map(x => x.trim().toUpperCase()).filter(Boolean)
-    if (correctArray.length === 1 && correctArray[0].length > 1 && !correctArray[0].includes(' ')) {
+    let correctArray = correctAnsStr
+      .split(/[,，\s]+/)
+      .map(x => x.trim().toUpperCase())
+      .filter(Boolean)
+    if (
+      correctArray.length === 1 &&
+      correctArray[0].length > 1 &&
+      !correctArray[0].includes(' ')
+    ) {
       correctArray = correctArray[0].split('')
     }
-    
+
     if (ruleStr.includes('全部选对得满分')) {
-       const hasWrong = userArray.some(x => !correctArray.includes(x))
-       if (hasWrong) return 0
-       if (userArray.length === correctArray.length) return 1
-       return userArray.length / correctArray.length
+      const hasWrong = userArray.some(x => !correctArray.includes(x))
+      if (hasWrong) return 0
+      if (userArray.length === correctArray.length) return 1
+      return userArray.length / correctArray.length
     }
-    
-    if (userArray.length === correctArray.length && userArray.every(x => correctArray.includes(x))) return 1
+
+    if (
+      userArray.length === correctArray.length &&
+      userArray.every(x => correctArray.includes(x))
+    )
+      return 1
     return 0
   } else if (q.type === 'fill_blank') {
     const userStr = String(ans).trim()
     const matchStrList = correctAnsStr.split(/[,，|]+/).map(x => x.trim())
-    
+
     if (ruleStr.includes('包含') || ruleStr.includes('关键词即视为正确')) {
       const quotesRegex = /['"‘“](.*?)['"’”]/g
       let keywords = []
       let match
       while ((match = quotesRegex.exec(ruleStr)) !== null) {
-          keywords.push(match[1])
+        keywords.push(match[1])
       }
       if (keywords.length === 0) keywords = matchStrList
-      
-      return keywords.some(kw => userStr.toLowerCase().includes(kw.toLowerCase())) ? 1 : 0
+
+      return keywords.some(kw =>
+        userStr.toLowerCase().includes(kw.toLowerCase())
+      )
+        ? 1
+        : 0
     } else if (ruleStr.includes('接受')) {
       const quotesRegex = /['"‘“](.*?)['"’”]/g
-      let others = []
+      const others = []
       let match
       while ((match = quotesRegex.exec(ruleStr)) !== null) {
-          others.push(match[1])
+        others.push(match[1])
       }
-      
-      const isCorrect = userStr.toLowerCase() === correctAnsStr.toLowerCase() || 
-                        others.some(kw => userStr.toLowerCase() === kw.toLowerCase())
+
+      const isCorrect =
+        userStr.toLowerCase() === correctAnsStr.toLowerCase() ||
+        others.some(kw => userStr.toLowerCase() === kw.toLowerCase())
       return isCorrect ? 1 : 0
     } else if (ruleStr.includes('忽略大小写')) {
       return userStr.toLowerCase() === correctAnsStr.toLowerCase() ? 1 : 0
     }
-    
+
     return userStr === correctAnsStr ? 1 : 0
   } else {
     const userStr = String(ans).trim().toUpperCase()
@@ -623,17 +692,17 @@ const calculateScoreRatio = (q: QuestionData, ans: any): number => {
 const submitQuiz = async () => {
   reviewMode.value = false
   mode.value = 'result'
-  
-  const kpStats: Record<string, { total: number, correct: number }> = {}
+
+  const kpStats: Record<string, { total: number; correct: number }> = {}
 
   questions.value.forEach((q, i) => {
     const ans = userAnswers.value[i]
     const ratio = calculateScoreRatio(q, ans)
     userScores.value[i] = ratio
-    
+
     const kp = q.knowledge_point || 'general'
     if (!kpStats[kp]) kpStats[kp] = { total: 0, correct: 0 }
-    
+
     kpStats[kp].total += 1
     kpStats[kp].correct += ratio
   })
@@ -642,17 +711,18 @@ const submitQuiz = async () => {
 
   const quizResults: QuizResult[] = Object.keys(kpStats).map(kp => ({
     knowledge_point: kp,
-    correct_rate: kpStats[kp].total > 0 ? (kpStats[kp].correct / kpStats[kp].total) : 0
+    correct_rate:
+      kpStats[kp].total > 0 ? kpStats[kp].correct / kpStats[kp].total : 0,
   }))
-  
+
   try {
     const finalPathRes = await getFinalLearningPath({
       userId: userInfo.value.id,
-      tartget: form.learningTarget,
-      tend: form.tend,
-      quizResults
+      tartget: form.value.learningTarget,
+      tend: form.value.tend,
+      quizResults,
     })
-    
+
     if (finalPathRes && finalPathRes.finalPath) {
       recommendLearningPath.value = finalPathRes.finalPath
     } else {
@@ -663,7 +733,6 @@ const submitQuiz = async () => {
     ElMessage.error('生成最终路线失败')
   }
 }
-
 </script>
 
 <style scoped>
