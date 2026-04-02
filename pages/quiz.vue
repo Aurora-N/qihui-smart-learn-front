@@ -35,10 +35,10 @@
                   v-model="form.learningStage"
                   placeholder="请选择所处的学习阶段"
                 >
-                  <el-option label="入门" value="1" />
-                  <el-option label="初级" value="2" />
-                  <el-option label="进阶" value="3" />
-                  <el-option label="深入" value="4" />
+                  <el-option label="入门" :value="1" />
+                  <el-option label="初级" :value="2" />
+                  <el-option label="进阶" :value="3" />
+                  <el-option label="深入" :value="4" />
                 </el-select>
               </el-form-item>
               <el-form-item label="学习意向路线" prop="tend" required>
@@ -391,7 +391,7 @@ const primaryColor = ref('#0060DF')
 const formRef = ref<FormInstance>()
 const form = ref({
   learningTarget: '',
-  learningStage: '入门',
+  learningStage: 1,
   tend: 'Java',
   availableTime: 2,
 })
@@ -496,7 +496,7 @@ const startQuiz = async (formEl: FormInstance | undefined) => {
         const res = await planUserLearningPath({
           userId: userInfo.value.id,
           learningTarget: form.value.learningTarget,
-          learningStage: Number(form.value.learningStage),
+          learningStage: form.value.learningStage,
           availableTime: form.value.availableTime,
         })
 
