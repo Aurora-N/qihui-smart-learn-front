@@ -6,6 +6,18 @@ const TARGET_URL = `https://${TARGET_HOST}`
 const PORT = 3456
 
 const server = http.createServer((req, res) => {
+  const startTime = Date.now()
+  console.log(
+    `[${new Date().toISOString()}] REQUEST  | ${req.method} ${req.url}`
+  )
+
+  res.on('finish', () => {
+    const duration = Date.now() - startTime
+    console.log(
+      `[${new Date().toISOString()}] RESPONSE | ${req.method} ${req.url} | Status: ${res.statusCode} | ${duration}ms`
+    )
+  })
+
   const options = {
     hostname: TARGET_HOST,
     port: 443,
@@ -38,8 +50,12 @@ const server = http.createServer((req, res) => {
   })
 
   proxyReq.on('error', err => {
-    console.error('Proxy request error:', err)
-    res.writeHead(500)
+    console.error(
+      `[${new Date().toISOString()}] ERROR    | ${req.method} ${req.url} | ${err.message}`
+    )
+    if (!res.headersSent) {
+      res.writeHead(500)
+    }
     res.end('Proxy Error')
   })
 
