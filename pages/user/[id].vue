@@ -12,7 +12,7 @@ const userInfo = ref({
   userId: userId,
   userName: '',
   email: '',
-  avatar: '',
+  avatarURL: '',
   selfDescription: '',
   registerDate: '',
   counts: {
@@ -106,7 +106,7 @@ const goToPost = postId => {
       <div class="container">
         <div class="user-info">
           <div class="avatar-container">
-            <el-avatar :size="100" :src="userInfo.avatar" />
+            <el-avatar :size="100" :src="formatAvatarUrl(userInfo.avatarURL)" />
           </div>
           <div class="user-details">
             <div class="username-container">

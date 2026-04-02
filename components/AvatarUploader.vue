@@ -52,7 +52,7 @@ const previewUrl = ref('')
 const uploading = ref(false)
 
 onBeforeMount(() => {
-  previewUrl.value = props.avatarurl
+  previewUrl.value = formatAvatarUrl(props.avatarurl)
 })
 
 const initials = computed(() => {

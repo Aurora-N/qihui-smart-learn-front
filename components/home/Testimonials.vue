@@ -2,7 +2,7 @@
   <div id="testimonials" class="testimonials-section">
     <div class="container">
       <!-- Popular Articles Section -->
-      <div class="section-container">
+      <div v-if="userStore.isLoggedIn" class="section-container">
         <div class="testimonials-header">
           <h2 class="testimonials-title">推荐文章</h2>
           <p class="testimonials-description">为你精心挑选的学习文章</p>
@@ -59,7 +59,7 @@
           >
             <div class="testimonial-header">
               <img
-                :src="post.author.attributes.avatarUrl"
+                :src="formatAvatarUrl(post.author.attributes.avatarUrl)"
                 :alt="post.author.attributes.userName"
                 class="testimonial-image"
               />
@@ -183,17 +183,21 @@ const formatDate = dateString => {
 // Fetch data from API
 onMounted(async () => {
   // Fetch popular articles
-  try {
-    isLoadingArticles.value = true
-    const userId = userStore.userInfo?.id || 1
-    const response = await homeApi.getRecommendedArticles(userId)
-    if (response.data) {
-      popularArticles.value = response.data
+  if (userStore.isLoggedIn) {
+    try {
+      isLoadingArticles.value = true
+      const userId = userStore.userInfo?.id || 1
+      const response = await homeApi.getRecommendedArticles(userId)
+      if (response.data) {
+        popularArticles.value = response.data
+      }
+    } catch (error) {
+      articlesError.value = '获取推荐文章失败'
+      console.error('Error fetching recommended articles:', error)
+    } finally {
+      isLoadingArticles.value = false
     }
-  } catch (error) {
-    articlesError.value = '获取推荐文章失败'
-    console.error('Error fetching recommended articles:', error)
-  } finally {
+  } else {
     isLoadingArticles.value = false
   }
 

@@ -62,11 +62,19 @@ const finalContent = ref('')
 <template>
   <div class="comment-container" :class="{ 'is-content': props.isContent }">
     <div class="comment-left">
-      <img :src="authors.attributes.avatarUrl" class="avatar" alt="" />
+      <img
+        :src="formatAvatarUrl(authors.attributes.avatarUrl)"
+        class="avatar"
+        alt=""
+      />
     </div>
     <div class="comment-right">
       <div class="comment-info">
-        <img :src="authors.attributes.avatarUrl" class="avatar-mobile" alt="" />
+        <img
+          :src="formatAvatarUrl(authors.attributes.avatarUrl)"
+          class="avatar-mobile"
+          alt=""
+        />
         <div class="head-meta">
           <div class="author-name">
             {{ authors.attributes.userName }}

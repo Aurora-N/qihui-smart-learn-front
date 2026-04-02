@@ -94,7 +94,11 @@ const activeItem = ref('')
         <div v-if="userInfo" class="user">
           <el-dropdown class="dropdown">
             <NuxtLink :to="`/user/${userInfo.userId}`" class="avatar-link">
-              <el-avatar :size="35" :src="userInfo.avatar" class="avatar" />
+              <el-avatar
+                :size="35"
+                :src="formatAvatarUrl(userInfo.avatarURL)"
+                class="avatar"
+              />
             </NuxtLink>
             <template #dropdown>
               <el-dropdown-menu class="dropdown-menu">
@@ -172,7 +176,7 @@ const activeItem = ref('')
             >
               <el-avatar
                 :size="50"
-                :src="userInfo.avatar"
+                :src="formatAvatarUrl(userInfo.avatar)"
                 class="mobile-avatar"
               />
               <div class="mobile-user-details">

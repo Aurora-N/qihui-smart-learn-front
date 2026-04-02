@@ -48,7 +48,9 @@ const rules = {
 const formRef = ref<any>(null)
 const selectedNav = ref('profile')
 const isLoading = ref(false)
-const avatarUrl = computed(() => userStore.userInfo.data?.avatar)
+const avatarUrl = computed(() =>
+  formatAvatarUrl(userStore.userInfo.data?.avatarURL || '')
+)
 
 // 初始化表单数据
 onMounted(() => {

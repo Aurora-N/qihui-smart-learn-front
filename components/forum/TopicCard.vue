@@ -10,7 +10,7 @@ defineProps<{
   <NuxtLink :to="`/forum/${topic.postId}`" class="topic-card">
     <div class="topic-left">
       <img
-        :src="topic.author.attributes.avatarUrl"
+        :src="formatAvatarUrl(topic.author.attributes.avatarUrl)"
         class="avatar"
         :alt="topic.author.attributes.userName + '的头像'"
       />
