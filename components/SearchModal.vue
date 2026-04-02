@@ -172,7 +172,9 @@ const navigateToResult = async result => {
     ElMessage({ type: 'error', message: errorSpecific.value, plain: true })
     return
   }
-  router.push(`/articles/${foundItemByTitle.value.stem}`)
+  router.push(
+    `/articles/${foundItemByTitle.value.stem.split('/').map(encodeURIComponent).join('/')}`
+  )
   closeSearch()
 }
 

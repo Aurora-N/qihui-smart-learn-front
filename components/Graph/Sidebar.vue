@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
+import { getLevelName } from '~/constants/graph'
 import { useGraphAttribute } from '~/utils/graph/utils'
 
 interface Node {
@@ -77,7 +78,7 @@ const getRelatedNodes = (node: Node) => {
   const relatedNodes: Node[] = []
 
   // 如果没有链接，直接返回空
-  if (!props.links || props.links.length === 0) return relatedNodes;
+  if (!props.links || props.links.length === 0) return relatedNodes
 
   // 查找直接相连的节点
   props.links.forEach(link => {
@@ -171,7 +172,7 @@ defineExpose({
               class="info-badge"
               :class="'level-' + getLevelClass(selectedNode.level)"
             >
-              {{ selectedNode.level }}
+              {{ getLevelName(selectedNode.level) }}
             </span>
           </div>
           <div v-if="selectedNode?.content" class="info-item">

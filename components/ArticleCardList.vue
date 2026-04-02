@@ -100,7 +100,11 @@ const getHue = (index: number) => {
       <!-- Article Card -->
       <div v-if="!hasSubCategory(obj)" class="article-card-wrapper">
         <NuxtLink
-          :to="obj.link ? `/articles/${obj.link}` : '#'"
+          :to="
+            obj.link
+              ? `/articles/${obj.link.split('/').map(encodeURIComponent).join('/')}`
+              : '#'
+          "
           class="article-card"
         >
           <div class="card-content">

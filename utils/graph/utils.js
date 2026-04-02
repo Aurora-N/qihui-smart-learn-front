@@ -198,7 +198,11 @@ export const useGraphAttribute = () => {
 
       // 处理返回的 article 数据
       const mappedArticles = response.articles.map(article => {
-        const url = article.articlePath.split('/').slice(2).join('/')
+        const url = article.articlePath
+          .split('/')
+          .slice(2)
+          .map(encodeURIComponent)
+          .join('/')
         return {
           ...article,
           name: article.articleName,
