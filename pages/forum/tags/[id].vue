@@ -35,7 +35,7 @@ onMounted(async () => {
 
     if (bannerConfig) {
       bannerConfig.value = {
-        title: tagDetail.value?.title,
+        title: tagDetail.value?.tagName,
         subTitle: tagDetail.value?.description,
         hueColor: tagDetail.value?.hueColor,
       }

@@ -63,7 +63,7 @@ export interface FinalPath {
 export interface PlanUserLearningPathRequestBody {
   userId: number
   learningTarget: string // 用户想学习的目标知识
-  learningStage: string // 用户主观认为自己所处的学习阶段（可选项有入门、初级、进阶、深入四个）
+  learningStage: number // 用户主观认为自己所处的学习阶段（可选项有入门、初级、进阶、深入四个，对应1-4）
   availableTime: number // 用户主观认为的自己每日能用于学习此路线知识的时间，单位为小时
 }
 

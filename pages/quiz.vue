@@ -35,10 +35,10 @@
                   v-model="form.learningStage"
                   placeholder="请选择所处的学习阶段"
                 >
-                  <el-option label="入门" value="入门" />
-                  <el-option label="初级" value="初级" />
-                  <el-option label="进阶" value="进阶" />
-                  <el-option label="深入" value="深入" />
+                  <el-option label="入门" value="1" />
+                  <el-option label="初级" value="2" />
+                  <el-option label="进阶" value="3" />
+                  <el-option label="深入" value="4" />
                 </el-select>
               </el-form-item>
               <el-form-item label="学习意向路线" prop="tend" required>
@@ -496,7 +496,7 @@ const startQuiz = async (formEl: FormInstance | undefined) => {
         const res = await planUserLearningPath({
           userId: userInfo.value.id,
           learningTarget: form.value.learningTarget,
-          learningStage: form.value.learningStage,
+          learningStage: Number(form.value.learningStage),
           availableTime: form.value.availableTime,
         })
 
