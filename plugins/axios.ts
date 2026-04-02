@@ -7,7 +7,7 @@ export default defineNuxtPlugin(() => {
 
   const apiClient = axios.create({
     baseURL: config.public.apiBase, // 统一服务器地址配置
-    timeout: 20000,
+    timeout: 200000000,
   })
 
   // 请求拦截器：自动添加 Token
