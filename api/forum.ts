@@ -39,7 +39,7 @@ export const useForumApi = () => {
 
     // 获取指定标签对应的帖子列表
     getTagPostsList: (tagId: number) =>
-      nuxtApp.$axios.get(`${BASE_API}/tags/${tagId}/posts`) as Promise<{
+      nuxtApp.$axios.get(`${BASE_API}/${tagId}/posts`) as Promise<{
         data: BasePost[]
       }>,
 

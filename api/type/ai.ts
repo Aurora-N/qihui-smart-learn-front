@@ -14,6 +14,7 @@ export interface ChatMessage {
   role: 'system' | 'user' | 'assistant' // 角色名
   createdAt: string // 消息发送时间
   references?: { metadata: DocsMetaData; index: number }[] // 参考文章列表
+  referenceData?: { metadata: DocsMetaData; index: number }[]
 }
 
 export interface StreamChoice {

@@ -79,7 +79,7 @@ const getTagsAttributes = async () => {
     if (tagWithAttr.length > 0) {
       tags.value.push({
         tagId: tagWithAttr[0].tagId,
-        title: tagWithAttr[0].title,
+        title: tagWithAttr[0].tagName,
         hueColor: tagWithAttr[0].hueColor,
       })
     }
@@ -164,7 +164,7 @@ const handleFavorite = async () => {
             :content="item.content"
             :time="item.createdAt"
             :likes-count="item.likesCount"
-            :replied-id="item.repliedID"
+            :replied-id="item.repliedId"
             :is-liked="item.liked"
             @like="handleLike(item.commentId)"
           />

@@ -57,10 +57,28 @@ onMounted(async () => {
 const { renderMarkdown } = useMarkdownText()
 
 const finalContent = ref('')
+
+const scrollToComment = id => {
+  const el = document.getElementById(`comment-${id}`)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    el.style.transition = 'background-color 0.5s'
+    const originalBg = el.style.backgroundColor
+    el.style.backgroundColor = 'var(--bg-hover, rgba(0, 0, 0, 0.05))'
+    setTimeout(() => {
+      el.style.backgroundColor = originalBg
+      el.style.transition = ''
+    }, 2000)
+  }
+}
 </script>
 
 <template>
-  <div class="comment-container" :class="{ 'is-content': props.isContent }">
+  <div
+    :id="`comment-${props.id}`"
+    class="comment-container"
+    :class="{ 'is-content': props.isContent }"
+  >
     <div class="comment-left">
       <img
         :src="formatAvatarUrl(authors.attributes.avatarUrl)"
@@ -78,6 +96,17 @@ const finalContent = ref('')
         <div class="head-meta">
           <div class="author-name">
             {{ authors.attributes.userName }}
+          </div>
+          <div
+            v-if="
+              props.repliedId &&
+              props.repliedId !== '0' &&
+              props.repliedId !== ''
+            "
+            class="replied-to"
+            @click="scrollToComment(props.repliedId)"
+          >
+            ▸ 回复评论
           </div>
           <div class="comment-date">
             <span>{{ props.time }}</span>
@@ -154,6 +183,19 @@ const finalContent = ref('')
 
 .author-name {
   font-weight: bold;
+}
+
+.replied-to {
+  font-size: 0.875rem;
+  color: var(--primary, #007bff);
+  margin-left: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.replied-to:hover {
+  text-decoration: underline;
 }
 
 .comment-date {

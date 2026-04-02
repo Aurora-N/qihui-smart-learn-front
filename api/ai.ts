@@ -76,10 +76,10 @@ export const deleteChatSession = async (sessionId: number) => {
 
 // 清空会话历史
 export const clearChatSession = async (sessionId: number) => {
-  return await del<string>(`${BASE_API}/session/clear/${sessionId}`)
+  return await del<string>(`${BASE_API}/message/clear/${sessionId}`)
 }
 
 // 删除单条消息
 export const deleteChatMessage = async (messageId: number) => {
-  return await del<string>(`${BASE_API}/session/clear/${messageId}`)
+  return await del<string>(`${BASE_API}/message/delete/${messageId}`)
 }

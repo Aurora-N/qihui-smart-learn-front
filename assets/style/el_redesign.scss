@@ -33,6 +33,7 @@
 
   // background colors
   --el-bg-color-overlay: var(--color-background) !important;
+  --el-bg-color: var(--color-background) !important;
 
   // Border Colors
   --el-border-color-light: var(--color-border) !important;
@@ -68,4 +69,8 @@
 
 .el-button {
   border-radius: 6px !important;
+}
+
+.el-dialog {
+  --el-dialog-border-radius: 8px !important;
 }

@@ -1,19 +1,58 @@
 <script setup lang="ts">
-import { Plus, ChatDotRound, Delete, Brush } from '@element-plus/icons-vue'
+import { ref } from 'vue'
+import {
+  Plus,
+  ChatDotRound,
+  Delete,
+  Brush,
+  Edit,
+} from '@element-plus/icons-vue'
 import { useChatState } from '~/composables/useChatState'
+import type { ChatSession } from '~/api/type/ai'
 
 const {
   sessions,
+  models,
   currentSessionId,
+  isSessionsLoading,
   handleNewSession,
   selectSession,
+  handleUpdateSession,
   handleDeleteSession,
   handleClearSession,
 } = useChatState()
+
+const editDialogVisible = ref(false)
+const editingSession = ref({
+  sessionId: 0,
+  sessionName: '',
+  modelName: '',
+})
+
+const openEditDialog = (session: ChatSession) => {
+  editingSession.value = {
+    sessionId: session.sessionId,
+    sessionName: session.sessionName || '新对话',
+    modelName:
+      session.modelName || models.value[0]?.modelName || 'gpt-3.5-turbo',
+  }
+  editDialogVisible.value = true
+}
+
+const confirmEditSession = async () => {
+  const success = await handleUpdateSession(
+    editingSession.value.sessionId,
+    editingSession.value.sessionName,
+    editingSession.value.modelName
+  )
+  if (success) {
+    editDialogVisible.value = false
+  }
+}
 </script>
 
 <template>
-  <aside class="chat-sidebar">
+  <aside v-loading="isSessionsLoading" class="chat-sidebar">
     <div class="sidebar-header">
       <el-button
         class="new-chat-btn"
@@ -39,6 +78,13 @@ const {
             session.sessionName || '新对话'
           }}</span>
           <div class="session-actions">
+            <el-button
+              type="primary"
+              class="action-btn"
+              text
+              :icon="Edit"
+              @click.stop="openEditDialog(session)"
+            />
             <el-popconfirm
               title="确定清空聊天记录吗？"
               @confirm="handleClearSession(session.sessionId)"
@@ -75,6 +121,41 @@ const {
         <p>暂无历史聊天</p>
       </div>
     </div>
+
+    <el-dialog
+      v-model="editDialogVisible"
+      title="修改会话"
+      width="400px"
+      append-to-body
+    >
+      <el-form :model="editingSession" label-width="80px">
+        <el-form-item label="会话名称">
+          <el-input
+            v-model="editingSession.sessionName"
+            placeholder="输入新的会话名称"
+          />
+        </el-form-item>
+        <el-form-item label="选择模型">
+          <el-select
+            v-model="editingSession.modelName"
+            placeholder="请选择AI模型"
+          >
+            <el-option
+              v-for="item in models"
+              :key="item.modelName"
+              :label="item.modelName"
+              :value="item.modelName"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="editDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="confirmEditSession">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </aside>
 </template>
 

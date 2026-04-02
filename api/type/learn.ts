@@ -49,3 +49,43 @@ export interface Video {
    */
   url: string
 }
+
+export interface LearningPathData {
+  finalPath: FinalPath[] | null
+}
+
+export interface FinalPath {
+  endNode: Node
+  nodeRelationship: NodeRelationship
+  startNode: Node
+}
+
+export interface PlanUserLearningPathRequestBody {
+  userId: number
+  learningTarget: string // 用户想学习的目标知识
+  learningStage: string // 用户主观认为自己所处的学习阶段（可选项有入门、初级、进阶、深入四个）
+  availableTime: number // 用户主观认为的自己每日能用于学习此路线知识的时间，单位为小时
+}
+
+export interface QuestionData {
+  correct_answer: string
+  difficulty: string
+  knowledge_point: string
+  options: string[] | null
+  question: string
+  scoring_rules: string
+  type: 'single_choice' | 'multiple_choice' | 'fill_blank'
+}
+
+export interface GetFinalLearningPathRequestBody {
+  quizResults: QuizResult[] // 用户的答题情况
+  tartget: string // 用户想学习的目标知识
+  tend: string // 用户倾向于从什么路线开始学习
+  userId: number
+}
+
+// 答题情况
+export interface QuizResult {
+  correct_rate: number // 对应知识点的正确率
+  knowledge_point: string // 知识点
+}

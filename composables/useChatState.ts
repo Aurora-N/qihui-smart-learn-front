@@ -4,6 +4,7 @@ import {
   fetchChatHistoryList,
   fetchChatMessages,
   createChatSession,
+  updateChatSession,
   sendMessageStream,
   deleteChatSession,
   clearChatSession,
@@ -19,6 +20,9 @@ const currentSessionId = ref<number | null>(null)
 const messages = ref<ChatMessage[]>([])
 const inputMessage = ref('')
 const isGenerating = ref(false)
+const isSessionsLoading = ref(false)
+const isMessagesLoading = ref(false)
+const isModelsLoading = ref(false)
 const models = ref<ModelInfo[]>([])
 const scrollToBottomTrigger = ref(0)
 
@@ -35,31 +39,83 @@ export function useChatState() {
 
   // 加载模型列表
   const loadModels = async () => {
+    isModelsLoading.value = true
     try {
       const res = await fetchApiModelList()
       models.value = res || []
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to load models:', error)
+    } finally {
+      isModelsLoading.value = false
     }
   }
 
   // 选择会话
   const selectSession = async (sessionId: number) => {
     currentSessionId.value = sessionId
+    isMessagesLoading.value = true
     try {
       const res = await fetchChatMessages(sessionId)
-      messages.value = res || []
+
+      const formattedMessages = await Promise.all(
+        (res || []).map(async msg => {
+          const rawRefs = msg.references || msg.referenceData || []
+          const newMsg = {
+            ...msg,
+            references: [] as any[],
+          }
+
+          // 收集所有的 documentId
+          const docIds = new Set<number>()
+          for (const refItem of rawRefs) {
+            if (refItem.metadata && refItem.metadata.documentId) {
+              docIds.add(refItem.metadata.documentId)
+            } else if (refItem.articlePath) {
+              // 如果已经有了完整的结构，直接保留
+              newMsg.references.push(refItem)
+            }
+          }
+
+          // 同步等待所有文献链接请求完成
+          if (docIds.size > 0) {
+            const promises = Array.from(docIds).map(id =>
+              getArticleLinkById(id).catch(err => {
+                console.error('Failed to fetch article ref:', err)
+                return null
+              })
+            )
+            const links = await Promise.all(promises)
+            for (const articleLink of links) {
+              if (
+                articleLink &&
+                !newMsg.references.some(
+                  (r: any) => r.articlePath === articleLink.articlePath
+                )
+              ) {
+                newMsg.references.push(articleLink)
+              }
+            }
+          }
+
+          return newMsg
+        })
+      )
+
+      messages.value = formattedMessages
       triggerScrollToBottom()
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to fetch messages:', error)
+    } finally {
+      isMessagesLoading.value = false
     }
   }
 
   // 加载历史会话
   const loadSessions = async () => {
     if (!userId.value) return
+    isSessionsLoading.value = true
     try {
       const res = await fetchChatHistoryList(userId.value)
       sessions.value = res || []
@@ -69,6 +125,8 @@ export function useChatState() {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to load sessions:', error)
+    } finally {
+      isSessionsLoading.value = false
     }
   }
 
@@ -93,6 +151,28 @@ export function useChatState() {
       // eslint-disable-next-line no-console
       console.error('Failed to create session:', error)
       ElMessage.error('创建会话失败')
+      return false
+    }
+  }
+
+  // 修改会话
+  const handleUpdateSession = async (
+    sessionId: number,
+    sessionName: string,
+    modelName: string
+  ) => {
+    try {
+      await updateChatSession(sessionId, sessionName, modelName)
+      const index = sessions.value.findIndex(s => s.sessionId === sessionId)
+      if (index !== -1) {
+        sessions.value[index].sessionName = sessionName
+        sessions.value[index].modelName = modelName
+      }
+      ElMessage.success('会话已更新')
+      return true
+    } catch (error) {
+      console.error('Failed to update session:', error)
+      ElMessage.error('更新会话失败')
       return false
     }
   }
@@ -280,12 +360,16 @@ export function useChatState() {
     messages,
     inputMessage,
     isGenerating,
+    isSessionsLoading,
+    isMessagesLoading,
+    isModelsLoading,
     models,
     scrollToBottomTrigger,
     loadModels,
     loadSessions,
     selectSession,
     handleNewSession,
+    handleUpdateSession,
     handleDeleteSession,
     handleClearSession,
     sendMessage,

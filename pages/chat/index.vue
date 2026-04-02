@@ -13,7 +13,7 @@ useHead({
   title: '计算机在线学习平台问答助手',
 })
 
-const { userId, loadModels, loadSessions } = useChatState()
+const { userId, loadModels, loadSessions, isModelsLoading } = useChatState()
 
 // 初始化
 onMounted(async () => {
@@ -28,7 +28,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="chat-page">
+  <div v-loading="isModelsLoading" class="chat-page">
     <Navbar :transparent="false" />
     <div class="chat-container">
       <ChatSidebar />

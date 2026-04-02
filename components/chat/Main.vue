@@ -8,6 +8,7 @@ const {
   inputMessage,
   isGenerating,
   userId,
+  isMessagesLoading,
   sendMessage,
   scrollToBottomTrigger,
 } = useChatState()
@@ -38,8 +39,12 @@ const handleScrollToBottomClick = () => {
 watch(scrollToBottomTrigger, async () => {
   await nextTick()
   doScrollToBottom(false)
-  // 自动滚动后重置按钮状态
-  checkScroll()
+
+  // 为了防止含有复杂的Markdown渲染或加载导致容器高度后续变化，增加一个异步延时滚动兜底
+  setTimeout(() => {
+    doScrollToBottom(false)
+    checkScroll()
+  }, 150)
 })
 
 const handleKeydown = (e: KeyboardEvent | Event) => {
@@ -56,7 +61,7 @@ const handleKeydown = (e: KeyboardEvent | Event) => {
 </script>
 
 <template>
-  <main class="chat-main">
+  <main v-loading="isMessagesLoading" class="chat-main">
     <div
       ref="messagesContainer"
       class="messages-container"

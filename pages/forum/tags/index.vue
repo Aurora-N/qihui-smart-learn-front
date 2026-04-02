@@ -41,7 +41,7 @@ definePageMeta({
           <div class="tag-title">
             <div class="tag-color-indicator" />
             <h3 class="tag-name">
-              {{ tag.title }}
+              {{ tag.tagName }}
             </h3>
           </div>
           <div class="tag-posts-count">{{ tag.postsCount }} 篇帖子</div>
