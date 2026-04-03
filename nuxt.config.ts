@@ -70,6 +70,9 @@ export default defineNuxtConfig({
   build: {
     transpile: ['jsencrypt'],
   },
+  routeRules: {
+    '/articles/**': { ssr: false },
+  },
   compatibilityDate: '2024-11-01',
   nitro: {
     prerender: {

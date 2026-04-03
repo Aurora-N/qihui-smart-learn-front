@@ -208,10 +208,10 @@ defineExpose({
             <!-- 这里可以根据节点数据动态生成资源链接 -->
             <div class="resource-links">
               <template v-if="selectedNodeResources.articles.length > 0">
-                <a
+                <NuxtLink
                   v-for="article in selectedNodeResources.articles"
                   :key="article.name"
-                  :href="`articles/${article.url}`"
+                  :to="`articles/${article.url}`"
                   target="_blank"
                   class="resource-link"
                 >
@@ -233,7 +233,7 @@ defineExpose({
                     <line x1="10" y1="14" x2="21" y2="3" />
                   </svg>
                   <span>{{ article.name }}</span>
-                </a>
+                </NuxtLink>
               </template>
             </div>
           </div>

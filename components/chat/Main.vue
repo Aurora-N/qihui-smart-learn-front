@@ -91,15 +91,15 @@ const handleKeydown = (e: KeyboardEvent | Event) => {
             >
               <span class="ref-title">参考资料：</span>
               <div class="ref-buttons">
-                <a
+                <NuxtLink
                   v-for="(refItem, i) in msg.references"
                   :key="i"
-                  :href="`/articles/${refItem.articlePath.split('/').map(encodeURIComponent).join('/')}`"
+                  :to="`/articles/${refItem.articlePath.split('/').map(encodeURIComponent).join('/')}`"
                   class="ref-btn"
                   target="_blank"
                 >
                   {{ refItem.articleName }}
-                </a>
+                </NuxtLink>
               </div>
             </div>
           </div>
