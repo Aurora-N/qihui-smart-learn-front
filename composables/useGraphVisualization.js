@@ -65,6 +65,14 @@ export const useGraphVisualization = () => {
       d.totalLinks = linkCount[d.linkId]
     })
 
+    // 重置节点的初始位置，避免从全屏返回时带着全屏的坐标导致偏移
+    nodes.forEach(n => {
+      delete n.x
+      delete n.y
+      delete n.vx
+      delete n.vy
+    })
+
     // 创建SVG
     const miniG = createSvg(miniGraphContainer, width, height).append('g')
 
