@@ -48,6 +48,23 @@ export const useGraphVisualization = () => {
     // 清除之前的图表
     d3.select(miniGraphContainer.value).selectAll('*').remove()
 
+    // 处理多条重合关系线，打上标记
+    const linkCount = {}
+    links.forEach(d => {
+      const getSourceId = n => (typeof n === 'object' ? n.uniqueId || n.id : n)
+      const source = getSourceId(d.source)
+      const target = getSourceId(d.target)
+      const id1 = source < target ? source : target
+      const id2 = source < target ? target : source
+      const linkId = `${id1}-${id2}`
+      linkCount[linkId] = (linkCount[linkId] || 0) + 1
+      d.linkGroupIdx = linkCount[linkId]
+      d.linkId = linkId
+    })
+    links.forEach(d => {
+      d.totalLinks = linkCount[d.linkId]
+    })
+
     // 创建SVG
     const miniG = createSvg(miniGraphContainer, width, height).append('g')
 
@@ -77,8 +94,29 @@ export const useGraphVisualization = () => {
       miniG.selectAll('path').attr('d', d => {
         const dx = d.target.x - d.source.x
         const dy = d.target.y - d.source.y
-        const dr = Math.sqrt(dx * dx + dy * dy) * 1
-        return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`
+        const dist = Math.sqrt(dx * dx + dy * dy)
+
+        if (d.totalLinks === 1) {
+          const dr = dist * 1
+          return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`
+        }
+
+        const drFactor = 1.0 + (d.linkGroupIdx - 1) * 0.5
+        const dr = dist * drFactor
+
+        const getSourceId = n =>
+          typeof n === 'object' ? n.uniqueId || n.id : n
+        const sourceId = getSourceId(d.source)
+        const targetId = getSourceId(d.target)
+        const sweep = (
+          sourceId < targetId
+            ? d.linkGroupIdx % 2 === 0
+            : d.linkGroupIdx % 2 !== 0
+        )
+          ? 1
+          : 0
+
+        return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,${sweep} ${d.target.x},${d.target.y}`
       })
     })
 
@@ -118,6 +156,23 @@ export const useGraphVisualization = () => {
     // 添加箭头标记
     creatArrow(miniSvg)
 
+    // 处理多条重合关系线，打上标记
+    const linkCount = {}
+    links.forEach(d => {
+      const getSourceId = n => (typeof n === 'object' ? n.uniqueId || n.id : n)
+      const source = getSourceId(d.source)
+      const target = getSourceId(d.target)
+      const id1 = source < target ? source : target
+      const id2 = source < target ? target : source
+      const linkId = `${id1}-${id2}`
+      linkCount[linkId] = (linkCount[linkId] || 0) + 1
+      d.linkGroupIdx = linkCount[linkId]
+      d.linkId = linkId
+    })
+    links.forEach(d => {
+      d.totalLinks = linkCount[d.linkId]
+    })
+
     // 创建链接
     createLink(miniG, links, d => Math.sqrt(d.value), true)
 
@@ -151,8 +206,29 @@ export const useGraphVisualization = () => {
       miniG.selectAll('path').attr('d', d => {
         const dx = d.target.x - d.source.x
         const dy = d.target.y - d.source.y
-        const dr = Math.sqrt(dx * dx + dy * dy) * 2
-        return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`
+        const dist = Math.sqrt(dx * dx + dy * dy)
+
+        if (d.totalLinks === 1) {
+          const dr = dist * 2
+          return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`
+        }
+
+        const drFactor = 1.0 + (d.linkGroupIdx - 1) * 0.5
+        const dr = dist * drFactor
+
+        const getSourceId = n =>
+          typeof n === 'object' ? n.uniqueId || n.id : n
+        const sourceId = getSourceId(d.source)
+        const targetId = getSourceId(d.target)
+        const sweep = (
+          sourceId < targetId
+            ? d.linkGroupIdx % 2 === 0
+            : d.linkGroupIdx % 2 !== 0
+        )
+          ? 1
+          : 0
+
+        return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,${sweep} ${d.target.x},${d.target.y}`
       })
 
       label.attr('x', d => d.x - 10).attr('y', d => d.y - 20)
@@ -211,6 +287,23 @@ export const useGraphVisualization = () => {
 
     // 添加箭头标记
     creatArrow(svg)
+
+    // 处理多条重合关系线，打上标记
+    const linkCount = {}
+    links.forEach(d => {
+      const getSourceId = n => (typeof n === 'object' ? n.uniqueId || n.id : n)
+      const source = getSourceId(d.source)
+      const target = getSourceId(d.target)
+      const id1 = source < target ? source : target
+      const id2 = source < target ? target : source
+      const linkId = `${id1}-${id2}`
+      linkCount[linkId] = (linkCount[linkId] || 0) + 1
+      d.linkGroupIdx = linkCount[linkId]
+      d.linkId = linkId
+    })
+    links.forEach(d => {
+      d.totalLinks = linkCount[d.linkId]
+    })
 
     // 创建曲线连接
     const link = createLink(g, links, d => Math.sqrt(d.value), true)
@@ -275,8 +368,34 @@ export const useGraphVisualization = () => {
       link.attr('d', d => {
         const dx = d.target.x - d.source.x
         const dy = d.target.y - d.source.y
-        const dr = Math.sqrt(dx * dx + dy * dy) * 1.5
-        return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`
+        const dist = Math.sqrt(dx * dx + dy * dy)
+
+        if (d.totalLinks === 1) {
+          // 只有一条连线时使用直线
+          const dr = dist * 1.5
+          return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`
+        }
+
+        // 多条连线时，根据索引分配不同的弧度
+        const drFactor = 1.0 + (d.linkGroupIdx - 1) * 0.5
+        const dr = dist * drFactor
+
+        // 保证相反方向或者同方向但多条关系能交替弯曲
+        const getSourceId = n =>
+          typeof n === 'object' ? n.uniqueId || n.id : n
+        const sourceId = getSourceId(d.source)
+        const targetId = getSourceId(d.target)
+
+        // 交替曲线方向
+        const sweep = (
+          sourceId < targetId
+            ? d.linkGroupIdx % 2 === 0
+            : d.linkGroupIdx % 2 !== 0
+        )
+          ? 1
+          : 0
+
+        return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,${sweep} ${d.target.x},${d.target.y}`
       })
 
       node.attr('cx', d => d.x).attr('cy', d => d.y)
@@ -320,24 +439,53 @@ export const useGraphVisualization = () => {
 
       linkLabels.each(function (d) {
         const label = d3.select(this)
+        const dx = d.target.x - d.source.x
+        const dy = d.target.y - d.source.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+
+        if (dist === 0) {
+          label.attr('x', d.source.x).attr('y', d.source.y)
+          return
+        }
+
         const midX = (d.source.x + d.target.x) / 2
         const midY = (d.source.y + d.target.y) / 2
 
-        if (d.isMutual) {
-          const dx = d.target.x - d.source.x
-          const dy = d.target.y - d.source.y
-          const dist = Math.sqrt(dx * dx + dy * dy)
+        let dr
+        let sweep
+        const getSourceId = n =>
+          typeof n === 'object' ? n.uniqueId || n.id : n
+        const sourceId = getSourceId(d.source)
+        const targetId = getSourceId(d.target)
 
-          if (dist > 0) {
-            const offsetX = (dy / dist) * 10
-            const offsetY = -(dx / dist) * 10
-            label.attr('x', midX + offsetX).attr('y', midY + offsetY)
-          } else {
-            label.attr('x', midX).attr('y', midY)
-          }
+        if (d.totalLinks === 1) {
+          dr = dist * 1.5
+          sweep = 1
         } else {
-          label.attr('x', midX).attr('y', midY)
+          const drFactor = 1.0 + (d.linkGroupIdx - 1) * 0.5
+          dr = dist * drFactor
+          sweep = (
+            sourceId < targetId
+              ? d.linkGroupIdx % 2 === 0
+              : d.linkGroupIdx % 2 !== 0
+          )
+            ? 1
+            : 0
         }
+
+        // 计算弦中点到弧线中点的距离 h = R - sqrt(R^2 - (d/2)^2)
+        const h = dr - Math.sqrt(Math.max(0, dr * dr - (dist * dist) / 4))
+
+        // sweep === 1 表示弧线弯向右侧（从 source 到 target 的右侧）
+        const sign = sweep === 1 ? 1 : -1
+        // 注意在 SVG 坐标系下，向下为正，法向量计算如下
+        const offsetX = sign * (-dy / dist) * h
+        const offsetY = sign * (dx / dist) * h
+
+        const posX = midX + offsetX
+        const posY = midY + offsetY
+
+        label.attr('x', posX).attr('y', posY).attr('transform', null)
       })
     })
 

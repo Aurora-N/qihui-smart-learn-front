@@ -8,9 +8,9 @@
       content-width="1100px"
     >
       <div class="graph">
-        <AsyncGraphComp title="总览" />
-        <!-- <AsyncGraphComp title="前端" graph-id="前端" />
-        <AsyncGraphComp title="后端" graph-id="后端" /> -->
+        <Graph title="总览" />
+        <Graph title="后端" />
+        <Graph title="前端" />
       </div>
       <!-- 学习路线 -->
       <div class="my-path">
@@ -35,10 +35,10 @@ definePageMeta({
   layout: false,
 })
 
-const AsyncGraphComp = defineAsyncComponent({
-  loader: () => import('@/components/Graph/index.vue'),
-  delay: 100,
-})
+// const AsyncGraphComp = defineAsyncComponent({
+//   loader: () => import('@/components/Graph/index.vue'),
+//   delay: 100,
+// })
 
 useHead({
   title: '学习方向',

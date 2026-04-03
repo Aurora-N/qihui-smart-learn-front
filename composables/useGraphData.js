@@ -30,7 +30,19 @@ export const useGraphData = () => {
         props.chatId || 0,
         props.latestMessageId || 0
       )
-      graphData = transformData(res.data || res, props.maxDepth)
+
+      let resData = res.data || res
+      // 如果定义了 title 并且有指定方向（前端、后端等），则在组装前预先过滤数据
+      if (props.title && props.title !== '总览') {
+        resData = resData.filter(record => {
+          // 由于记录包含 startNode 和 endNode，判断如果其中有一端属于这个分类，我们就保留这两者的关联关系
+          const startType = record.startNode?.type1
+          const endType = record.endNode?.type1
+          return startType === props.title || endType === props.title
+        })
+      }
+
+      graphData = transformData(resData, props.maxDepth)
     } else {
       const res = await getKnowledgeRelationships(
         props.nodeName || props.graphId
