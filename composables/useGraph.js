@@ -81,6 +81,11 @@ export const useGraph = (props, sidebarRef = null) => {
       setTimeout(() => {
         graphVisualization.zoomToFit(data.nodes)
       }, 500)
+    } else if (data.nodes.length > 0) {
+      // 即使是初次渲染也执行缩放包裹，确保比例
+      setTimeout(() => {
+        graphVisualization.zoomToFit(data.nodes)
+      }, 500)
     }
   }
 
@@ -183,6 +188,21 @@ export const useGraph = (props, sidebarRef = null) => {
     ],
     () => {
       graphVisualization.updateSvgSize()
+      // 等待 DOM 更新后重新自适应
+      setTimeout(() => {
+        if (graphState.isFullscreen.value) {
+          graphVisualization.zoomToFit(graphData.nodes.value)
+        } else if (graphState.embededGraphInitialized.value) {
+          // 重新根据容器宽度初始化内嵌图谱，避免变形
+          initEmbeddedGraph()
+        } else {
+          // 小图模式根据容器宽度重新初始化
+          graphVisualization.initMiniGraph({
+            nodes: graphData.nodes.value,
+            links: graphData.links.value,
+          })
+        }
+      }, 300)
     }
   )
 

@@ -92,6 +92,10 @@ export const useGraphVisualization = () => {
       false
     )
 
+    // 增加额外的向心力，防止离散子图飘远
+    miniSimulation.force('x', d3.forceX(width / 2).strength(0.1))
+    miniSimulation.force('y', d3.forceY(height / 2).strength(0.1))
+
     // 更新函数
     miniSimulation.on('tick', () => {
       miniG
@@ -203,6 +207,10 @@ export const useGraphVisualization = () => {
       { x: width / 2, y: height / 2 },
       d => getNodeRadius(d)
     )
+
+    // 增加额外的向心力，防止离散子图飘远
+    miniSimulation.force('x', d3.forceX(width / 2).strength(0.05))
+    miniSimulation.force('y', d3.forceY(height / 2).strength(0.05))
 
     // 更新函数
     miniSimulation.on('tick', () => {
@@ -316,12 +324,15 @@ export const useGraphVisualization = () => {
     // 创建曲线连接
     const link = createLink(g, links, d => Math.sqrt(d.value), true)
 
-    // 创建链接标签
-    linkLabels = createLinkLabel(g, links, false)
-
     // 计算图的中心点
     const centerX = width / 2
     const centerY = height / 2
+
+    // 创建链接标签
+    linkLabels = createLinkLabel(g, links, false)
+
+    // 初始化 linkLabels 的位置在父级的中心点，避免从 (0,0) 飞入的突兀初始动画
+    linkLabels.attr('x', centerX).attr('y', centerY)
 
     // 创建节点
     const node = createNode(g, nodes, d => getNodeRadius(d), 1.5)
@@ -370,6 +381,10 @@ export const useGraphVisualization = () => {
       { x: width / 2, y: height / 2 },
       d => getNodeRadius(d) + 10
     )
+
+    // 增加额外的向心力，防止离散子图互相排斥飘远
+    simulation.value.force('x', d3.forceX(centerX).strength(0.06))
+    simulation.value.force('y', d3.forceY(centerY).strength(0.06))
 
     // 更新函数
     simulation.value.on('tick', () => {
@@ -632,10 +647,10 @@ export const useGraphVisualization = () => {
    * 更新SVG尺寸
    */
   const updateSvgSize = () => {
-    if (svg) {
-      svg
-        .attr('width', windowWidth.value)
-        .attr('height', windowHeight.value + 100)
+    if (svg && graphContainer.value) {
+      const width = graphContainer.value.clientWidth
+      const height = graphContainer.value.clientHeight
+      svg.attr('width', width).attr('height', height)
     }
   }
 
