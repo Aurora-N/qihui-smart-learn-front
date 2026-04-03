@@ -59,25 +59,3 @@ export const getNodeColor = node => {
       return NODE_COLORS.DEFAULT
   }
 }
-
-/**
- * 获取难度级别的CSS类名
- * @param {string} level - 难度级别
- * @returns {string} - CSS类名
- */
-export const getLevelClass = level => {
-  switch (level) {
-    case '入门':
-      return 'beginner'
-    case '基础':
-      return 'basic'
-    case '进阶':
-      return 'intermediate'
-    case '深入':
-      return 'advanced'
-    case '高级':
-      return 'expert'
-    default:
-      return 'default'
-  }
-}

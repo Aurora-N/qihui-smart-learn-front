@@ -172,13 +172,15 @@ export const useGraphAttribute = () => {
     const levelNum = Number(level)
     switch (levelNum) {
       case 1:
-        return 'basic' // 基础
+        return 'beginner' // 入门
       case 2:
-        return 'intermediate' // 进阶
+        return 'basic' // 初级
       case 3:
-        return 'advanced' // 深入
+        return 'intermediate' // 进阶
       case 4:
-        return 'expert' // 高级
+        return 'advanced' // 深入
+      // case 5:
+      //   return 'expert' // 高级
       default:
         return 'default'
     }
