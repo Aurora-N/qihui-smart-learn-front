@@ -37,7 +37,6 @@
     "nuxt": "^3.15.4",
     "nuxt-shiki": "^0.3.0",
     "pinia-plugin-persistedstate": "^4.2.0",
-    "pinyin": "^4.0.0-alpha.2",
     "shiki": "^3.1.0",
     "vue": "latest",
     "vue-router": "latest"
