@@ -43,6 +43,15 @@
   --el-fill-color-light: var(--color-background-mute) !important;
 
   --el-fill-color-blank: var(--color-background) !important;
+
+  // Loading 遮罩层背景色适配深色模式
+  --el-mask-color: color-mix(
+    in srgb,
+    var(--color-background) 80%,
+    transparent
+  ) !important;
+
+  --el-border-color-lighter: var(--color-border) !important;
 }
 
 .el-message {

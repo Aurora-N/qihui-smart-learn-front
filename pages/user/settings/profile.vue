@@ -134,7 +134,7 @@ definePageMeta({
         <el-button
           class="back-btn"
           size="large"
-          @click="$router.push(`/user/${userInfo.userId}`)"
+          @click="$router.push(`/user?id=${userInfo.userId}`)"
         >
           <el-icon>
             <ArrowLeft />

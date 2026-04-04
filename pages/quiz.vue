@@ -780,7 +780,7 @@ const restartQuiz = () => {
   text-align: center;
   padding: 40px;
   font-size: 16px;
-  color: #606266;
+  color: var(--color-text);
 }
 
 .quiz-header {
@@ -792,7 +792,7 @@ const restartQuiz = () => {
 .quiz-header h1 {
   margin: 0;
   font-size: 24px;
-  color: #303133;
+  color: var(--color-text);
   text-align: center;
 }
 
@@ -808,12 +808,12 @@ const restartQuiz = () => {
 .question-count {
   margin-bottom: 10px;
   font-size: 14px;
-  color: #909399;
+  color: var(--color-text-2);
 }
 
 .question-count span {
   font-weight: bold;
-  color: #0060df;
+  color: var(--color-primary);
 }
 
 .question-text {
@@ -882,12 +882,12 @@ const restartQuiz = () => {
 .review-mode h2 {
   text-align: center;
   margin-bottom: 10px;
-  color: #303133;
+  color: var(--color-text);
 }
 
 .review-description {
   text-align: center;
-  color: #606266;
+  color: var(--color-text);
   margin-bottom: 20px;
 }
 
@@ -909,7 +909,7 @@ const restartQuiz = () => {
 .results-container h2 {
   text-align: center;
   margin-bottom: 20px;
-  color: #303133;
+  color: var(--color-text);
 }
 
 .score-summary {

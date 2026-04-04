@@ -325,7 +325,7 @@ defineExpose({
 .graph-container {
   width: 100%;
   height: 100%;
-  background-color: #f8f9fa; /* 浅灰色背景 */
+  background-color: var(--color-background-mute); /* 浅灰色背景 */
   border-radius: 8px;
   overflow: hidden;
   border-radius: 12px;

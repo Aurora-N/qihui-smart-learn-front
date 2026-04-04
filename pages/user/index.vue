@@ -5,7 +5,7 @@ import { useForumApi } from '~/api/forum'
 
 const route = useRoute()
 const router = useRouter()
-const userId = route.params.id
+const userId = route.query.id
 const userApi = useUserApi()
 const forumApi = useForumApi()
 const userInfo = ref({

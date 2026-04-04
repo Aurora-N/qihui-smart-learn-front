@@ -59,7 +59,7 @@ definePageMeta({
 
           <button
             class="link-btn"
-            @click="$router.push(`/forum/tags/${tag.tagId}`)"
+            @click="$router.push(`/forum/tags/tagpost?id=${tag.tagId}`)"
           >
             去看看
           </button>

@@ -126,7 +126,7 @@ useHead({
                     class="nav-item-tag"
                     :class="{ 'active-tag': selectedNav === String(tag.tagId) }"
                     :style="{ '--hue': tag.hueColor }"
-                    @click="switchToNav(`tags/${tag.tagId}`)"
+                    @click="switchToNav(`tags/tagpost?id=${tag.tagId}`)"
                   >
                     <el-icon>
                       <CollectionTag />
@@ -186,7 +186,7 @@ useHead({
                 class="nav-item-tag"
                 :class="{ 'active-tag': selectedNav === String(tag.tagId) }"
                 :style="{ '--hue': tag.hueColor }"
-                @click="switchToNav(`tags/${tag.tagId}`)"
+                @click="switchToNav(`tags/tagpost?id=${tag.tagId}`)"
               >
                 <el-icon>
                   <CollectionTag />

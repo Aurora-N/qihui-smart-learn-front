@@ -89,7 +89,7 @@ const activeItem = ref('')
       <div class="desktop-controls">
         <div v-if="userInfo" class="user">
           <el-dropdown class="dropdown">
-            <NuxtLink :to="`/user/${userInfo.userId}`" class="avatar-link">
+            <NuxtLink :to="`/user?id=${userInfo.userId}`" class="avatar-link">
               <el-avatar
                 :size="35"
                 :src="formatAvatarUrl(userInfo.avatarURL)"
@@ -168,7 +168,7 @@ const activeItem = ref('')
           <div class="mobile-user-info">
             <div
               class="mobile-user-profile"
-              @click="routerTo(`/user/${userInfo.userId}`)"
+              @click="routerTo(`/user?id=${userInfo.userId}`)"
             >
               <el-avatar
                 :size="50"

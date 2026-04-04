@@ -19,17 +19,23 @@ const topics = ref<any>([])
 const route = useRoute()
 
 const getTagLists = async () => {
-  const res = await useForumApi().getTagPostsList(Number(route.params.id))
+  const res = await useForumApi().getTagPostsList(Number(route.query.id))
   topics.value = (res.data as any).posts || res.data
 }
 
 const bannerConfig = inject<any>('bannerConfig')
 
-onMounted(async () => {
-  await getAllTags()
+const loadTagData = async () => {
+  if (!route.query.id) return
+
+  if (tags.value.length === 0) {
+    await getAllTags()
+  }
+
   tagDetail.value = tags.value.filter(
-    (item: any) => String(item.tagId) === String(route.params.id)
+    (item: any) => String(item.tagId) === String(route.query.id)
   )[0]
+
   if (tagDetail.value) {
     await getTagLists()
 
@@ -41,7 +47,20 @@ onMounted(async () => {
       }
     }
   }
+}
+
+onMounted(() => {
+  loadTagData()
 })
+
+watch(
+  () => route.query.id,
+  () => {
+    if (route.path.includes('/tags/tagpost')) {
+      loadTagData()
+    }
+  }
+)
 </script>
 
 <template>
