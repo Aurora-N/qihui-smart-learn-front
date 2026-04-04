@@ -129,7 +129,7 @@ export const creatArrow = svg => {
     .append('marker')
     .attr('id', d => d)
     .attr('viewBox', '0 -5 10 10')
-    .attr('refX', 25)
+    .attr('refX', 31) // 箭头距离线条末端的距离
     .attr('refY', 0)
     .attr('markerWidth', 6)
     .attr('markerHeight', 6)
@@ -144,7 +144,7 @@ export const useGraphAttribute = () => {
   // 根据节点类型获取半径
   const getNodeRadius = node => {
     // 对于任何级别的节点，保证大小都一样
-    return 15
+    return 12
   }
 
   // 根据难度级别获取颜色
