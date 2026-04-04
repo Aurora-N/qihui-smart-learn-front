@@ -171,7 +171,7 @@ const stopRotation = () => {
 const formatArticleLink = articlePath => {
   // Replace backslashes with forward slashes, remove first two path segments, add /articles prefix
   const formattedPath = articlePath.split('/').map(encodeURIComponent).join('/')
-  const formatted = '/articles/' + formattedPath
+  const formatted = '/articles/page?path=' + formattedPath
   return formatted
 }
 

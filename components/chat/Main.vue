@@ -94,7 +94,7 @@ const handleKeydown = (e: KeyboardEvent | Event) => {
                 <NuxtLink
                   v-for="(refItem, i) in msg.references"
                   :key="i"
-                  :to="`/articles/${refItem.articlePath.split('/').map(encodeURIComponent).join('/')}`"
+                  :to="`/articles/page?path=${refItem.articlePath.split('/').map(encodeURIComponent).join('/')}`"
                   class="ref-btn"
                   target="_blank"
                 >

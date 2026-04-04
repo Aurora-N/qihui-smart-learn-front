@@ -3,7 +3,7 @@
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
-    '@nuxt/content',
+    // '@nuxt/content',
     '@element-plus/nuxt',
     'nuxt-shiki',
     '@vueuse/nuxt',
@@ -33,27 +33,27 @@ export default defineNuxtConfig({
       // scrollBehaviorType: 'smooth'
     },
   },
-  content: {
-    build: {
-      markdown: {
-        highlight: {
-          // Theme used in all color schemes.
-          theme: 'material-theme-lighter',
-          langs: ['c', 'cpp', 'java'],
-        },
-        toc: {
-          depth: 2, // include h3 headings
-          searchDepth: 2,
-        },
-      },
-      pathMeta: {
-        slugifyOptions: {
-          // 保留路径中的汉字（非ascii字符）
-          remove: /[$*+~()'"!\-=#?:@]/g,
-        },
-      },
-    },
-  },
+  // content: {
+  //   build: {
+  //     markdown: {
+  //       highlight: {
+  //         // Theme used in all color schemes.
+  //         theme: 'material-theme-lighter',
+  //         langs: ['c', 'cpp', 'java'],
+  //       },
+  //       toc: {
+  //         depth: 2, // include h3 headings
+  //         searchDepth: 2,
+  //       },
+  //     },
+  //     pathMeta: {
+  //       slugifyOptions: {
+  //         // 保留路径中的汉字（非ascii字符）
+  //         remove: /[$*+~()'"!\-=#?:@]/g,
+  //       },
+  //     },
+  //   },
+  // },
 
   runtimeConfig: {
     public: {
@@ -71,7 +71,7 @@ export default defineNuxtConfig({
     transpile: ['jsencrypt'],
   },
   routeRules: {
-    '/articles/**': { ssr: false },
+    '/articles/page': { ssr: false },
   },
   compatibilityDate: '2024-11-01',
   nitro: {

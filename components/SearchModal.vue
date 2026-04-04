@@ -173,7 +173,7 @@ const navigateToResult = async result => {
     return
   }
   router.push(
-    `/articles/${foundItemByTitle.value.stem.split('/').map(encodeURIComponent).join('/')}`
+    `/articles/page?path=${foundItemByTitle.value.stem.split('/').map(encodeURIComponent).join('/')}`
   )
   closeSearch()
 }

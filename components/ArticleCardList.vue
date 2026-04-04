@@ -102,7 +102,7 @@ const getHue = (index: number) => {
         <NuxtLink
           :to="
             obj.link
-              ? `/articles/${obj.link.split('/').map(encodeURIComponent).join('/')}`
+              ? `/articles/page?path=${obj.link.split('/').map(encodeURIComponent).join('/')}`
               : '#'
           "
           class="article-card"

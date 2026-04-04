@@ -211,7 +211,7 @@ defineExpose({
                 <NuxtLink
                   v-for="article in selectedNodeResources.articles"
                   :key="article.name"
-                  :to="`articles/${article.url}`"
+                  :to="`articles/page?path=${article.url.split('/').map(encodeURIComponent).join('/')}`"
                   target="_blank"
                   class="resource-link"
                 >

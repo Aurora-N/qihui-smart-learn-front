@@ -8,9 +8,9 @@ import GraphSidebar from '~/components/Graph/Sidebar.vue'
 const route = useRoute()
 const router = useRouter()
 
-const slug = Array.isArray(route.params.slug)
-  ? route.params.slug.join('/')
-  : route.params.slug || ''
+const slug = Array.isArray(route.query.path)
+  ? (route.query.path.join('/') as string)
+  : (route.query.path as string) || ''
 
 const isLoading = ref(true)
 const page = ref<any>(null)
@@ -75,9 +75,9 @@ onMounted(async () => {
     // slug format example: "前端/微前端/1.介绍"
     // The API expects ArticleLink which expects articleName and articlePath.
     // We derive articlePath from slug and articleName from the last segment.
-    const parts = slug.split('/')
+    const parts = slug.split('/').map(decodeURIComponent)
     const articleName = parts[parts.length - 1] + '.md' // Assuming articleName is the last segment with .md extension
-    const articlePath = slug // Assuming slug is the exact path without .md
+    const articlePath = parts.join('/') // Assuming slug is the exact path without .md
 
     const res = await getArticleDetail({ articleName, articlePath })
     if (res) {
@@ -183,7 +183,7 @@ const recommendPostsList = ref([
         <Breadcrumb
           class="breadcrumb"
           :current-title="page?.articleName"
-          :parents="route.params.slug.slice(0, -1)"
+          :parents="slug.split('/').filter(Boolean).slice(0, -1)"
         />
 
         <!-- 文章对应的知识图谱 -->
