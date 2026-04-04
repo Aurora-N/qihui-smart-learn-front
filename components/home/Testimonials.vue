@@ -13,11 +13,12 @@
           {{ articlesError }}
         </div>
         <div v-else class="testimonials-grid">
-          <div
+          <NuxtLink
             v-for="article in displayedArticles"
             :key="article.name"
             class="testimonial-card"
-            @click="$router.push(formatArticleLink(article.articlePath))"
+            :to="formatArticleLink(article.articlePath)"
+            target="_blank"
           >
             <div class="testimonial-header">
               <IconsLearn
@@ -35,7 +36,7 @@
             <p class="testimonial-quote">
               {{ article.articlePath.split('/').slice(1, -1).join(' - ') }}
             </p>
-          </div>
+          </NuxtLink>
         </div>
       </div>
 
@@ -51,11 +52,12 @@
           {{ postsError }}
         </div>
         <div v-else class="testimonials-grid">
-          <div
+          <NuxtLink
             v-for="post in displayedPosts"
             :key="post.postId"
             class="testimonial-card"
-            @click="$router.push(`/forum/${post.postId}`)"
+            :to="`/forum/post?id=${post.postId}`"
+            target="_blank"
           >
             <div class="testimonial-header">
               <img
@@ -79,7 +81,7 @@
               <span class="post-comments">{{ post.commentsCount }} 评论</span>
               <span class="post-date">{{ formatDate(post.createdAt) }}</span>
             </div>
-          </div>
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -170,8 +172,7 @@ const stopRotation = () => {
 // Format article link
 const formatArticleLink = articlePath => {
   // Replace backslashes with forward slashes, remove first two path segments, add /articles prefix
-  const formattedPath = articlePath.split('/').map(encodeURIComponent).join('/')
-  const formatted = '/articles/page?path=' + formattedPath
+  const formatted = '/articles/page?path=' + articlePath
   return formatted
 }
 
@@ -292,6 +293,7 @@ onUnmounted(() => {
   height: 100%;
   display: flex;
   flex-direction: column;
+  text-decoration: none;
 }
 
 .testimonial-card:hover {

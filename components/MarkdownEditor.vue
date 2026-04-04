@@ -222,7 +222,6 @@ import {
 import { fromAsyncCodeToHtml } from '@shikijs/markdown-it/async'
 import MarkdownItAsync from 'markdown-it-async'
 import { codeToHtml } from 'shiki'
-import '~/assets/style/post.scss'
 import markdownItSanitizer from 'markdown-it-sanitizer'
 import { useForumApi } from '~/api/forum'
 
@@ -478,7 +477,8 @@ const handleSubmit = async () => {
     markdownText.value,
     selectedTags.value
   )
-  if (res.status === 'success') router.push(`/forum/${res.postMeta.postId}`)
+  if (res.status === 'success')
+    router.push(`/forum/post?id=${res.postMeta.postId}`)
 }
 
 // Lifecycle hooks
@@ -510,6 +510,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 @import url(~/assets/style/tag_color.scss);
+@import url(~/assets/style/post.scss);
 
 .markdown-editor {
   display: flex;

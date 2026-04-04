@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <NuxtLink :to="`/forum/${topic.postId}`" class="topic-card">
+  <NuxtLink :to="`/forum/post?id=${topic.postId}`" class="topic-card">
     <div class="topic-left">
       <img
         :src="formatAvatarUrl(topic.author.attributes.avatarUrl)"

@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useMarkdownText } from '~/composables/useMarkdownText'
-import '~/assets/style/post.scss'
 
 const props = defineProps({
   id: { type: String, required: true }, // 评论的ID CommitId
@@ -141,6 +140,7 @@ const scrollToComment = id => {
 
 <style lang="scss" scoped>
 @import url(~/assets/style/tag_color.scss);
+@import url(~/assets/style/post.scss);
 
 .comment-container {
   display: flex;

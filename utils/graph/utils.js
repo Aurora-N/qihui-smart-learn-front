@@ -143,16 +143,7 @@ export const creatArrow = svg => {
 export const useGraphAttribute = () => {
   // 根据节点类型获取半径
   const getNodeRadius = node => {
-    // 根据一级目录和二级目录的区分设置大小
-    // 如果只有 type1 没有 type2，则是一级节点，大一些
-    if (node.type1 && !node.type2) {
-      return 20
-    }
-    // 如果有 type2，则是二级（或更小级别）节点，小一些
-    if (node.type2) {
-      return 12
-    }
-    // 默认兜底大小
+    // 对于任何级别的节点，保证大小都一样
     return 15
   }
 
@@ -201,10 +192,6 @@ export const useGraphAttribute = () => {
       // 处理返回的 article 数据
       const mappedArticles = response.articles.map(article => {
         const url = article.articlePath
-          .split('/')
-          .slice(2)
-          .map(encodeURIComponent)
-          .join('/')
         return {
           ...article,
           name: article.articleName,

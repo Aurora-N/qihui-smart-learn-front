@@ -95,7 +95,7 @@ const fetchUserFavorites = async () => {
 
 // 跳转到帖子详情页
 const goToPost = postId => {
-  navigateTo(`/forum/${postId}`)
+  navigateTo(`/forum/post?id=${postId}`)
 }
 </script>
 

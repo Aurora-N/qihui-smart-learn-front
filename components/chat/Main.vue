@@ -94,7 +94,7 @@ const handleKeydown = (e: KeyboardEvent | Event) => {
                 <NuxtLink
                   v-for="(refItem, i) in msg.references"
                   :key="i"
-                  :to="`/articles/page?path=${refItem.articlePath.split('/').map(encodeURIComponent).join('/')}`"
+                  :to="`/articles/page?path=${refItem.articlePath}`"
                   class="ref-btn"
                   target="_blank"
                 >
@@ -154,6 +154,7 @@ const handleKeydown = (e: KeyboardEvent | Event) => {
 
 <style scoped lang="scss">
 @use '~/assets/style/abstracts/variables' as *;
+@use '~/assets/style/post.scss' as *;
 
 // 主区域
 .chat-main {

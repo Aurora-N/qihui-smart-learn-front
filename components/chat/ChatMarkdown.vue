@@ -50,71 +50,71 @@ watch(
 
 <style lang="scss">
 @use '~/assets/style/abstracts/variables' as *;
+@use '~/assets/style/post.scss' as *;
 
 .chat-markdown {
-  p {
-    margin-bottom: $spacing-sm;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+  // p {
+  //   margin-bottom: $spacing-sm;
+  //   &:last-child {
+  //     margin-bottom: 0;
+  //   }
+  // }
+  //   pre {
+  //     background-color: var(--color-background-soft);
+  //     padding: $spacing-md;
+  //     border-radius: 10px;
+  //     overflow-x: auto;
+  //     margin: $spacing-sm 0;
+  //   }
 
-  pre {
-    background-color: var(--color-background-soft);
-    padding: $spacing-md;
-    border-radius: 10px;
-    overflow-x: auto;
-    margin: $spacing-sm 0;
-  }
+  //   code {
+  //     font-family: var(--font-family-mono);
+  //     background-color: var(--color-background-soft);
+  //     padding: 0.125rem 0.25rem;
+  //     border-radius: $border-radius-sm;
+  //     font-size: 0.875em;
+  //   }
 
-  code {
-    font-family: var(--font-family-mono);
-    background-color: var(--color-background-soft);
-    padding: 0.125rem 0.25rem;
-    border-radius: $border-radius-sm;
-    font-size: 0.875em;
-  }
+  //   pre code {
+  //     background-color: transparent;
+  //     padding: 0;
+  //     border-radius: 0;
+  //     font-size: 1em;
+  //   }
 
-  pre code {
-    background-color: transparent;
-    padding: 0;
-    border-radius: 0;
-    font-size: 1em;
-  }
+  //   ul,
+  //   ol {
+  //     margin: $spacing-sm 0 $spacing-sm $spacing-md;
+  //     padding-left: $spacing-md;
+  //   }
 
-  ul,
-  ol {
-    margin: $spacing-sm 0 $spacing-sm $spacing-md;
-    padding-left: $spacing-md;
-  }
+  //   blockquote {
+  //     border-left: 4px solid var(--color-border);
+  //     padding-left: $spacing-md;
+  //     margin: $spacing-sm 0;
+  //     color: var(--color-text-mute);
+  //   }
 
-  blockquote {
-    border-left: 4px solid var(--color-border);
-    padding-left: $spacing-md;
-    margin: $spacing-sm 0;
-    color: var(--color-text-mute);
-  }
+  //   table {
+  //     width: 100%;
+  //     border-collapse: collapse;
+  //     margin: $spacing-sm 0;
+  //     th,
+  //     td {
+  //       border: 1px solid var(--color-border);
+  //       padding: $spacing-xs $spacing-sm;
+  //     }
+  //     th {
+  //       background-color: var(--color-background-soft);
+  //     }
+  //   }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: $spacing-sm 0;
-    th,
-    td {
-      border: 1px solid var(--color-border);
-      padding: $spacing-xs $spacing-sm;
-    }
-    th {
-      background-color: var(--color-background-soft);
-    }
-  }
-
-  a {
-    color: var(--link-color);
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
+  //   a {
+  //     color: var(--link-color);
+  //     text-decoration: none;
+  //     &:hover {
+  //       text-decoration: underline;
+  //     }
+  //   }
 }
 </style>

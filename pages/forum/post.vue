@@ -7,7 +7,7 @@ const route = useRoute()
 
 const userInfo = ref<any>({})
 const post = ref<any>({
-  postId: route.params.id,
+  postId: route.query.id,
   title: '',
   author: {
     attributes: {
@@ -25,7 +25,7 @@ const initialized = ref(false)
 const initPostContent = async () => {
   const isLogin = Object.keys(userStore.userInfo).length !== 0
   const res = await useForumApi().getPostContent(
-    Number(route.params.id),
+    Number(route.query.id),
     isLogin ? userStore.userInfo.data?.userId : undefined
   )
   post.value = (res.data as any).posts || res.data
@@ -60,7 +60,7 @@ const handleBeforeSubmit = async (content: string) => {
   // 接入评论API
   const res = await useForumApi().replyPost({
     userId: userStore.userInfo.data!.userId,
-    postId: Number(route.params.id),
+    postId: Number(route.query.id),
     repliedId: null, // 或对应需要回复的ID
     comment: content,
   } as any)

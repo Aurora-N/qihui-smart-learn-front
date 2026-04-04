@@ -121,12 +121,21 @@ const openSidebar = async (node: Node | null) => {
   if (node) {
     selectedNode.value = node
     showSidebar.value = true
+    hasRelatedGraphData.value = true // 重置为true，待内部组件挂载后检查
     await fetchSelectedNodeData()
   }
 }
 
 const closeSidebar = () => {
   showSidebar.value = false
+}
+
+// 侧边栏知识图谱是否有数据
+const hasRelatedGraphData = ref(true)
+
+const handleGraphReady = (data: { nodes: any[]; links: any[] }) => {
+  // 如果没有节点或只有当前一个节点，认为没有关系数据
+  hasRelatedGraphData.value = data.nodes && data.nodes.length > 1
 }
 
 defineExpose({
@@ -184,7 +193,10 @@ defineExpose({
       <!-- 资源加载完毕后才显示 -->
       <div v-if="selectedNode && selectedNodeResources">
         <!-- 相关资源 -->
-        <div class="sidebar-section">
+        <div
+          v-if="selectedNodeResources.articles.length > 0"
+          class="sidebar-section"
+        >
           <div class="sidebar-section-header">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -207,34 +219,32 @@ defineExpose({
           <div class="sidebar-section-content">
             <!-- 这里可以根据节点数据动态生成资源链接 -->
             <div class="resource-links">
-              <template v-if="selectedNodeResources.articles.length > 0">
-                <NuxtLink
-                  v-for="article in selectedNodeResources.articles"
-                  :key="article.name"
-                  :to="`articles/page?path=${article.url.split('/').map(encodeURIComponent).join('/')}`"
-                  target="_blank"
-                  class="resource-link"
+              <NuxtLink
+                v-for="article in selectedNodeResources.articles"
+                :key="article.name"
+                :to="`articles/page?path=${article.url}`"
+                target="_blank"
+                class="resource-link"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path
-                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
-                    />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" y1="14" x2="21" y2="3" />
-                  </svg>
-                  <span>{{ article.name }}</span>
-                </NuxtLink>
-              </template>
+                  <path
+                    d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                  />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+                <span>{{ article.name }}</span>
+              </NuxtLink>
             </div>
           </div>
         </div>
@@ -302,7 +312,7 @@ defineExpose({
         </div> -->
 
         <!-- 相关知识图谱 -->
-        <div class="sidebar-section">
+        <div v-show="hasRelatedGraphData" class="sidebar-section">
           <div class="sidebar-section-header">
             <IconsGraph style="width: 20px; height: 20px" />
             <h4>相关知识图谱</h4>
@@ -313,6 +323,7 @@ defineExpose({
               :graph-id="selectedNode.id"
               :title="selectedNode.id"
               :is-relationship="true"
+              @graph-ready="handleGraphReady"
             />
           </div>
         </div>
