@@ -82,3 +82,10 @@ export const getFinalLearningPath = async (
     body
   )
 }
+
+// 获取可选的学习目标列表
+export const getAvailableLearningTargets = async () => {
+  return await get<{ target: string[] }>(
+    `${BASE_API}/quiz/choose_learning_target`
+  )
+}

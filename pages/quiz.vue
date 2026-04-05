@@ -25,10 +25,19 @@
           <div v-else-if="mode === 'form'" class="form-section">
             <el-form ref="formRef" :model="form" label-width="120px">
               <el-form-item label="学习目标" prop="learningTarget" required>
-                <el-input
+                <el-select
                   v-model="form.learningTarget"
-                  placeholder="请输入你想学习的目标知识，如：前端开发、React"
-                />
+                  placeholder="请选择你想学习的目标知识"
+                  filterable
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="target in availableTargets"
+                    :key="target"
+                    :label="target"
+                    :value="target"
+                  />
+                </el-select>
               </el-form-item>
               <el-form-item label="当前阶段" prop="learningStage" required>
                 <el-select
@@ -393,11 +402,13 @@ import {
   checkUserHasCustomPath,
   planUserLearningPath,
   getFinalLearningPath,
+  getAvailableLearningTargets,
 } from '~/api/learn'
 import type { QuestionData, QuizResult } from '~/api/type/learn'
 import { useUserStore } from '~/stores/userStore'
 
 const mode = ref<'form' | 'quiz' | 'result'>('form')
+const availableTargets = ref<string[]>([])
 const checkingStatus = ref(true)
 const loadingQuestions = ref(false)
 const primaryColor = ref('#0060DF')
@@ -438,6 +449,15 @@ useHead({
 })
 
 onMounted(async () => {
+  try {
+    const res = await getAvailableLearningTargets()
+    if (res && res.target) {
+      availableTargets.value = res.target
+    }
+  } catch (error) {
+    console.error('Failed to get learning targets', error)
+  }
+
   if (userInfo.value && userInfo.value.id) {
     try {
       const status = await checkUserHasCustomPath(userInfo.value.id)
