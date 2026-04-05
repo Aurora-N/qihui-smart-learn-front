@@ -751,8 +751,8 @@ const submitQuiz = async () => {
 
   try {
     const finalPathRes = await getFinalLearningPath({
-      userId: userInfo.value.id,
-      tartget: form.value.learningTarget,
+      userId: userInfo.value.id!,
+      target: form.value.learningTarget,
       tend: form.value.tend,
       quizResults,
     })

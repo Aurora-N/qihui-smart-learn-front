@@ -79,7 +79,7 @@ export interface QuestionData {
 
 export interface GetFinalLearningPathRequestBody {
   quizResults: QuizResult[] // 用户的答题情况
-  tartget: string // 用户想学习的目标知识
+  target: string // 用户想学习的目标知识
   tend: string // 用户倾向于从什么路线开始学习
   userId: number
 }
