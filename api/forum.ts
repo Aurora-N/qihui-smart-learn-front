@@ -44,8 +44,13 @@ export const useForumApi = () => {
       }>,
 
     // 发表新帖子
-    createNewPost: ({ title, content, tags = [] }: CreateNewPostRequestBody) =>
-      nuxtApp.$axios.post(`${BASE_API}/newpost`, {
+    createNewPost: ({
+      userId,
+      title,
+      content,
+      tags = [],
+    }: { userId: string } & CreateNewPostRequestBody) =>
+      nuxtApp.$axios.post(`${BASE_API}/newpost?userId=${userId}`, {
         title,
         tags,
         content,

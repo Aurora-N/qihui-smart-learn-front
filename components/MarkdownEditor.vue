@@ -224,7 +224,9 @@ import MarkdownItAsync from 'markdown-it-async'
 import { codeToHtml } from 'shiki'
 import markdownItSanitizer from 'markdown-it-sanitizer'
 import { useForumApi } from '~/api/forum'
+import { useUserStore } from '~/stores/userStore'
 
+const userStore = useUserStore()
 const postTitle = ref('')
 const markdownText = ref('')
 const viewMode = ref('split') // 'edit', 'preview', or 'split'
@@ -238,6 +240,11 @@ const tags = ref([])
 const getAllTags = async () => {
   const res = await useForumApi().getAllTags()
   tags.value = res.data
+
+  const defaultTag = tags.value.find(tag => tag.tagName === '通用')
+  if (defaultTag && selectedTags.value.length === 0) {
+    toggleTag(defaultTag)
+  }
 }
 
 onMounted(() => {
@@ -473,6 +480,7 @@ const handleSubmit = async () => {
     return
   }
   const res = await useForumApi().createNewPost({
+    userId: userStore.userInfo.id,
     title: postTitle.value,
     content: markdownText.value,
     tags: selectedTags.value,
