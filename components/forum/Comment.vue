@@ -98,9 +98,7 @@ const scrollToComment = id => {
           </div>
           <div
             v-if="
-              props.repliedId &&
-              props.repliedId !== '0' &&
-              props.repliedId !== ''
+              props.repliedId && props.repliedId !== 0 && props.repliedId !== -1
             "
             class="replied-to"
             @click="scrollToComment(props.repliedId)"
@@ -119,7 +117,7 @@ const scrollToComment = id => {
             :index="tag.tagId"
             :style="{ '--hue': tag.hueColor }"
           >
-            <span class="tag-name">{{ tag.title }}</span>
+            <span class="tag-name">{{ tag.tagName }}</span>
           </div>
         </div>
       </div>

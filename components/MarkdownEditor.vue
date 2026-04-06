@@ -83,7 +83,7 @@
               >
                 <div class="tag-color-indicator" />
                 <h3 class="tag-name">
-                  {{ tag.title }}
+                  {{ tag.tagName }}
                 </h3>
               </div>
             </Dropdown>
@@ -257,7 +257,7 @@ const toggleTag = tag => {
     // 没找到标签，添加
     selectedTags.value.push({
       tagId: Number.parseInt(tag.tagId),
-      tagName: tag.title,
+      tagName: tag.tagName,
     })
   } else {
     // 找到标签，删除
@@ -472,11 +472,11 @@ const handleSubmit = async () => {
     ElMessage({ type: 'error', message: '请输入正文！', plain: true })
     return
   }
-  const res = await useForumApi().createNewPost(
-    postTitle.value,
-    markdownText.value,
-    selectedTags.value
-  )
+  const res = await useForumApi().createNewPost({
+    title: postTitle.value,
+    content: markdownText.value,
+    tags: selectedTags.value,
+  })
   if (res.status === 'success')
     router.push(`/forum/post?id=${res.postMeta.postId}`)
 }

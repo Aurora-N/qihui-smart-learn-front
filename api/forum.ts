@@ -46,11 +46,9 @@ export const useForumApi = () => {
     // 发表新帖子
     createNewPost: ({ title, content, tags = [] }: CreateNewPostRequestBody) =>
       nuxtApp.$axios.post(`${BASE_API}/newpost`, {
-        data: {
-          title,
-          tags,
-          content,
-        },
+        title,
+        tags,
+        content,
       }) as Promise<{ data: CreateNewPostResponseData }>,
 
     // 发表评论
