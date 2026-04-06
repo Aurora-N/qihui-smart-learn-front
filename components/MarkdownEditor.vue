@@ -485,8 +485,9 @@ const handleSubmit = async () => {
     content: markdownText.value,
     tags: selectedTags.value,
   })
-  if (res.status === 'success')
-    router.push(`/forum/post?id=${res.postMeta.postId}`)
+  if (res.status === 'success' && res.data?.postId) {
+    router.push(`/forum/post?id=${res.data.postId}`)
+  }
 }
 
 // Lifecycle hooks
