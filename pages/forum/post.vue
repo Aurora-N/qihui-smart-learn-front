@@ -79,7 +79,7 @@ const getTagsAttributes = async () => {
     if (tagWithAttr.length > 0) {
       tags.value.push({
         tagId: tagWithAttr[0].tagId,
-        title: tagWithAttr[0].tagName,
+        tagName: tagWithAttr[0].tagName,
         hueColor: tagWithAttr[0].hueColor,
       })
     }
