@@ -1,3 +1,4 @@
+import type { BaseResponse } from './type/base'
 import type {
   BasePost,
   CreateNewCommentRequestBody,
@@ -44,17 +45,17 @@ export const useForumApi = () => {
       }>,
 
     // 发表新帖子
-    createNewPost: ({
+    createNewPost: async ({
       userId,
       title,
       content,
       tags = [],
-    }: { userId: string } & CreateNewPostRequestBody) =>
+    }: { userId?: number | string } & CreateNewPostRequestBody) =>
       nuxtApp.$axios.post(`${BASE_API}/newpost?userId=${userId}`, {
         title,
         tags,
         content,
-      }) as Promise<{ data: CreateNewPostResponseData }>,
+      }) as Promise<BaseResponse<CreateNewPostResponseData>>,
 
     // 发表评论
     replyPost: async (

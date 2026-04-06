@@ -486,7 +486,15 @@ const handleSubmit = async () => {
     tags: selectedTags.value,
   })
   if (res.status === 'success' && res.data?.postId) {
+    ElMessage({
+      type: 'success',
+      message: res.msg || '发布成功！',
+      plain: true,
+    })
     router.push(`/forum/post?id=${res.data.postId}`)
+  } else {
+    console.log(res)
+    ElMessage({ type: 'error', message: res.msg || '发布失败！', plain: true })
   }
 }
 
