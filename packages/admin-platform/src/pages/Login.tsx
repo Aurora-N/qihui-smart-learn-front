@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { Eye, EyeOff, Lock, User, LogIn, ShieldAlert } from "lucide-react"
+import { Eye, EyeOff, Lock, User, LogIn, ShieldAlert, Loader2 } from "lucide-react"
 import {
   Card,
   CardHeader,
@@ -17,6 +17,7 @@ import { toast } from "sonner"
 import clsx from "clsx"
 import { twMerge } from "tailwind-merge"
 import { ThemeToggle } from "../components/ThemeToggle"
+import { encryptWithRSA } from "../utils/rsaEncrypt"
 
 export function Login() {
   const [email, setEmail] = useState("")
@@ -24,35 +25,55 @@ export function Login() {
   const [captcha, setCaptcha] = useState("")
   const [captchaKey, setCaptchaKey] = useState("")
   const [captchaImage, setCaptchaImage] = useState("")
+  const [isCaptchaLoading, setIsCaptchaLoading] = useState(false)
+  const [captchaError, setCaptchaError] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { setToken } = useUserStore()
 
   const refreshCaptcha = async () => {
+    setIsCaptchaLoading(true)
+    setCaptchaError(false)
     try {
       const data = await getCaptcha()
       if (data && data.base64Image) {
         setCaptchaImage(data.base64Image)
         setCaptchaKey(data.key)
         setCaptcha("")
+      } else {
+        setCaptchaError(true)
       }
     } catch {
+      setCaptchaError(true)
       toast.error("获取验证码失败，请重试")
+    } finally {
+      setIsCaptchaLoading(false)
     }
   }
 
   useEffect(() => {
     let ignore = false
     const initCaptcha = async () => {
+      setIsCaptchaLoading(true)
+      setCaptchaError(false)
       try {
         const data = await getCaptcha()
-        if (!ignore && data && data.base64Image) {
-          setCaptchaImage(data.base64Image)
-          setCaptchaKey(data.key)
+        if (!ignore) {
+          if (data && data.base64Image) {
+            setCaptchaImage(data.base64Image)
+            setCaptchaKey(data.key)
+          } else {
+            setCaptchaError(true)
+          }
         }
       } catch {
-        if (!ignore) toast.error("获取验证码失败，请重试")
+        if (!ignore) {
+          setCaptchaError(true)
+          toast.error("获取验证码失败，请重试")
+        }
+      } finally {
+        if (!ignore) setIsCaptchaLoading(false)
       }
     }
     initCaptcha()
@@ -68,9 +89,10 @@ export function Login() {
 
     setLoading(true)
     try {
+      const encryptedPassword = await encryptWithRSA(password)
       const response = await adminLogin({
         account: email,
-        password,
+        password: encryptedPassword as string,
         captcha,
         captchaKey,
       })
@@ -78,7 +100,7 @@ export function Login() {
       toast.success("欢迎回来，管理员")
       navigate("/")
     } catch {
-      toast.error("凭证无效")
+      toast.error("验证失败或密码错误")
       refreshCaptcha()
     } finally {
       setLoading(false)
@@ -177,14 +199,34 @@ export function Login() {
                   />
                   <ShieldAlert className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                 </div>
-                {captchaImage && (
-                  <img
-                    src={captchaImage}
-                    alt="验证码"
-                    onClick={refreshCaptcha}
-                    className="h-12 w-32 cursor-pointer rounded-md object-cover shadow-sm transition-transform active:scale-95"
-                  />
-                )}
+                <div
+                  className="relative h-12 w-32 cursor-pointer overflow-hidden rounded-md shadow-sm transition-transform active:scale-95"
+                  onClick={!isCaptchaLoading ? refreshCaptcha : undefined}
+                >
+                  {captchaImage && !captchaError ? (
+                    <img
+                      src={captchaImage}
+                      alt="验证码"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-muted text-xs text-muted-foreground">
+                      {captchaError ? (
+                        "加载失败"
+                      ) : (
+                        <>
+                          <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                          加载中...
+                        </>
+                      )}
+                    </div>
+                  )}
+                  {isCaptchaLoading && captchaImage && !captchaError && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm">
+                      <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -197,9 +239,11 @@ export function Login() {
                   : "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg active:scale-95"
               )}
             >
-              <LogIn
-                className={clsx("mr-2 h-5 w-5", loading && "animate-spin")}
-              />
+              {loading ? (
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              ) : (
+                <LogIn className="mr-2 h-5 w-5" />
+              )}
               {loading ? "正在登录..." : "登录"}
             </Button>
           </form>

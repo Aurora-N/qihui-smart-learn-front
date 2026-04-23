@@ -12,3 +12,8 @@ export const adminLogin = async (data: AdminLoginRequest) => {
 export const getCaptcha = async () => {
   return await get<{ base64Image: string; key: string }>(`${BASE_API}/captcha`)
 }
+
+// 获取公钥
+export const getPublicKey = async () => {
+  return await get<string>(`${BASE_API}/publicKey`)
+}
