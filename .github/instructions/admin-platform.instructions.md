@@ -1,6 +1,6 @@
 ---
 description: 'React, Vite, TypeScript, Tailwind CSS, and shadcn/ui best practices and guidelines. Use when writing or modifying code in the admin-platform.'
-applyTo: 'packages/admin-platform/**/*.{ts,tsx}'
+applyTo: 'packages/admin-platform/**'
 ---
 
 # Admin Platform Best Practices

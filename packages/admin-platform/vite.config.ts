@@ -11,4 +11,14 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      "/baseUrl": {
+        target: "http://8.134.211.162:3456",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/baseUrl/, ""),
+      },
+    },
+  },
 })
