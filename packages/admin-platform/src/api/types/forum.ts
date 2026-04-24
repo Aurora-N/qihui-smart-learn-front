@@ -5,7 +5,7 @@ export interface ForumTag {
 
 export interface ForumTagDetail {
   tagId: number | string 
-  title: string
+  tagName: string
   hueColor: string
   description: string
   postsCount: number

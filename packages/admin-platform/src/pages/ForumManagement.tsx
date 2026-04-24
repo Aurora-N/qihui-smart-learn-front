@@ -11,7 +11,6 @@ import type {
   PostDetail,
 } from "../api/types/forum"
 import { Tabs, TabsList, TabsTrigger } from "../components/ui/tabs"
-import { Card } from "../components/ui/card"
 import { Badge } from "../components/ui/badge"
 import { Button } from "../components/ui/button"
 import {
@@ -30,6 +29,7 @@ import {
 } from "../components/ui/sheet"
 import { Trash2, MessageSquare, Clock } from "lucide-react"
 import { toast } from "sonner" // standard toast library
+import { renderMarkdown } from "../utils/markdown"
 
 export function ForumManagement() {
   const [tags, setTags] = useState<ForumTagDetail[]>([])
@@ -40,6 +40,7 @@ export function ForumManagement() {
 
   const [selectedPost, setSelectedPost] = useState<PostDetail | null>(null)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const [renderedContent, setRenderedContent] = useState<string>('')
 
   useEffect(() => {
     getForumTags()
@@ -68,8 +69,16 @@ export function ForumManagement() {
 
   const handleViewPost = async (postId: number | string) => {
     try {
-      const res = await getPostDetail(Number(postId))
-      setSelectedPost(res.posts)
+      const res: any = await getPostDetail(Number(postId))
+      // 兼容可能存在的不同嵌套层级
+      const postData = res.posts || res.data || res
+      setSelectedPost(postData)
+      if (postData.content) {
+        const mdHtml = await renderMarkdown(postData.content)
+        setRenderedContent(mdHtml)
+      } else {
+        setRenderedContent('')
+      }
       setIsSheetOpen(true)
     } catch {
       toast.error("加载帖子详情失败")
@@ -107,9 +116,9 @@ export function ForumManagement() {
               <TabsTrigger
                 key={tag.tagId}
                 value={String(tag.tagId)}
-                className="rounded-sm text-sm data-[state=active]:bg-card data-[state=active]:shadow"
+                className="rounded-full text-sm data-[state=active]:bg-card data-[state=active]:shadow"
               >
-                {tag.title}
+                {tag.tagName}
                 <Badge
                   variant="secondary"
                   className="ml-2 h-4 bg-muted text-[10px] leading-none"
@@ -121,7 +130,7 @@ export function ForumManagement() {
           </TabsList>
 
           {/* Just render the current tab content generically */}
-          <Card className="mt-4 overflow-hidden border-border shadow-sm">
+          <div className="mt-4 overflow-hidden rounded-md border bg-card shadow-sm">
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow>
@@ -205,13 +214,13 @@ export function ForumManagement() {
                 )}
               </TableBody>
             </Table>
-          </Card>
+          </div>
         </Tabs>
       )}
 
       {/* Post Detail Drawer */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="w-[90vw] overflow-y-auto sm:max-w-2xl">
+        <SheetContent className="w-[90vw] overflow-y-auto sm:max-w-4xl">
           <SheetHeader className="border-b pb-4">
             <SheetTitle className="mt-6 text-2xl leading-tight font-bold">
               {selectedPost?.title}
@@ -230,9 +239,10 @@ export function ForumManagement() {
 
           {selectedPost && (
             <div className="space-y-8 py-6">
-              <div className="prose max-w-none text-sm whitespace-pre-wrap text-muted-foreground">
-                {selectedPost.content}
-              </div>
+              <div 
+                className="prose max-w-none text-sm text-foreground"
+                dangerouslySetInnerHTML={{ __html: renderedContent }}
+              />
 
               <div className="border-t border-border pt-6">
                 <h4 className="mb-4 flex justify-between border-b pb-2 text-lg font-semibold text-foreground">

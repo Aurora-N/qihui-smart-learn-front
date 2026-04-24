@@ -12,7 +12,7 @@ export const getPostsByTag = async (tag: number) => {
 
 // 获取具体帖子内容
 export const getPostDetail = async (postId: number) => {
-  return await get<FetchPostDetailResponse>(`/api/forum/${postId}`)
+  return await get<FetchPostDetailResponse>(`/api/admin/forum/${postId}`)
 }
 
 // 获取所有标签列表
