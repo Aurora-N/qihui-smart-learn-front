@@ -18,18 +18,22 @@ const server = http.createServer((req, res) => {
     )
   })
 
+  const headers = {
+    ...req.headers,
+    host: TARGET_HOST, // 需要重写 host 请求头
+    'ngrok-skip-browser-warning': 'true',
+  }
+
+  // 删除前端自带的跨域标识，将其伪装成浏览器直接请求
+  delete headers.origin
+  delete headers.referer
+
   const options = {
     hostname: TARGET_HOST,
     port: 443,
     path: req.url,
     method: req.method,
-    headers: {
-      ...req.headers,
-      host: TARGET_HOST, // 需要重写 host 请求头
-      origin: TARGET_URL,
-      referer: TARGET_URL,
-      'ngrok-skip-browser-warning': 'true',
-    },
+    headers,
   }
 
   const proxyReq = https.request(options, proxyRes => {
