@@ -18,6 +18,20 @@ const server = http.createServer((req, res) => {
     )
   })
 
+  // 1. 设置通用的 CORS 响应头
+  const origin = req.headers.origin || '*'
+  res.setHeader('Access-Control-Allow-Origin', origin)
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH')
+  res.setHeader('Access-Control-Allow-Headers', req.headers['access-control-request-headers'] || '*')
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+
+  // 2. 提前处理 OPTIONS 预检请求
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200)
+    res.end()
+    return
+  }
+
   const headers = {
     ...req.headers,
     host: TARGET_HOST, // 需要重写 host 请求头
@@ -37,21 +51,19 @@ const server = http.createServer((req, res) => {
   }
 
   const proxyReq = https.request(options, proxyRes => {
-    // 设置支持跨域请求（如果前端直接访问该代理并遇到CORS问题可用）
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader(
-      'Access-Control-Allow-Methods',
-      'GET, POST, PUT, DELETE, OPTIONS'
-    )
-    res.setHeader('Access-Control-Allow-Headers', '*')
+    // 过滤掉目标服务返回的可能妨碍跨域的请求头
+    const proxyHeaders = { ...proxyRes.headers }
+    delete proxyHeaders['access-control-allow-origin']
+    delete proxyHeaders['access-control-allow-methods']
+    delete proxyHeaders['access-control-allow-headers']
+    delete proxyHeaders['access-control-allow-credentials']
+    
+    // 使用 setHeader 后的结果加上 proxyHeaders 进行兜底
+    Object.keys(proxyHeaders).forEach(key => {
+      res.setHeader(key, proxyHeaders[key]);
+    });
 
-    if (req.method === 'OPTIONS') {
-      res.writeHead(200)
-      res.end()
-      return
-    }
-
-    res.writeHead(proxyRes.statusCode, proxyRes.headers)
+    res.writeHead(proxyRes.statusCode)
     proxyRes.pipe(res, { end: true })
   })
 
@@ -64,19 +76,6 @@ const server = http.createServer((req, res) => {
     }
     res.end('Proxy Error')
   })
-
-  // 处理 OPTIONS 请求
-  if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader(
-      'Access-Control-Allow-Methods',
-      'GET, POST, PUT, DELETE, OPTIONS'
-    )
-    res.setHeader('Access-Control-Allow-Headers', '*')
-    res.writeHead(200)
-    res.end()
-    return
-  }
 
   req.pipe(proxyReq, { end: true })
 })
