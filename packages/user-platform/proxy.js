@@ -26,6 +26,8 @@ const server = http.createServer((req, res) => {
     headers: {
       ...req.headers,
       host: TARGET_HOST, // 需要重写 host 请求头
+      origin: TARGET_URL,
+      referer: TARGET_URL,
       'ngrok-skip-browser-warning': 'true',
     },
   }
