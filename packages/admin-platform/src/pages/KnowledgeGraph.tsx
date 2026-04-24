@@ -203,7 +203,6 @@ export function KnowledgeGraph() {
     getKnowledgeGraph()
       .then((res) => {
         setData(res)
-        renderD3Graph(res)
       })
       .catch(() => toast.error("加载知识图谱失败"))
       .finally(() => setLoading(false))
@@ -213,6 +212,12 @@ export function KnowledgeGraph() {
     fetchGraph()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (!loading && data.length > 0) {
+      renderD3Graph(data)
+    }
+  }, [loading, data])
 
   useEffect(() => {
     const handleResize = () => {
