@@ -7,7 +7,6 @@ import {
   Network,
   Settings,
   LogOut,
-  FolderOpen,
   LogIn,
 } from "lucide-react"
 import { useUserStore } from "../store/userStore"

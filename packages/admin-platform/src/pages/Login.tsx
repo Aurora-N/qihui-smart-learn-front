@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-  CardDescription,
 } from "../components/ui/card"
 import { Input } from "../components/ui/input"
 import { Button } from "../components/ui/button"
@@ -14,7 +13,6 @@ import { Label } from "../components/ui/label"
 import { adminLogin, getCaptcha } from "../api/auth"
 import { useUserStore } from "../store/userStore"
 import { toast } from "sonner"
-import clsx from "clsx"
 import { twMerge } from "tailwind-merge"
 import { ThemeToggle } from "../components/ThemeToggle"
 import { encryptWithRSA } from "../utils/rsaEncrypt"
